@@ -1,32 +1,48 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.notes
 
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.NoteAdd
 import androidx.compose.material.icons.rounded.AddCircle
-import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.NoteAdd
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.data.db.NotesItem
 import ir.hoseinahmadi.taskmanager.data.db.TaskColor
+import ir.hoseinahmadi.taskmanager.navigation.Screen
 
 @Composable
-fun NotesScreen(){
+fun NotesScreen(navHostController: NavHostController){
+    var gridItem by remember {
+        mutableStateOf(false)
+    }
+
     val taskList = listOf(
         NotesItem(
             1,
@@ -129,44 +145,61 @@ fun NotesScreen(){
 
        NotesItem(
             12,
-            "سلام خویسیییییییی",
-            "باطابا زابابابایبط باطباباباباباباببا",
+            "سلام خویسیییییییی این نوتبیبیب من اس",
+            "باطابا زابابابایبط باطبابابیبیبیبیبیلساهسیاهیسلاهعیسلاعلیاسعلیاسعخهاسبلخاهیسلاخهباخهعللاباخهعببیبیبیبباباباباببا",
             "20:00",
             "21:00",
             TaskColor.ORANGE
 
-        ),
-
-        )
+        ),)
 
     val lazyState = rememberLazyStaggeredGridState()
 
     Scaffold(
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                expanded = lazyState.canScrollForward,
-                text = {
-                    Text(text = "یادداشت", style = MaterialTheme.typography.bodyLarge) },
-                icon = { Icon(Icons.Rounded.AddCircle, contentDescription ="" ) },
-                onClick = { /*TODO*/ })
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                ExtendedFloatingActionButton(
+                    containerColor = Color.White,
+                    expanded = lazyState.canScrollForward,
+                    text = {
+                        Text(text = "یادداشت",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.Black
+                        ) },
+                    icon = { Icon(Icons.AutoMirrored.Rounded.NoteAdd,
+                        contentDescription ="",
+                        tint = Color.Black
+                        ) },
+                    onClick = { navHostController.navigate(Screen.AddNotesScreen.route) })
+            }
 
-        }
+        },
+        floatingActionButtonPosition = FabPosition.Start
     ) {
-        LazyVerticalStaggeredGrid(
-            state =lazyState ,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-                .padding(horizontal = 4.dp),
-            columns = StaggeredGridCells.Fixed(2),
-            contentPadding = PaddingValues(3.dp),
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            verticalItemSpacing = 5.dp
-        ) {
-            items(taskList){
-                NotesItemCard(item = it)
+        if (gridItem){
+            LazyVerticalStaggeredGrid(
+                state =lazyState ,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+                    .padding(horizontal = 4.dp),
+                columns = StaggeredGridCells.Fixed(2),
+                contentPadding = PaddingValues(3.dp),
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                verticalItemSpacing = 5.dp
+            ) {
+                items(taskList){item ->
+                    NotesItemCard(item = item)
+                }
+            }
+        }else{
+            LazyColumn {
+                items(taskList){item ->
+                    NotesListItem(item)
+                }
             }
         }
+
     }
 
 }

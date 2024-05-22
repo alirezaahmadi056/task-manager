@@ -19,29 +19,6 @@ val font_standard = FontFamily(
     Font(R.font.iranyekan)
 )
 
-val Typography.extraBoldNumber: TextStyle
-    @Composable
-    get() = TextStyle(
-        fontFamily = font_bold,
-        fontWeight = FontWeight.Bold,
-        fontSize = 26.sp,
-    )
-
-
-val Typography.extraSmall: TextStyle
-    @Composable
-    get() = TextStyle(
-        fontFamily = font_standard,
-        fontSize = 11.sp,
-        lineHeight = 25.sp
-    )
-
-val Typography.veryExtraSmall: TextStyle
-    @Composable
-    get() = TextStyle(
-        fontFamily = font_standard,
-        fontSize = 10.sp,
-    )
 
 
 val Typography = Typography(
@@ -82,19 +59,19 @@ val Typography = Typography(
         lineHeight = 25.sp
     ),
     labelSmall = TextStyle(
-        fontFamily = font_standard,
+        fontFamily = font_medium,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
         lineHeight = 25.sp
     ),
     labelMedium = TextStyle(
-        fontFamily = font_standard,
+        fontFamily = font_medium,
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp,
         lineHeight = 25.sp
     ),
     labelLarge = TextStyle(
-        fontFamily = font_standard,
+        fontFamily = font_bold,
         fontWeight = FontWeight.Medium,
         fontSize = 20.sp,
         lineHeight = 25.sp

@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.NoteAlt
+import androidx.compose.material.icons.rounded.Task
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -37,35 +39,37 @@ fun BottomNavigation(
             var selected by rememberSaveable {
                 mutableIntStateOf(0)
             }
-            NavigationBarItem(selected =selected==0,
+            NavigationBarItem(selected = selected == 0,
                 onClick = {
-                          selected=0
+                    selected = 0
                     navHostController.navigate(Screen.NotesScreen.route)
-
                 },
                 icon = {
-                    Icon(Icons.Rounded.Lock,
-                        contentDescription ="" )
+                    Icon(
+                        Icons.Rounded.NoteAlt,
+                        contentDescription = ""
+                    )
                 },
                 label = {
                     Text(text = "notes")
                 }
-                )
+            )
 
-               NavigationBarItem(selected =selected==1,
+            NavigationBarItem(selected = selected == 1,
                 onClick = {
-                    selected=1
+                    selected = 1
                     navHostController.navigate(Screen.TaskScreen.route)
                 },
-                   icon = {
-                       Icon(Icons.Rounded.Lock,
-                           contentDescription ="" )
-                   },
-                   label = {
-                       Text(text = "task")
-                   }
-               )
-
+                icon = {
+                    Icon(
+                        Icons.Rounded.Task,
+                        contentDescription = ""
+                    )
+                },
+                label = {
+                    Text(text = "task")
+                }
+            )
 
 
         }

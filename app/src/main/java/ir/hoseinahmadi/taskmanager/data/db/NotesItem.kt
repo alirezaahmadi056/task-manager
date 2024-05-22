@@ -1,5 +1,6 @@
 package ir.hoseinahmadi.taskmanager.data.db
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -16,7 +17,7 @@ data class NotesItem(
 )
 
 enum class TaskColor(val color: Color) {
-     GREEN(Color(0xFF8BC34A)),
-    ORANGE(Color(0xFFFF9800)),
+     GREEN(Color(0xff089000)),
+    ORANGE( Color(0xFFF69A0E)),
     RED(Color(0xFFF44336)),
 }
