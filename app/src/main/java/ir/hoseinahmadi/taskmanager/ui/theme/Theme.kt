@@ -29,6 +29,7 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Pink40,
     background = Color.White,
 
+
     /* Other default colors to override
     surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
@@ -42,7 +43,6 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun TaskManagerTheme(
     darkTheme: Boolean,
-
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
