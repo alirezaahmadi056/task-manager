@@ -41,9 +41,9 @@ fun NotesListItem(item: NotesItem) {
             modifier = Modifier
         ) {
             Box(modifier = Modifier
-                .width(20.dp)
+                .width(10.dp)
                 .fillMaxHeight()
-                .background(item.taskColor.color)
+                .background(item.taskColor)
             )
             Column(
                 modifier = Modifier.padding(4.dp).padding(start = 28.dp)

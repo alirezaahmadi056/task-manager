@@ -27,10 +27,9 @@ fun NotesItemCard(item: NotesItem) {
     val taskColor = listOf(LightPurple, LightBlue, LightGreen).random()
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = item.taskColor.color
+            containerColor = item.taskColor
         ),
         elevation = CardDefaults.cardElevation(1.dp),
-        border = BorderStroke(1.dp, Color.LightGray.copy(0.5f)),
         onClick = {},
     ) {
             Column(
@@ -42,14 +41,16 @@ fun NotesItemCard(item: NotesItem) {
                     modifier = Modifier.fillMaxWidth(),
                     text = item.title,
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.scrim,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = item.body!!,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.DarkGray,)
+                    color = MaterialTheme.colorScheme.scrim.copy(0.7f),
+
+                    )
             }
 
 //            Box(modifier = Modifier

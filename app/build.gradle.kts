@@ -80,6 +80,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager:0.12.0")
 
 
+
     // Room
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("androidx.room:room-runtime:2.6.1")
@@ -110,9 +111,9 @@ dependencies {
     //swipe refresh
     implementation("com.google.accompanist:accompanist-swiperefresh:0.27.0")
 
-//system ui controller
+    //system ui controller
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
 
     //icon
-    implementation("androidx.compose.material:material-icons-extended:1.6.6")
+    implementation("androidx.compose.material:material-icons-extended:1.7.0-beta01")
 }
