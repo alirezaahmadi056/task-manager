@@ -1,4 +1,4 @@
-package ir.hoseinahmadi.taskmanager.data.db
+package ir.hoseinahmadi.taskmanager.data.db.notes
 
 import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
@@ -10,9 +10,10 @@ data class NotesItem(
     val id: Int = 0,
     val title: String,
     val body: String? = null,
-    val startTime: String,
-    val endTime: String,
-    val taskColor: Color
+    val startTime: String="",
+    val endTime: String="",
+   val createTime :String="",
+   val createDate :String="",
 )
 
 

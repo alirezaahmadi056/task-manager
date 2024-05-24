@@ -1,6 +1,5 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.notes
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,12 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import ir.hoseinahmadi.taskmanager.data.db.NotesItem
+import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
 import ir.hoseinahmadi.taskmanager.ui.theme.LightBlue
 import ir.hoseinahmadi.taskmanager.ui.theme.LightGreen
 import ir.hoseinahmadi.taskmanager.ui.theme.LightPurple
@@ -27,7 +23,7 @@ fun NotesItemCard(item: NotesItem) {
     val taskColor = listOf(LightPurple, LightBlue, LightGreen).random()
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = item.taskColor
+//            containerColor = item.taskColor
         ),
         elevation = CardDefaults.cardElevation(1.dp),
         onClick = {},

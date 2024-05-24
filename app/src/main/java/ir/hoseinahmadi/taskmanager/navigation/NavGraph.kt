@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import ir.hoseinahmadi.taskmanager.ui.screen.AddNotesScreen
+import ir.hoseinahmadi.taskmanager.ui.screen.addNotes.AddNotesScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.NotesScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.task.TaskScreen
 

@@ -1,12 +1,8 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.notes
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,34 +14,49 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.NoteAdd
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import ir.hoseinahmadi.taskmanager.data.db.NotesItem
+import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
 import ir.hoseinahmadi.taskmanager.navigation.Screen
-import okhttp3.internal.addHeaderLenient
+import ir.hoseinahmadi.taskmanager.viewModel.NotesViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun NotesScreen(navHostController: NavHostController) {
+fun NotesScreen(
+    navHostController: NavHostController,
+    notesViewModel: NotesViewModel = hiltViewModel()
+) {
     var gridItem by remember {
         mutableStateOf(true)
     }
 
+    var notesItem by remember {
+        mutableStateOf<List<NotesItem>>(emptyList())
+    }
+
+    LaunchedEffect(key1 = true) {
+        notesViewModel.allNotesItem.collectLatest {
+            notesItem =it
+        }
+    }
+
+/*
     val taskList = listOf(
         NotesItem(
             1,
@@ -156,6 +167,7 @@ fun NotesScreen(navHostController: NavHostController) {
 
         ),
     )
+*/
 
     val lazyState = rememberLazyStaggeredGridState()
 
@@ -197,13 +209,13 @@ fun NotesScreen(navHostController: NavHostController) {
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalItemSpacing = 6.dp
             ) {
-                items(taskList) { item ->
+                items(notesItem) { item ->
                     NotesItemCard(item = item)
                 }
             }
         } else {
             LazyColumn {
-                items(taskList) { item ->
+                items(notesItem) { item ->
                     NotesListItem(item)
                 }
             }
