@@ -20,10 +20,23 @@ import ir.hoseinahmadi.taskmanager.ui.theme.LightPurple
 
 @Composable
 fun NotesItemCard(item: NotesItem) {
-    val taskColor = listOf(LightPurple, LightBlue, LightGreen).random()
+    val taskColor = when (item.taskColor) {
+        2 -> {
+            MaterialTheme.colorScheme.onSecondary
+        }
+
+        3 -> {
+            MaterialTheme.colorScheme.error
+        }
+
+        else -> {
+            MaterialTheme.colorScheme.onPrimary
+        }
+    }
+
     Card(
         colors = CardDefaults.cardColors(
-//            containerColor = item.taskColor
+            containerColor = taskColor
         ),
         elevation = CardDefaults.cardElevation(1.dp),
         onClick = {},
@@ -42,10 +55,9 @@ fun NotesItemCard(item: NotesItem) {
                     overflow = TextOverflow.Ellipsis,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = item.body!!,
+                Text(text = item.body,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.scrim.copy(0.7f),
-
                     )
             }
 
