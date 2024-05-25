@@ -11,6 +11,8 @@ data class NotesItem(
     val title: String,
     val body: String,
     val taskColor :Int,
+    val phone :String,
+    val address :String,
    val createTime :String="",
    val createDate :String="",
 )

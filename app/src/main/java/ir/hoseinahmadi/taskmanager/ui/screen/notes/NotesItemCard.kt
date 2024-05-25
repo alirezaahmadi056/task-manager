@@ -13,13 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.google.gson.Gson
 import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
+import ir.hoseinahmadi.taskmanager.navigation.Screen
 import ir.hoseinahmadi.taskmanager.ui.theme.LightBlue
 import ir.hoseinahmadi.taskmanager.ui.theme.LightGreen
 import ir.hoseinahmadi.taskmanager.ui.theme.LightPurple
 
 @Composable
-fun NotesItemCard(item: NotesItem) {
+fun NotesItemCard(navHostController: NavHostController, item: NotesItem) {
     val taskColor = when (item.taskColor) {
         2 -> {
             MaterialTheme.colorScheme.onSecondary
@@ -39,27 +42,31 @@ fun NotesItemCard(item: NotesItem) {
             containerColor = taskColor
         ),
         elevation = CardDefaults.cardElevation(1.dp),
-        onClick = {},
+        onClick = {
+            val data = Gson().toJson(item)
+            navHostController.navigate(Screen.AddNotesScreen.route + "?data=$data")
+        },
     ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 12.dp)
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = item.title,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.scrim,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = item.body,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.scrim.copy(0.7f),
-                    )
-            }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp, vertical = 12.dp)
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = item.title,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.scrim,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = item.body,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.scrim.copy(0.7f),
+            )
+        }
 
 //            Box(modifier = Modifier
 //                .align(Alignment.TopEnd)
@@ -67,9 +74,7 @@ fun NotesItemCard(item: NotesItem) {
 //                .clip(RoundedCornerShape(bottomStart = 12.dp))
 //                .background(Color.Red)
 //            )
-        }
-
-
+    }
 
 
 }

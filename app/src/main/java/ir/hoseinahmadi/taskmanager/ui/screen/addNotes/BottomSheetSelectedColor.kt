@@ -108,13 +108,13 @@ private fun ItemSelectedColor(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 4.dp, vertical = 8.dp),
+                .padding(horizontal = 4.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
             Box(
                 modifier = Modifier
-                    .size(15.dp, 28.dp)
+                    .size(12.dp, 28.dp)
                     .clip(RoundedCornerShape(7.dp))
                     .background(color)
                     .padding(4.dp)
