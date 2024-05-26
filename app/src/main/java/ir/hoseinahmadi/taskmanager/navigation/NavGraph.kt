@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import ir.hoseinahmadi.taskmanager.ui.screen.addNotes.AddNotesScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.NotesScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.task.TaskScreen
+import ir.hoseinahmadi.taskmanager.ui.screen.test
 
 @Composable
 fun NavGraph(navHostController: NavHostController){
@@ -24,16 +25,17 @@ fun NavGraph(navHostController: NavHostController){
         composable(Screen.AddNotesScreen.route +"?data={data}",
             arguments = listOf(
                 navArgument("data"){
-                    type = NavType.StringType
-                    nullable =true
+                    type = NavType.IntType
+                    defaultValue =999
                 }
             )
             ){
             AddNotesScreen(
                 navHostController = navHostController,
-                date = it.arguments?.getString("data")
+                id = it.arguments?.getInt("data") ?:99
             )
         }
+
 
     }
 

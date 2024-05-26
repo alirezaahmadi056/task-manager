@@ -1,23 +1,38 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.addNotes
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.ContentResolver
 import android.content.Context
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
-import android.provider.ContactsContract.CommonDataKinds.Note
+import android.provider.OpenableColumns
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -25,10 +40,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.rounded.ArtTrack
-import androidx.compose.material.icons.rounded.AvTimer
-import androidx.compose.material.icons.rounded.JoinFull
-import androidx.compose.material.icons.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.DeleteForever
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Notes
 import androidx.compose.material.icons.rounded.PhoneIphone
@@ -36,17 +51,18 @@ import androidx.compose.material.icons.rounded.RunningWithErrors
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -54,24 +70,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastMapIndexed
+import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.google.gson.Gson
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
 import ir.hoseinahmadi.taskmanager.util.TaskHelper
 import ir.hoseinahmadi.taskmanager.viewModel.NotesViewModel
+import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun AddNotesScreen(
     navHostController: NavHostController,
-    date: String?,
+    id: Int,
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
 
@@ -92,6 +114,18 @@ fun AddNotesScreen(
     var addres by remember {
         mutableStateOf("")
     }
+
+    var selectedImageUriList by remember {
+        mutableStateOf<List<Uri>>(emptyList())
+    }
+
+    val multipleImagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetMultipleContents(),
+        onResult = { uriList ->
+            selectedImageUriList = uriList
+        }
+    )
+
     val taskColor = when (selectedColor) {
         2 -> {
             MaterialTheme.colorScheme.onSecondary
@@ -110,8 +144,17 @@ fun AddNotesScreen(
     }
     var header = " یادداشت جدید"
     var bottom = "افزودن یادداشت"
-    val item = Gson().fromJson(date, NotesItem::class.java)
-    if (item != null) {
+
+    var item by remember {
+        mutableStateOf<NotesItem>(NotesItem())
+    }
+
+    if (id != 999) {
+        LaunchedEffect(key1 = true) {
+            notesViewModel.getNotesItem(id).collectLatest {
+                item = it
+            }
+        }
         title = item.title
         body = item.body
         selectedColor = item.taskColor
@@ -119,8 +162,11 @@ fun AddNotesScreen(
         addres = item.address
         header = "ویرایش یادداشت"
         bottom = "ذخیره یادداشت"
+        selectedImageUriList = item.uri
     }
 
+    Log.e("pasi", selectedImageUriList.toString())
+    Log.e("pasi", id.toString())
     Scaffold(
         bottomBar = {
             Button(
@@ -129,7 +175,7 @@ fun AddNotesScreen(
                     .padding(vertical = 4.dp),
                 onClick = {
                     notesViewModel.upsertNotesItem(
-                        if (item != null) {
+                        if (id != 999) {
                             NotesItem(
                                 id = item.id,
                                 title = title,
@@ -144,7 +190,8 @@ fun AddNotesScreen(
                                 body = body,
                                 taskColor = selectedColor,
                                 phone = contactPhone,
-                                address = addres
+                                address = addres,
+                                uri = selectedImageUriList
                             )
                         }
                     )
@@ -403,28 +450,135 @@ fun AddNotesScreen(
             }
 
             HorizontalDivider(
-                thickness = 1.dp,
-                color = Color.LightGray.copy(0.5f)
+                thickness = 4.dp,
+                color = Color.LightGray.copy(0.1f)
             )
-//            DateTimeButton { date, time ->
-//
-//            }
+
+            var expanded by remember {
+                mutableStateOf(false)
+            }
+            val rotateState by animateFloatAsState(
+                targetValue = if (expanded) 180f else 0f,
+                label = ""
+            )
+
+            Card(
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize(
+                        animationSpec = tween(
+                            durationMillis = 300
+                        )
+                    ),
+                onClick = {
+                    expanded = !expanded
+                })
+            {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 14.dp, horizontal = 15.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Text(text = "پیوست")
+
+                    Icon(
+                        imageVector = Icons.Rounded.KeyboardArrowDown, contentDescription = "",
+                        modifier = Modifier
+                            .rotate(rotateState)
+                            .size(28.dp),
+                        tint = MaterialTheme.colorScheme.scrim
+                    )
+                }
+            }
+
+            AnimatedVisibility(
+                visible = expanded,
+                enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
+                exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
+            ) {
+                Column {
+                    val context = LocalContext.current
+                    for (uri in selectedImageUriList) {
+                        val fileInfo = getFileInfo(context.contentResolver, uri)
+                        fileInfo?.let { (name, size) ->
+                            // اطلاعات فایل را دریافت کرده‌ایم، می‌توانید از آنها استفاده کنید
+                            // برای مثال، می‌توانید اطلاعات را به کارت جزئیات فایل اضافه کنید
+                            SaveImageCard(uri, context, name, size.toString()) {
+                                if (id != 0) {
+                                    IconButton(
+                                        modifier = Modifier.padding(bottom = 8.dp),
+                                        onClick = { }) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.DeleteForever,
+                                            contentDescription = "",
+                                            Modifier.size(30.dp),
+                                            tint = MaterialTheme.colorScheme.error
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp, vertical = 4.dp),
+                        border = BorderStroke(1.dp, color = Color.DarkGray),
+                        onClick = {
+                            multipleImagePickerLauncher.launch("*/*")
+                        })
+                    {
+                        Row(
+                            modifier = Modifier
+                                .padding(vertical = 18.dp, horizontal = 30.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "اضافه کردن عکس, فایل"
+                            )
+                        }
+
+                    }
+                }
+
+
+            }
+
 
         }
 
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-fun DateTimeButton(
-    data: (date: String, time: String) -> Unit
-) {
-    val currentDateTime = LocalDateTime.now()
-    val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+//@RequiresApi(Build.VERSION_CODES.O)
+//fun DateTimeButton(
+//    data: (date: String, time: String) -> Unit
+//) {
+//    val currentDateTime = LocalDateTime.now()
+//    val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+//    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+//
+//    val currentDate = currentDateTime.format(dateFormatter)
+//    val currentTime = currentDateTime.format(timeFormatter)
+//
+//}
 
-    val currentDate = currentDateTime.format(dateFormatter)
-    val currentTime = currentDateTime.format(timeFormatter)
-
+fun getFileInfo(contentResolver: ContentResolver, uri: Uri): Pair<String, Long>? {
+    val cursor = contentResolver.query(uri, null, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            val sizeIndex = it.getColumnIndex(OpenableColumns.SIZE)
+            val name = it.getString(nameIndex)
+            val size = it.getLong(sizeIndex)
+            return Pair(name, size)
+        }
+    }
+    return null
 }
-

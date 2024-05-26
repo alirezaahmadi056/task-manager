@@ -43,8 +43,7 @@ fun NotesItemCard(navHostController: NavHostController, item: NotesItem) {
         ),
         elevation = CardDefaults.cardElevation(1.dp),
         onClick = {
-            val data = Gson().toJson(item)
-            navHostController.navigate(Screen.AddNotesScreen.route + "?data=$data")
+            navHostController.navigate(Screen.AddNotesScreen.route + "?data=${item.id}")
         },
     ) {
         Column(

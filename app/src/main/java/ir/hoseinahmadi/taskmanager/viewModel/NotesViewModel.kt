@@ -21,11 +21,18 @@ class NotesViewModel @Inject constructor(
 
      val allNotesItem:Flow<List<NotesItem>> = repository.getAllNoteItem()
 
+
     fun upsertNotesItem(item: NotesItem) {
         viewModelScope.launch(Dispatchers.IO) { repository.upsertNotesItem(item) }
     }
+
+    suspend fun getNotesItem(id:Int):Flow<NotesItem> = repository.getItemById(id)
+
+
 
 
 
 
 }
+
+

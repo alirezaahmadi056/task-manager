@@ -14,4 +14,7 @@ interface NotesDao {
     @Query("select * from notesitem")
     fun allNotesItem(): Flow<List<NotesItem>>
 
+    @Query("select * from notesitem where id=:id")
+    fun getItemById(id: Int): Flow<NotesItem>
+
 }
