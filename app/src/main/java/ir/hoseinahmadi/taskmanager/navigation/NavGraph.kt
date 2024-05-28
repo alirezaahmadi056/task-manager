@@ -12,27 +12,29 @@ import ir.hoseinahmadi.taskmanager.ui.screen.task.TaskScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.test
 
 @Composable
-fun NavGraph(navHostController: NavHostController){
+fun NavGraph(navHostController: NavHostController) {
 
-    NavHost(navController = navHostController,
-        startDestination = Screen.NotesScreen.route) {
-        composable(Screen.NotesScreen.route){
+    NavHost(
+        navController = navHostController,
+        startDestination = Screen.NotesScreen.route
+    ) {
+        composable(Screen.NotesScreen.route) {
             NotesScreen(navHostController)
         }
-        composable(Screen.TaskScreen.route){
+        composable(Screen.TaskScreen.route) {
             TaskScreen()
         }
-        composable(Screen.AddNotesScreen.route +"?data={data}",
+        composable(Screen.AddNotesScreen.route + "?id={id}",
             arguments = listOf(
-                navArgument("data"){
+                navArgument("id") {
                     type = NavType.IntType
-                    defaultValue =999
-                }
+                    defaultValue =0
+                },
             )
-            ){
+        ) {
             AddNotesScreen(
                 navHostController = navHostController,
-                id = it.arguments?.getInt("data") ?:99
+                id = it.arguments?.getInt("id")?:0,
             )
         }
 

@@ -1,18 +1,16 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.addNotes
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.OpenableColumns
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
@@ -21,13 +19,13 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,10 +38,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Notes
 import androidx.compose.material.icons.rounded.PhoneIphone
@@ -70,7 +66,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -78,18 +73,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastMapIndexed
-import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.google.gson.Gson
 import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
 import ir.hoseinahmadi.taskmanager.util.TaskHelper
 import ir.hoseinahmadi.taskmanager.viewModel.NotesViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@SuppressLint("MutableCollectionMutableState")
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AddNotesScreen(
     navHostController: NavHostController,
@@ -97,34 +95,53 @@ fun AddNotesScreen(
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
 
+    if (id != 0) {
+        LaunchedEffect(key1 = true) {
+            Log.e("pasi", "la starg")
+            notesViewModel.getNotesItem(id)
+        }
+    }
+
+
     var title by remember {
         mutableStateOf("")
     }
+//    var subtasks by remember { mutableStateOf(subtaskFromOutside.toMutableList()) }
 
     var body by remember {
         mutableStateOf("")
     }
 
-    var selectedColor by remember {
-        mutableIntStateOf(1)
-    }
+
     var contactPhone by remember {
         mutableStateOf("")
     }
-    var addres by remember {
+
+    var address by remember {
         mutableStateOf("")
     }
 
     var selectedImageUriList by remember {
-        mutableStateOf<List<Uri>>(emptyList())
+        mutableStateOf<List<Uri>>(emptyList<Uri>())
     }
 
     val multipleImagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents(),
         onResult = { uriList ->
-            selectedImageUriList = uriList
-        }
-    )
+            selectedImageUriList +=uriList
+        })
+
+
+    var header = " یادداشت جدید"
+    var bottom = "افزودن یادداشت"
+
+    var selectedColor by remember {
+        mutableIntStateOf(1)
+    }
+
+    val createTime by remember {
+        mutableStateOf(dateTimeButton())
+    }
 
     val taskColor = when (selectedColor) {
         2 -> {
@@ -139,34 +156,38 @@ fun AddNotesScreen(
             MaterialTheme.colorScheme.onPrimary
         }
     }
-    var nameColor by remember {
-        mutableStateOf("عادی")
-    }
-    var header = " یادداشت جدید"
-    var bottom = "افزودن یادداشت"
-
-    var item by remember {
-        mutableStateOf<NotesItem>(NotesItem())
-    }
-
-    if (id != 999) {
-        LaunchedEffect(key1 = true) {
-            notesViewModel.getNotesItem(id).collectLatest {
-                item = it
-            }
+    val nameColor = when (selectedColor) {
+        2 -> {
+            "متوسط"
         }
-        title = item.title
-        body = item.body
-        selectedColor = item.taskColor
-        contactPhone = item.phone
-        addres = item.address
+
+        3 -> {
+            "مهم"
+        }
+
+        else -> {
+            "عادی"
+        }
+    }
+
+    if (id != 0) {
         header = "ویرایش یادداشت"
         bottom = "ذخیره یادداشت"
-        selectedImageUriList = item.uri
+        LaunchedEffect(key1 = true) {
+            notesViewModel.singleNotesItem.collectLatest {
+                title = it.title
+                body = it.body
+                contactPhone = it.phone
+                address = it.address
+                selectedColor = it.taskColor
+                selectedImageUriList = it.uri ?: emptyList()
+            }
+        }
+
     }
 
-    Log.e("pasi", selectedImageUriList.toString())
-    Log.e("pasi", id.toString())
+
+
     Scaffold(
         bottomBar = {
             Button(
@@ -175,14 +196,16 @@ fun AddNotesScreen(
                     .padding(vertical = 4.dp),
                 onClick = {
                     notesViewModel.upsertNotesItem(
-                        if (id != 999) {
+                        if (id != 0) {
                             NotesItem(
-                                id = item.id,
+                                id = id,
                                 title = title,
                                 body = body,
                                 taskColor = selectedColor,
                                 phone = contactPhone,
-                                address = addres
+                                address = address,
+                                uri = selectedImageUriList,
+                                createDate = createTime
                             )
                         } else {
                             NotesItem(
@@ -190,13 +213,16 @@ fun AddNotesScreen(
                                 body = body,
                                 taskColor = selectedColor,
                                 phone = contactPhone,
-                                address = addres,
-                                uri = selectedImageUriList
+                                address = address,
+                                uri = selectedImageUriList,
+                                createDate = createTime
                             )
                         }
                     )
+
                     navHostController.popBackStack()
-                }) {
+                }
+            ) {
                 Text(text = bottom)
 
             }
@@ -378,9 +404,9 @@ fun AddNotesScreen(
                     textAlign = TextAlign.Start
                 ),
                 maxLines = 3,
-                value = addres,
-                onValueChange = { address ->
-                    addres = TaskHelper.taskByLocate(address)
+                value = address,
+                onValueChange = { itt ->
+                    address = TaskHelper.taskByLocate(itt)
                 })
 
             HorizontalDivider(
@@ -442,10 +468,7 @@ fun AddNotesScreen(
 
                 }
 
-                BottomSheetSelectedColor(onClick = { colorIndex, name ->
-                    selectedColor = colorIndex
-                    nameColor = name
-                })
+                BottomSheetSelectedColor(onClick = { colorIndex -> selectedColor = colorIndex })
 
             }
 
@@ -494,36 +517,41 @@ fun AddNotesScreen(
                     )
                 }
             }
-
             AnimatedVisibility(
                 visible = expanded,
                 enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
                 exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
             ) {
                 Column {
-                    val context = LocalContext.current
-                    for (uri in selectedImageUriList) {
-                        val fileInfo = getFileInfo(context.contentResolver, uri)
-                        fileInfo?.let { (name, size) ->
-                            // اطلاعات فایل را دریافت کرده‌ایم، می‌توانید از آنها استفاده کنید
-                            // برای مثال، می‌توانید اطلاعات را به کارت جزئیات فایل اضافه کنید
-                            SaveImageCard(uri, context, name, size.toString()) {
-                                if (id != 0) {
-                                    IconButton(
-                                        modifier = Modifier.padding(bottom = 8.dp),
-                                        onClick = { }) {
-                                        Icon(
-                                            imageVector = Icons.Rounded.DeleteForever,
-                                            contentDescription = "",
-                                            Modifier.size(30.dp),
-                                            tint = MaterialTheme.colorScheme.error
-                                        )
-                                    }
+                    FlowRow(
+                        maxItemsInEachRow = 2,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        selectedImageUriList.forEachIndexed { index, uri ->
+                            SaveImageCard(uri) {
+                                IconButton(
+                                    modifier = Modifier.padding(bottom = 8.dp),
+                                    onClick = {
+                                        selectedImageUriList =
+                                            selectedImageUriList.toMutableList().apply {
+                                                removeAt(index)
+                                            }
+                                    }) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.DeleteForever,
+                                        contentDescription = "",
+                                        Modifier.size(30.dp),
+                                        tint = MaterialTheme.colorScheme.error
+                                    )
                                 }
                             }
                         }
 
                     }
+
+
+
+
                     Surface(
                         shape = RoundedCornerShape(14.dp),
                         modifier = Modifier
@@ -556,18 +584,25 @@ fun AddNotesScreen(
     }
 }
 
-//@RequiresApi(Build.VERSION_CODES.O)
-//fun DateTimeButton(
-//    data: (date: String, time: String) -> Unit
-//) {
-//    val currentDateTime = LocalDateTime.now()
-//    val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-//    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
-//
-//    val currentDate = currentDateTime.format(dateFormatter)
-//    val currentTime = currentDateTime.format(timeFormatter)
-//
-//}
+fun dateTimeButton(
+) :String {
+    val currentDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        LocalDateTime.now()
+    } else {
+        TODO("VERSION.SDK_INT < O")
+    }
+    val dateFormatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    } else {
+        TODO("VERSION.SDK_INT < O")
+    }
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+
+    val currentDate = currentDateTime.format(dateFormatter) ?: ""
+    val currentTime = currentDateTime.format(timeFormatter) ?: ""
+
+   return "$currentDate--$currentTime"
+}
 
 fun getFileInfo(contentResolver: ContentResolver, uri: Uri): Pair<String, Long>? {
     val cursor = contentResolver.query(uri, null, null, null, null)
@@ -581,4 +616,41 @@ fun getFileInfo(contentResolver: ContentResolver, uri: Uri): Pair<String, Long>?
         }
     }
     return null
+}
+
+fun getFileName(uri: Uri, context: Context): String {
+    var name = ""
+    val cursor = context.contentResolver.query(uri, null, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (nameIndex != -1) {
+                name = it.getString(nameIndex)
+            }
+        }
+    }
+    return name
+}
+
+fun getFileSize(uri: Uri, context: Context): String {
+    var size = ""
+    val cursor = context.contentResolver.query(uri, null, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val sizeIndex = it.getColumnIndex(OpenableColumns.SIZE)
+            if (sizeIndex != -1) {
+                val sizeInBytes = it.getLong(sizeIndex)
+                size = android.text.format.Formatter.formatFileSize(context, sizeInBytes)
+            }
+        }
+    }
+    return size
+}
+
+@Composable
+private fun SelectedColor() {
+    var selectedColor by remember {
+        mutableIntStateOf(1)
+    }
+
 }

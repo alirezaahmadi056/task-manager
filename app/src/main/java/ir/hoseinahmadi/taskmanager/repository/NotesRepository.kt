@@ -14,6 +14,6 @@ class NotesRepository @Inject constructor(
 
      fun getAllNoteItem(): Flow<List<NotesItem>> = dao.allNotesItem()
 
-    fun getItemById(id:Int) :Flow<NotesItem> = dao.getItemById(id)
+    fun getItemById(id:Int) = dao.getItemById(id)
 
 }

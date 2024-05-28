@@ -38,7 +38,7 @@ data class SelectedColor(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheetSelectedColor(
-    onClick: (colorIndex: Int, name: String) -> Unit
+    onClick: (colorIndex: Int,) -> Unit
 ) {
     val show by remember {
         showBottomSheetSelectedColor
@@ -77,7 +77,7 @@ fun BottomSheetSelectedColor(
                         text = selectedColor.name,
                         color = selectedColor.color,
                         onClick = {
-                            onClick(i + 1, selectedColor.name)
+                            onClick(i + 1)
                             showBottomSheetSelectedColor.value = false }
                     )
                     HorizontalDivider(

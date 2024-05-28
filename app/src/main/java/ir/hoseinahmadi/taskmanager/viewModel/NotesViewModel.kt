@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,18 +20,21 @@ class NotesViewModel @Inject constructor(
     private val repository: NotesRepository
 ) : ViewModel() {
 
-     val allNotesItem:Flow<List<NotesItem>> = repository.getAllNoteItem()
+    val allNotesItem: Flow<List<NotesItem>> = repository.getAllNoteItem()
 
+    val singleNotesItem: MutableStateFlow<NotesItem> = MutableStateFlow(NotesItem())
 
     fun upsertNotesItem(item: NotesItem) {
         viewModelScope.launch(Dispatchers.IO) { repository.upsertNotesItem(item) }
     }
 
-    suspend fun getNotesItem(id:Int):Flow<NotesItem> = repository.getItemById(id)
-
-
-
-
+    fun getNotesItem(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getItemById(id).collectLatest {
+                singleNotesItem.emit(it)
+            }
+        }
+    }
 
 
 }

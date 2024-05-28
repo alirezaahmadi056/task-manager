@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -35,19 +36,16 @@ import ir.hoseinahmadi.taskmanager.R
 @Composable
 fun SaveImageCard(
     uri: Uri,
-    context: Context,
-    fileName: String,
-    fileSize: String,
-    addIconDelete: @Composable (() -> Unit)? = null, // تعریف تابع به عنوان پارامتر اختیاری
+    addIconDelete: @Composable (() -> Unit)? = null,
 ) {
 
-
+    val context = LocalContext.current
 
     Card(
         border = BorderStroke(1.dp, Color.LightGray),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth(.5f)
             .padding(horizontal = 6.dp, vertical = 3.dp),
     ) {
         Row(
@@ -67,7 +65,7 @@ fun SaveImageCard(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = fileName,
+                    text = uri.path.toString(),
                     color = MaterialTheme.colorScheme.scrim,
                     style = MaterialTheme.typography.bodyLarge,
                     maxLines = 1,
@@ -75,7 +73,7 @@ fun SaveImageCard(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = fileSize,
+                    text = uri.authority.toString(),
                     color = MaterialTheme.colorScheme.scrim.copy(0.7f),
                     style = MaterialTheme.typography.bodyMedium,
 
