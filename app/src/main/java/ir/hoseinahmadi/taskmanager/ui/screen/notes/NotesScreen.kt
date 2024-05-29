@@ -95,8 +95,8 @@ fun NotesScreen(
                     .padding(horizontal = 4.dp),
                 columns = StaggeredGridCells.Fixed(2),
                 contentPadding = PaddingValues(3.dp),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalItemSpacing = 6.dp
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalItemSpacing = 8.dp
             ) {
                 items(notesItem) { item ->
                     NotesItemCard(navHostController,item = item)

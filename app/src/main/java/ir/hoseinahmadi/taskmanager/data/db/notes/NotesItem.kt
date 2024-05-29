@@ -28,12 +28,12 @@ class UriTypeConverter {
 data class NotesItem(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val title: String="",
-    val body: String="",
-    val taskColor: Int=1,
-    val phone: String="",
-    val address: String="",
-    val uri: List<Uri> ?=null,
+    val title: String = "",
+    val body: String = "",
+    val taskColor: Int = 1,
+    val phone: String = "",
+    val address: String = "",
+    val uri: List<Uri>? = null,
     val createDate: String = "",
 )
 

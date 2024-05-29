@@ -1,5 +1,9 @@
 package ir.hoseinahmadi.taskmanager.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -30,7 +34,20 @@ fun NavGraph(navHostController: NavHostController) {
                     type = NavType.IntType
                     defaultValue =0
                 },
-            )
+            ),
+
+            enterTransition = {
+                slideInVertically(
+                    initialOffsetY = { fullHeight -> fullHeight },
+                    animationSpec = tween(800)
+                )
+            },
+            exitTransition = {
+                slideOutVertically(
+                    targetOffsetY = { fullHeight -> fullHeight },
+                    animationSpec = tween(800)
+                )
+            }
         ) {
             AddNotesScreen(
                 navHostController = navHostController,
