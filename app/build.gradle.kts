@@ -99,7 +99,7 @@ dependencies {
 
 
     //hilt di
-    val hiltVersion = "2.49"
+    val hiltVersion = "2.50"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     ksp("com.google.dagger:hilt-compiler:$hiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")

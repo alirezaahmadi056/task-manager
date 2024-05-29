@@ -40,7 +40,7 @@ fun NotesListItem(navHostController: NavHostController,item: NotesItem) {
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .height(90.dp)
+            .height(92.dp)
             .padding(4.dp),
         onClick = {
             navHostController.navigate(Screen.AddNotesScreen.route +"?id=${item.id}")
