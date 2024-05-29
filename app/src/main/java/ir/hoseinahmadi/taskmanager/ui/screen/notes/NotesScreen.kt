@@ -74,6 +74,9 @@ fun NotesScreen(
     val lazyStateStagger = rememberLazyStaggeredGridState()
     val lazyListState = rememberLazyListState()
     val scope = rememberCoroutineScope()
+    AlertDialogSelectedGridList(gridList = {
+        gridItem =it
+    })
     Scaffold(
         floatingActionButton = {
                 ExtendedFloatingActionButton(
@@ -103,9 +106,7 @@ fun NotesScreen(
             enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
             exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
         ) {
-            AlertDialogSelectedGridList(gridList = {
-                gridItem =it
-            })
+
             extanded = (lazyStateStagger.firstVisibleItemScrollOffset==0||lazyStateStagger.canScrollForward)
 
             LazyVerticalStaggeredGrid(

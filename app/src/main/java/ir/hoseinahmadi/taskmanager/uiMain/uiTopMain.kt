@@ -18,12 +18,15 @@ import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.FilterList
+import androidx.compose.material.icons.outlined.FormatListNumberedRtl
 import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material.icons.rounded.AcUnit
 import androidx.compose.material.icons.rounded.AlignVerticalBottom
 import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.sharp.DarkMode
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -70,27 +73,89 @@ fun TopBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(horizontal = 2.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                    .padding( vertical = 12.dp),
+                horizontalArrangement = Arrangement.Absolute.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { openDrawer() }) {
-                    Icon(
-                        Icons.Rounded.Menu,
-                        contentDescription = ""
-                    )
-                }
-                Text(text = if (isNote) "یادداشت های من" else "وظایف من")
-
-
-                if (isNote) {
-                    var expand by remember {
-                        mutableStateOf(false)
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Rounded.Search,
+                            contentDescription = "",
+                            Modifier.size(25.dp),
+                            tint = MaterialTheme.colorScheme.scrim
+                        )
                     }
-                    Column {
-                        IconButton(onClick = {
-                            expand = true
-                        }) {
+                    if (isNote) {
+                        var expand by remember {
+                            mutableStateOf(false)
+                        }
+                        Column {
+                            IconButton(onClick = {
+                                expand = true
+                            }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.menu_dots),
+                                    contentDescription = "",
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.scrim.copy()
+                                )
+                            }
+                            DropdownMenu(
+                                modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                                expanded = expand,
+                                onDismissRequest = { expand = false })
+                            {
+                                DropdownMenuItem(
+                                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                                    text = {
+                                        Text(
+                                            text = "ترتیب یادداشت ها",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.scrim
+
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.FormatListNumberedRtl,
+                                            contentDescription = "",
+                                            tint = MaterialTheme.colorScheme.scrim
+                                        )
+                                    },
+                                    onClick = { })
+                                HorizontalDivider(
+                                    thickness = 0.5.dp,
+                                    color = Color.LightGray
+                                )
+
+                                DropdownMenuItem(
+                                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                                    text = {
+                                        Text(
+                                            text = "نوع شاهده لیست",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.scrim
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.FilterList,
+                                            contentDescription = "",
+                                            tint = MaterialTheme.colorScheme.scrim
+                                        )
+                                    },
+                                    onClick = {
+                                        showDialogSelectedGridList.value = true
+                                        expand = false
+                                    })
+                            }
+                        }
+                    } else {
+                        IconButton(onClick = {}) {
                             Icon(
                                 painter = painterResource(id = R.drawable.menu_dots),
                                 contentDescription = "",
@@ -98,62 +163,21 @@ fun TopBar(
                                 tint = MaterialTheme.colorScheme.scrim.copy()
                             )
                         }
-                        DropdownMenu(
-                            modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                            expanded = expand,
-                            onDismissRequest = { expand = false })
-                        {
-                            DropdownMenuItem(
-                                modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                                text = {
-                                    Text(
-                                        text = "ترتیب یادداشت ها",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.scrim
-
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Outlined.Sort,
-                                        contentDescription = "",
-                                        tint = MaterialTheme.colorScheme.scrim
-                                    )
-                                },
-                                onClick = { })
-                            HorizontalDivider(
-                                thickness = 0.5.dp,
-                                color = Color.LightGray
-                            )
-
-                            DropdownMenuItem(
-                                modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                                text = {
-                                    Text(
-                                        text = "نوع شاهده لیست",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.scrim
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Outlined.FilterList,
-                                        contentDescription = "",
-                                        tint = MaterialTheme.colorScheme.scrim
-                                    )
-                                },
-                                onClick = {
-                                    expand = false
-                                    showDialogSelectedGridList.value = true }) } }
-                }else{
-                    IconButton(onClick = {}) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.menu_dots),
-                            contentDescription = "",
-                            modifier = Modifier.size(24.dp),
-                            tint = MaterialTheme.colorScheme.scrim.copy()
-                        )
                     }
+                }
+
+                Text(
+                    modifier = Modifier.padding(start = 30.dp),
+                    text = if (isNote) "یادداشت های من" else "وظایف من",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.scrim
+                )
+
+                IconButton(onClick = { openDrawer() }) {
+                    Icon(
+                        Icons.Rounded.Menu,
+                        contentDescription = ""
+                    )
                 }
 
 
@@ -195,7 +219,8 @@ fun DrawerContent(
         DrawerItem(text = "پوسته تیره", icon = Icons.Rounded.DarkMode,
             addComposable = {
                 Switch(
-                    thumbContent ={
+                    modifier = Modifier.height(10.dp),
+                    thumbContent = {
                         if (darkThem) {
                             Icon(
                                 imageVector = Icons.Filled.Check,
@@ -279,7 +304,8 @@ fun DrawerItem(
 
         }
         HorizontalDivider(
-            thickness = 0.9.dp,
+            modifier = Modifier.padding(start = 30.dp, end = 8.dp),
+            thickness = 0.7.dp,
             color = Color.LightGray.copy(0.5f)
         )
     }

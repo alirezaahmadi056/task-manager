@@ -215,17 +215,15 @@ fun AddNotesScreen(
                     .fillMaxWidth()
                     .padding(4.dp),
                 onClick = {
-                    val note = NotesItem(
-                        id = if (id != 0) id else 0,
+                    notesViewModel.upsertNotesItem(NotesItem(
+                        id = id,
                         title = title,
                         body = body,
                         taskColor = selectedColor,
                         phone = contactPhone,
                         address = address,
                         uri = selectedImageUriList,
-                        createDate = createTime
-                    )
-                    notesViewModel.upsertNotesItem(note)
+                        createDate = createTime))
 
                     navHostController.popBackStack()
                 }
