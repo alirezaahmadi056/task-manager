@@ -12,12 +12,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.NoteAdd
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -30,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +46,7 @@ import ir.hoseinahmadi.taskmanager.navigation.Screen
 import ir.hoseinahmadi.taskmanager.util.Constants
 import ir.hoseinahmadi.taskmanager.viewModel.NotesViewModel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Composable
 fun NotesScreen(
@@ -62,17 +66,19 @@ fun NotesScreen(
             notesItem = it
         }
     }
-    AlertDialogSelectedGridList(gridList = {
-        gridItem =it
-    })
 
-    val lazyState = rememberLazyStaggeredGridState()
+    var extanded by remember {
+        mutableStateOf(false)
+    }
+
+    val lazyStateStagger = rememberLazyStaggeredGridState()
+    val lazyListState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
     Scaffold(
         floatingActionButton = {
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                 ExtendedFloatingActionButton(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    expanded = lazyState.canScrollForward,
+                    expanded = extanded,
                     text = {
                         Text(
                             text = "یادداشت",
@@ -88,7 +94,6 @@ fun NotesScreen(
                         )
                     },
                     onClick = { navHostController.navigate(Screen.AddNotesScreen.route) })
-            }
 
         },
         floatingActionButtonPosition = FabPosition.Start
@@ -98,9 +103,13 @@ fun NotesScreen(
             enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
             exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
         ) {
+            AlertDialogSelectedGridList(gridList = {
+                gridItem =it
+            })
+            extanded = (lazyStateStagger.firstVisibleItemScrollOffset==0||lazyStateStagger.canScrollForward)
 
             LazyVerticalStaggeredGrid(
-                state = lazyState,
+                state = lazyStateStagger,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
@@ -120,8 +129,10 @@ fun NotesScreen(
             enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
             exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
         ) {
+            extanded = (lazyListState.firstVisibleItemScrollOffset==0||lazyListState.canScrollForward)
 
             LazyColumn(
+                state = lazyListState,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)

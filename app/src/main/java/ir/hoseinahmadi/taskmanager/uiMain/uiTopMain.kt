@@ -14,17 +14,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.outlined.FilterList
+import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material.icons.rounded.AcUnit
 import androidx.compose.material.icons.rounded.AlignVerticalBottom
 import androidx.compose.material.icons.rounded.DarkMode
+import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -48,13 +56,15 @@ import ir.hoseinahmadi.taskmanager.ui.screen.addNotes.showBottomSheetSelectedCol
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.showDialogSelectedGridList
 
 @Composable
- fun TopBar(
+fun TopBar(
     backStackEntry: State<NavBackStackEntry?>,
     isShow: Boolean,
     openDrawer: () -> Unit,
 ) {
 
     if (isShow) {
+
+        val isNote = backStackEntry.value?.destination?.route == Screen.NotesScreen.route
         Column {
             Row(
                 modifier = Modifier
@@ -64,17 +74,89 @@ import ir.hoseinahmadi.taskmanager.ui.screen.notes.showDialogSelectedGridList
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { openDrawer() }) { Icon(Icons.Rounded.Menu, contentDescription = "") }
-                Text(text =if (backStackEntry.value?.destination?.route==Screen.NotesScreen.route) "یادداشت های من" else "وظایف من")
-
-                IconButton(onClick = { showDialogSelectedGridList.value=true }) {
+                IconButton(onClick = { openDrawer() }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.menu_dots),
-                        contentDescription = "",
-                        modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.scrim.copy()
+                        Icons.Rounded.Menu,
+                        contentDescription = ""
                     )
                 }
+                Text(text = if (isNote) "یادداشت های من" else "وظایف من")
+
+
+                if (isNote) {
+                    var expand by remember {
+                        mutableStateOf(false)
+                    }
+                    Column {
+                        IconButton(onClick = {
+                            expand = true
+                        }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.menu_dots),
+                                contentDescription = "",
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.scrim.copy()
+                            )
+                        }
+                        DropdownMenu(
+                            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                            expanded = expand,
+                            onDismissRequest = { expand = false })
+                        {
+                            DropdownMenuItem(
+                                modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                                text = {
+                                    Text(
+                                        text = "ترتیب یادداشت ها",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.scrim
+
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Outlined.Sort,
+                                        contentDescription = "",
+                                        tint = MaterialTheme.colorScheme.scrim
+                                    )
+                                },
+                                onClick = { })
+                            HorizontalDivider(
+                                thickness = 0.5.dp,
+                                color = Color.LightGray
+                            )
+
+                            DropdownMenuItem(
+                                modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                                text = {
+                                    Text(
+                                        text = "نوع شاهده لیست",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.scrim
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.FilterList,
+                                        contentDescription = "",
+                                        tint = MaterialTheme.colorScheme.scrim
+                                    )
+                                },
+                                onClick = {
+                                    expand = false
+                                    showDialogSelectedGridList.value = true }) } }
+                }else{
+                    IconButton(onClick = {}) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.menu_dots),
+                            contentDescription = "",
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.scrim.copy()
+                        )
+                    }
+                }
+
+
             }
             HorizontalDivider(
                 thickness = 0.5.dp,
@@ -87,7 +169,7 @@ import ir.hoseinahmadi.taskmanager.ui.screen.notes.showDialogSelectedGridList
 }
 
 @Composable
- fun DrawerContent(
+fun DrawerContent(
     changeThem: (Boolean) -> Unit
 ) {
     var darkThem by remember {
@@ -113,28 +195,40 @@ import ir.hoseinahmadi.taskmanager.ui.screen.notes.showDialogSelectedGridList
         DrawerItem(text = "پوسته تیره", icon = Icons.Rounded.DarkMode,
             addComposable = {
                 Switch(
+                    thumbContent ={
+                        if (darkThem) {
+                            Icon(
+                                imageVector = Icons.Filled.Check,
+                                contentDescription = "",
+                                tint = Color.Blue
+                            )
+                        }
+                    },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.White,
                         uncheckedBorderColor = Color.Transparent
-                    ) ,
+                    ),
                     checked = darkThem,
                     onCheckedChange = {
-                        darkThem =it
+                        darkThem = it
                         changeThem(it)
                     }
                 )
             },
             onClick = {
-                darkThem=!darkThem
+                darkThem = !darkThem
                 changeThem(darkThem)
             })
-        DrawerItem(text = "ارتباط با تیم توسعه دهنده", icon = Icons.Rounded.AlignVerticalBottom, onClick = {})
+        DrawerItem(
+            text = "ارتباط با تیم توسعه دهنده",
+            icon = Icons.Rounded.AlignVerticalBottom,
+            onClick = {})
 
     }
 }
 
 @Composable
- fun DrawerItem(
+fun DrawerItem(
     text: String,
     icon: ImageVector,
     addComposable: @Composable (() -> Unit)? = null,
