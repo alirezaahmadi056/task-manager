@@ -1,5 +1,11 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.notes
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,7 +49,7 @@ fun NotesScreen(
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
     var gridItem by remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
 
     var notesItem by remember {
@@ -52,10 +58,9 @@ fun NotesScreen(
 
     LaunchedEffect(key1 = true) {
         notesViewModel.allNotesItem.collectLatest {
-            notesItem =it
+            notesItem = it
         }
     }
-
 
 
     val lazyState = rememberLazyStaggeredGridState()
@@ -77,7 +82,7 @@ fun NotesScreen(
                         Icon(
                             Icons.AutoMirrored.Rounded.NoteAdd,
                             contentDescription = "",
-                            tint =Color.White
+                            tint = Color.White
                         )
                     },
                     onClick = { navHostController.navigate(Screen.AddNotesScreen.route) })
@@ -86,7 +91,11 @@ fun NotesScreen(
         },
         floatingActionButtonPosition = FabPosition.Start
     ) {
-        if (gridItem) {
+        AnimatedVisibility(
+            visible = gridItem,
+            enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
+            exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
+        ) {
             LazyVerticalStaggeredGrid(
                 state = lazyState,
                 modifier = Modifier
@@ -99,13 +108,22 @@ fun NotesScreen(
                 verticalItemSpacing = 8.dp
             ) {
                 items(notesItem) { item ->
-                    NotesItemCard(navHostController,item = item)
+                    NotesItemCard(navHostController, item = item)
                 }
             }
-        } else {
-            LazyColumn {
+        }
+        AnimatedVisibility(
+            visible = !gridItem,
+            enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
+            exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+            ) {
                 items(notesItem) { item ->
-                    NotesListItem(item)
+                    NotesListItem(navHostController, item)
                 }
             }
         }

@@ -1,5 +1,6 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.notes
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,48 +17,72 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
+import ir.hoseinahmadi.taskmanager.navigation.Screen
+import ir.hoseinahmadi.taskmanager.util.TaskHelper
 
 @Composable
-fun NotesListItem(item: NotesItem) {
+fun NotesListItem(navHostController: NavHostController,item: NotesItem) {
+
+    val taskColor = when (item.taskColor) {
+        2 -> { MaterialTheme.colorScheme.onSecondary }
+        3 -> { MaterialTheme.colorScheme.error }
+        else -> { MaterialTheme.colorScheme.onPrimary }
+    }
     Card(
-        elevation = CardDefaults.cardElevation(1.5.dp),
+        border = BorderStroke(1.dp,MaterialTheme.colorScheme.scrim.copy(0.2f)),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = MaterialTheme.colorScheme.background
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .height(58.dp)
-            .padding(2.dp),
-        onClick = { /*TODO*/ }) {
+            .height(90.dp)
+            .padding(4.dp),
+        onClick = {
+            navHostController.navigate(Screen.AddNotesScreen.route +"?id=${item.id}")
+        }) {
         Box(
             modifier = Modifier
         ) {
             Box(modifier = Modifier
                 .width(10.dp)
                 .fillMaxHeight()
-//                .background(item.taskColor)
+                .background(taskColor)
             )
             Column(
-                modifier = Modifier.padding(4.dp).padding(start = 28.dp)
+                modifier = Modifier
+                    .padding(4.dp)
+                    .padding(start = 18.dp)
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = item.title,
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.scrim,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
-                Spacer(modifier = Modifier.height(3.dp))
+
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = item.body!!,
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp),
+                    text = item.body,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.scrim.copy(0.8f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+
+                Text(
+                    modifier = Modifier.fillMaxWidth().padding(4.dp),
+                    text =TaskHelper.taskByLocate(item.createDate),
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.DarkGray,
-                    maxLines = 2,
+                    color = MaterialTheme.colorScheme.scrim.copy(0.8f),
+                    textAlign = TextAlign.End,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
 
