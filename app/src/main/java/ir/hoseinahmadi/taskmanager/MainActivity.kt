@@ -26,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.hoseinahmadi.taskmanager.navigation.BottomNavigation
 import ir.hoseinahmadi.taskmanager.navigation.NavGraph
 import ir.hoseinahmadi.taskmanager.navigation.Screen
+import ir.hoseinahmadi.taskmanager.ui.component.AppConfig
 import ir.hoseinahmadi.taskmanager.ui.theme.TaskManagerTheme
 import ir.hoseinahmadi.taskmanager.uiMain.DrawerContent
 import ir.hoseinahmadi.taskmanager.uiMain.TopBar
@@ -37,8 +38,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-
+            AppConfig()
             var darkThem by rememberSaveable {
                 mutableStateOf(false)
             }
@@ -65,15 +65,14 @@ class MainActivity : ComponentActivity() {
                         }) {
                         Scaffold(
                             topBar = {
-                                TopBar(showBottomBar,
-                                    onClick = {
+                                TopBar(
+                                    backStackEntry,
+                                    showBottomBar,
+                                    openDrawer = {
                                         scope.launch {
                                             drawerState.open()
                                         }
                                     },
-                                    changeThem = {
-                                        darkThem = !darkThem
-                                    }
                                 )
                             },
                             bottomBar = {

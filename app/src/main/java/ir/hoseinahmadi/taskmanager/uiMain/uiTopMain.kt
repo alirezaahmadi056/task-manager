@@ -15,9 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.rounded.Sort
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.rounded.AcUnit
 import androidx.compose.material.icons.rounded.AlignVerticalBottom
 import androidx.compose.material.icons.rounded.DarkMode
@@ -32,6 +29,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,14 +41,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
 import ir.hoseinahmadi.taskmanager.R
+import ir.hoseinahmadi.taskmanager.navigation.Screen
+import ir.hoseinahmadi.taskmanager.ui.screen.addNotes.showBottomSheetSelectedColor
+import ir.hoseinahmadi.taskmanager.ui.screen.notes.showDialogSelectedGridList
 
 @Composable
  fun TopBar(
+    backStackEntry: State<NavBackStackEntry?>,
     isShow: Boolean,
-    onClick: () -> Unit,
-    changeThem: () -> Unit,
+    openDrawer: () -> Unit,
 ) {
+
     if (isShow) {
         Column {
             Row(
@@ -61,17 +64,15 @@ import ir.hoseinahmadi.taskmanager.R
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { onClick() }) {
-                    Icon(
-                        Icons.Rounded.Menu,
-                        contentDescription = ""
-                    )
-                }
+                IconButton(onClick = { openDrawer() }) { Icon(Icons.Rounded.Menu, contentDescription = "") }
+                Text(text =if (backStackEntry.value?.destination?.route==Screen.NotesScreen.route) "یادداشت های من" else "وظایف من")
 
-                Text(text = "یادداشت های من")
-                IconButton(onClick = { changeThem() }) {
+                IconButton(onClick = { showDialogSelectedGridList.value=true }) {
                     Icon(
-                        Icons.AutoMirrored.Rounded.Sort, contentDescription = ""
+                        painter = painterResource(id = R.drawable.menu_dots),
+                        contentDescription = "",
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.scrim.copy()
                     )
                 }
             }

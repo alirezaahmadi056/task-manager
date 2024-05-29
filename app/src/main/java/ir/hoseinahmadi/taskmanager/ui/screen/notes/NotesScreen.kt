@@ -40,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
 import ir.hoseinahmadi.taskmanager.navigation.Screen
+import ir.hoseinahmadi.taskmanager.util.Constants
 import ir.hoseinahmadi.taskmanager.viewModel.NotesViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -49,7 +50,7 @@ fun NotesScreen(
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
     var gridItem by remember {
-        mutableStateOf(false)
+        mutableStateOf(Constants.GRIDLIST)
     }
 
     var notesItem by remember {
@@ -61,10 +62,11 @@ fun NotesScreen(
             notesItem = it
         }
     }
-
+    AlertDialogSelectedGridList(gridList = {
+        gridItem =it
+    })
 
     val lazyState = rememberLazyStaggeredGridState()
-
     Scaffold(
         floatingActionButton = {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -96,6 +98,7 @@ fun NotesScreen(
             enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
             exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
         ) {
+
             LazyVerticalStaggeredGrid(
                 state = lazyState,
                 modifier = Modifier
@@ -117,6 +120,7 @@ fun NotesScreen(
             enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
             exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
         ) {
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
