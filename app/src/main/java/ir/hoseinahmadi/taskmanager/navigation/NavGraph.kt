@@ -13,7 +13,6 @@ import androidx.navigation.navArgument
 import ir.hoseinahmadi.taskmanager.ui.screen.addNotes.AddNotesScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.NotesScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.task.TaskScreen
-import ir.hoseinahmadi.taskmanager.ui.screen.test
 
 @Composable
 fun NavGraph(navHostController: NavHostController) {
