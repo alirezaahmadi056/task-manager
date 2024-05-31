@@ -13,5 +13,5 @@ data class TaskItem(
 
 data class Task(
     var title: String="",
-    val isCompleted :Boolean=false,
+    var isCompleted :Boolean=false,
 )

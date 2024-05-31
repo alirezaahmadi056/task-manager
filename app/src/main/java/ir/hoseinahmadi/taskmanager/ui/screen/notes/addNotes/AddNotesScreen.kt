@@ -202,6 +202,7 @@ fun AddNotesScreen(
 
     }
 
+    BottomSheetSelectedColor(onClick = { colorIndex -> selectedColor = colorIndex })
 
     Scaffold(
         bottomBar = {
@@ -250,7 +251,10 @@ fun AddNotesScreen(
                         tint = MaterialTheme.colorScheme.scrim
                     )
                 }
-                Text(text = header)
+                Text(text = header,
+                    color = MaterialTheme.colorScheme.scrim,
+                    style = MaterialTheme.typography.bodyLarge
+                    )
             }
         }
     ) {
@@ -473,7 +477,6 @@ fun AddNotesScreen(
 
                 }
 
-                BottomSheetSelectedColor(onClick = { colorIndex -> selectedColor = colorIndex })
 
             }
 
