@@ -26,7 +26,7 @@ fun NavGraph(navHostController: NavHostController) {
             NotesScreen(navHostController)
         }
         composable(Screen.TaskScreen.route) {
-            TaskScreen()
+            TaskScreen(navHostController)
         }
         composable(Screen.AddNotesScreen.route + "?id={id}",
             arguments = listOf(

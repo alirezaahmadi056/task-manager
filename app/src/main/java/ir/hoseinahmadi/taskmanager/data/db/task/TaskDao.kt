@@ -11,6 +11,9 @@ interface TaskDao {
     suspend fun upsertTaskDao(item: TaskItem)
 
     @Query("select * from taskitem")
-    fun getAllTaskItem():Flow<List<TaskItem>>
+    fun getAllTaskItem(): Flow<List<TaskItem>>
+
+    @Query("select * from taskitem where id =:id")
+    fun getSingleTaskById(id: Int) :Flow<TaskItem>
 
 }

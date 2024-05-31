@@ -7,11 +7,11 @@ import androidx.room.PrimaryKey
 data class TaskItem(
     @PrimaryKey(autoGenerate = true)
     val id :Int=0,
-    val title :String,
-    val subTask :List<Task>,
-    val taskColor :Int)
+    val title :String="",
+    val subTask :List<Task> = emptyList(),
+    val taskColor :Int=1)
 
 data class Task(
-    val title: String,
-    val isCompleted :Boolean,
+    var title: String="",
+    val isCompleted :Boolean=false,
 )
