@@ -10,9 +10,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import ir.hoseinahmadi.taskmanager.ui.screen.addNotes.AddNotesScreen
+import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.AddNotesScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.NotesScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.task.TaskScreen
+import ir.hoseinahmadi.taskmanager.ui.screen.task.addTask.AddTaskScreen
 
 @Composable
 fun NavGraph(navHostController: NavHostController) {
@@ -31,7 +32,7 @@ fun NavGraph(navHostController: NavHostController) {
             arguments = listOf(
                 navArgument("id") {
                     type = NavType.IntType
-                    defaultValue =0
+                    defaultValue = 0
                 },
             ),
 
@@ -50,11 +51,22 @@ fun NavGraph(navHostController: NavHostController) {
         ) {
             AddNotesScreen(
                 navHostController = navHostController,
-                id = it.arguments?.getInt("id")?:0,
+                id = it.arguments?.getInt("id") ?: 0,
             )
         }
 
-
+        composable(Screen.AddTaskScreen.route +"?id={id}",
+            arguments = listOf(
+                navArgument("id"){
+                    type = NavType.IntType
+                    defaultValue =0
+                }
+            )
+            ) {
+            AddTaskScreen(navHostController = navHostController,
+                id =it.arguments?.getInt("id")?:0
+            )
+        }
     }
 
 }

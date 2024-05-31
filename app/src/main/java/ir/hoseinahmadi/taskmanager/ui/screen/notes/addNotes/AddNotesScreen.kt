@@ -1,4 +1,4 @@
-package ir.hoseinahmadi.taskmanager.ui.screen.addNotes
+package ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes
 
 import android.annotation.SuppressLint
 import android.content.Intent

@@ -10,6 +10,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ir.hoseinahmadi.taskmanager.data.db.DataBase
 import ir.hoseinahmadi.taskmanager.data.db.notes.NotesDao
+import ir.hoseinahmadi.taskmanager.data.db.task.TaskDao
 import javax.inject.Singleton
 
 @Module
@@ -29,6 +30,10 @@ object ModuleDataBse {
 
     @Provides
     @Singleton
-    fun provideNotesDao(dataBase: DataBase) =dataBase.NotesDao()
+    fun provideNotesDao(dataBase: DataBase):NotesDao =dataBase.NotesDao()
+
+    @Provides
+    @Singleton
+    fun provideTaskDao(dataBase: DataBase):TaskDao =dataBase.TaskDao()
 
 }

@@ -55,7 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import ir.hoseinahmadi.taskmanager.R
 import ir.hoseinahmadi.taskmanager.navigation.Screen
-import ir.hoseinahmadi.taskmanager.ui.screen.addNotes.showBottomSheetSelectedColor
+import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.showBottomSheetSelectedColor
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.showDialogSelectedGridList
 
 @Composable
