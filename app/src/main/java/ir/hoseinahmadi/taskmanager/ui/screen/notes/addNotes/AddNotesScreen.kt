@@ -248,6 +248,7 @@ fun AddNotesScreen(
                                 createDate = createTime
                             )
                         )
+                        navHostController.popBackStack()
 
                     }
                 },

@@ -8,7 +8,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -53,14 +56,16 @@ fun NotesScreen(
     navHostController: NavHostController,
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
-    var gridItem by remember {
-        mutableStateOf(Constants.GRIDLIST)
-    }
+    var gridItem by remember { mutableStateOf(Constants.GRIDLIST) }
+    var notesItem by remember { mutableStateOf<List<NotesItem>>(emptyList()) }
+    var sortOrder by remember { mutableIntStateOf(0) }
 
-    var notesItem by remember {
-        mutableStateOf<List<NotesItem>>(emptyList())
+    val sortedNotesItem = when (sortOrder) {
+        1 -> notesItem.sortedBy { it.taskColor } // اولویت کم
+        2 -> notesItem.sortedByDescending { it.taskColor == 2 } // اولویت معمولی
+        3 -> notesItem.sortedByDescending { it.taskColor } // اولویت زیاد
+        else -> notesItem.reversed() //  حالت پیش ‌فرض بر اساس اخرین یادداشت
     }
-
     LaunchedEffect(key1 = true) {
         notesViewModel.allNotesItem.collectLatest {
             notesItem = it
@@ -78,6 +83,32 @@ fun NotesScreen(
         gridItem =it
     })
     Scaffold(
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(onClick = { sortOrder = 1 }) {
+                    Text("اولویت کم",
+                        style = MaterialTheme.typography.bodySmall
+                        )
+                }
+                Button(onClick = { sortOrder = 2 }) {
+                    Text("اولویت معمولی",
+                        style = MaterialTheme.typography.bodySmall
+
+                    )
+                }
+                Button(onClick = { sortOrder = 3 }) {
+                    Text("اولویت زیاد",
+                        style = MaterialTheme.typography.bodySmall
+
+                    )
+                }
+            }
+        },
         floatingActionButton = {
                 ExtendedFloatingActionButton(
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -120,7 +151,7 @@ fun NotesScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalItemSpacing = 8.dp
             ) {
-                items(notesItem) { item ->
+                items(sortedNotesItem) { item ->
                     NotesItemCard(navHostController, item = item)
                 }
             }
@@ -138,7 +169,7 @@ fun NotesScreen(
                     .fillMaxSize()
                     .padding(it)
             ) {
-                items(notesItem) { item ->
+                items(sortedNotesItem) { item ->
                     NotesListItem(navHostController, item)
                 }
             }

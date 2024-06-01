@@ -1,16 +1,15 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.task
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.NoteAdd
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -20,16 +19,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.navigation.Screen
 import ir.hoseinahmadi.taskmanager.viewModel.TaskViewModel
-import kotlin.math.roundToInt
 
 @Composable
 fun TaskScreen(
@@ -37,17 +37,55 @@ fun TaskScreen(
     taskViewModel: TaskViewModel = hiltViewModel()
 ) {
     val item by taskViewModel.allItem.collectAsState(initial = emptyList())
-    val (completedTasks, remainingTasks) = item.partition { items ->
-        items.subTask.all { it.isCompleted }
+    var sortOrder by remember { mutableIntStateOf(0) }
+
+    // مرتب‌سازی آیتم‌ها بر اساس sortOrder
+    val sortedNotesItem = when (sortOrder) {
+        1 -> item.sortedBy { it.taskColor } // اولویت کم
+        2 -> item.sortedByDescending { it.taskColor == 2 } // اولویت معمولی
+        3 -> item.sortedByDescending { it.taskColor } // اولویت زیاد
+        else -> item.reversed() //  حالت پیش ‌فرض بر اساس اخرین یادداشت
     }
+
+    val (completedTasks, incompleteTasks) = sortedNotesItem.partition { sort ->
+        sort.subTask.all { it.isCompleted }
+    }
+
     Scaffold(
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(onClick = { sortOrder = 1 }) {
+                    Text("اولویت کم",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                Button(onClick = { sortOrder = 2 }) {
+                    Text("اولویت معمولی",
+                        style = MaterialTheme.typography.bodySmall
+
+                    )
+                }
+                Button(onClick = { sortOrder = 3 }) {
+                    Text("اولویت زیاد",
+                        style = MaterialTheme.typography.bodySmall
+
+                    )
+                }
+            }
+        },
+
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,
                 expanded = true,
                 text = {
                     Text(
-                        text = "وظیقه" ,
+                        text = "وظیقه",
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.White
                     )
@@ -69,22 +107,13 @@ fun TaskScreen(
                 .padding(it),
 
             ) {
-            items(item) {
+            items(incompleteTasks) {
                 TaskItemCard(navHostController = navHostController, item = it)
             }
-            /*      val progress = 0.4f
-                  Box(contentAlignment = Alignment.Center) {
-                      CircularProgressIndicator(
-                          modifier = Modifier.size(150.dp),
-                          progress = { progress },
-                          color = MaterialTheme.colorScheme.primary,
-                          trackColor = Color.LightGray,
-                          strokeCap = StrokeCap.Square,
-                          strokeWidth = 4.dp
-                      )
-                      Text(text = (progress * 100).roundToInt().toString())
-                  }*/
 
+            item {
+                CompletedTaskSection(navHostController,completedTasks)
+            }
 
         }
 

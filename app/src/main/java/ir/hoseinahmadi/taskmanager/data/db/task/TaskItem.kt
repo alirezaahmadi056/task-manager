@@ -9,6 +9,7 @@ data class TaskItem(
     val id :Int=0,
     val title :String="",
     val subTask :List<Task> = emptyList(),
+    val body :String ="",
     val taskColor :Int=1)
 
 data class Task(

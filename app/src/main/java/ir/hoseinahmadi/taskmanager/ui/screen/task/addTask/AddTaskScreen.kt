@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ArrowBackIos
+import androidx.compose.material.icons.rounded.Notes
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -71,7 +72,9 @@ fun AddTaskScreen(
     var taskTitle by remember { mutableStateOf("") }
     var selectedColor by remember { mutableIntStateOf(1) }
     var subTask by remember { mutableStateOf<List<Task>>(mutableListOf()) }
-
+    var taskBody by remember {
+        mutableStateOf("")
+    }
     var subTaskItem by remember { mutableStateOf(Task()) }
     var subTaskId by remember { mutableIntStateOf(0) }
 
@@ -110,6 +113,7 @@ fun AddTaskScreen(
                 taskTitle = taskItem.title
                 selectedColor = taskItem.taskColor
                 subTask = taskItem.subTask
+                taskBody =taskItem.body
             }
         }
     }
@@ -149,6 +153,7 @@ fun AddTaskScreen(
                         id = id,
                         title = taskTitle,
                         subTask = subTask,
+                        body = taskBody,
                         taskColor = selectedColor
                     )
                     taskViewModel.upsertTask(taskItem)
@@ -196,6 +201,50 @@ fun AddTaskScreen(
                     )
                 )
 
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = Color.LightGray.copy(0.5f)
+                )
+            }
+
+            item {
+
+                TextField(
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Rounded.Notes,
+                            contentDescription = "",
+                            tint = if (taskBody.isEmpty()) MaterialTheme.colorScheme.scrim.copy(0.8f) else MaterialTheme.colorScheme.primary
+                        )
+                    },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedTextColor = MaterialTheme.colorScheme.scrim,
+                        cursorColor = Color(0xFF2196F3)
+                    ),
+                    maxLines =3,
+                    placeholder = {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 4.dp),
+                            text = "توضیحات ...",
+                            textAlign = TextAlign.Start,
+                            color = MaterialTheme.colorScheme.scrim.copy(0.7f),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = taskBody,
+                    onValueChange = { taskBody = it },
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(
+                        textAlign = TextAlign.Start
+                    )
+                )
                 HorizontalDivider(
                     thickness = 1.dp,
                     color = Color.LightGray.copy(0.5f)
