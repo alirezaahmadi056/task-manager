@@ -1,5 +1,6 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.task.addTask
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ir.hoseinahmadi.taskmanager.data.db.task.Task
@@ -37,13 +39,13 @@ fun BottomSheetAddTask(
 
     if (show) {
         var taskTitle by remember { mutableStateOf("") }
-
+val context = LocalContext.current
         ModalBottomSheet(onDismissRequest = { showBottomSheetAddTask.value = false }) {
             Column(
                 modifier = Modifier
                     .padding(vertical = 10.dp, horizontal = 5.dp)
                     .fillMaxWidth()
-                    .padding(bottom = 20.dp),
+                    .padding(bottom = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -55,7 +57,7 @@ fun BottomSheetAddTask(
                             color = MaterialTheme.colorScheme.scrim.copy(0.5f)
                         )
                     },
-maxLines = 2,
+                    maxLines = 2,
                     shape = RoundedCornerShape(15.dp),
                     colors = TextFieldDefaults.colors(
                         unfocusedContainerColor = MaterialTheme.colorScheme.scrim.copy(0.1f),
@@ -79,9 +81,18 @@ maxLines = 2,
                         .fillMaxWidth()
                         .padding(vertical = 10.dp, horizontal = 4.dp),
                     onClick = {
-                        obClick(taskTitle)
-                        taskTitle = ""
-                        showBottomSheetAddTask.value = false
+                        if (taskTitle.length < 5){
+                            Toast.makeText(
+                                context,
+                                "عنوان طولانی تری وارد کنید",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }else{
+                            obClick(taskTitle)
+                            taskTitle = ""
+                            showBottomSheetAddTask.value = false
+                        }
+
                     }
                 ) {
                     Text(
@@ -112,7 +123,7 @@ fun BottomUpdateSheetTask(
                 modifier = Modifier
                     .padding(vertical = 10.dp, horizontal = 5.dp)
                     .fillMaxWidth()
-                    .padding(bottom = 20.dp),
+                    .padding(bottom = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {

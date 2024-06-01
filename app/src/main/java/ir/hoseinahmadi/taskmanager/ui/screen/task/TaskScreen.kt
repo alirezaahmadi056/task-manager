@@ -37,15 +37,17 @@ fun TaskScreen(
     taskViewModel: TaskViewModel = hiltViewModel()
 ) {
     val item by taskViewModel.allItem.collectAsState(initial = emptyList())
-
+    val (completedTasks, remainingTasks) = item.partition { items ->
+        items.subTask.all { it.isCompleted }
+    }
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,
-                expanded = false,
+                expanded = true,
                 text = {
                     Text(
-                        text = "وظیقه",
+                        text = "وظیقه" ,
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.White
                     )
@@ -58,7 +60,6 @@ fun TaskScreen(
                     )
                 },
                 onClick = { navHostController.navigate(Screen.AddTaskScreen.route) })
-
         },
         floatingActionButtonPosition = FabPosition.Start
     ) {

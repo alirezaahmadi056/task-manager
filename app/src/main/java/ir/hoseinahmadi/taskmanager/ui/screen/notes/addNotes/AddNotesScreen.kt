@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -17,6 +18,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,11 +39,15 @@ import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.rounded.AttachFile
+import androidx.compose.material.icons.rounded.Call
+import androidx.compose.material.icons.rounded.CallEnd
 import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.LowPriority
 import androidx.compose.material.icons.rounded.Notes
+import androidx.compose.material.icons.rounded.Phone
+import androidx.compose.material.icons.rounded.PhoneEnabled
 import androidx.compose.material.icons.rounded.PhoneIphone
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.RunningWithErrors
@@ -72,11 +78,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.R
@@ -183,10 +191,9 @@ fun AddNotesScreen(
             "عادی"
         }
     }
-
     if (id != 0) {
         header = "ویرایش یادداشت"
-        bottom = "ذخیره یادداشت"
+        bottom = "ویرایش یادداشت"
 
         LaunchedEffect(true) {
             notesViewModel.singleNotesItem.collectLatest { item ->
@@ -206,33 +213,49 @@ fun AddNotesScreen(
 
     Scaffold(
         bottomBar = {
-            Button(
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = Color.White
-                ),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                onClick = {
-                    notesViewModel.upsertNotesItem(NotesItem(
-                        id = id,
-                        title = title,
-                        body = body,
-                        taskColor = selectedColor,
-                        phone = contactPhone,
-                        address = address,
-                        uri = selectedImageUriList,
-                        createDate = createTime))
+            Bottom(
+                  title = bottom,
+                onUpsertItem = {
+                    if (title.isEmpty()) {
+                        Toast.makeText(context, "عنوان یادداشت را مشخص کنید", Toast.LENGTH_SHORT)
+                            .show()
+                    } else if (title.length < 10) {
+                        Toast.makeText(
+                            context,
+                            "عنوان یادداشت بزرگ تری وارد کنید",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else if (body.isEmpty()) {
+                        Toast.makeText(context, "توضیحات یادداشت را مشخص کنید", Toast.LENGTH_SHORT)
+                            .show()
+                    } else if (body.length < 12) {
+                        Toast.makeText(
+                            context,
+                            "توضیحات یادداشت بزرگ تری وارد کنید",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    } else {
+                        notesViewModel.upsertNotesItem(
+                            NotesItem(
+                                id = id,
+                                title = title,
+                                body = body,
+                                taskColor = selectedColor,
+                                phone = contactPhone,
+                                address = address,
+                                uri = selectedImageUriList,
+                                createDate = createTime
+                            )
+                        )
 
+                    }
+                },
+                onBack = {
                     navHostController.popBackStack()
-                }
-            ) {
-                Text(text = bottom,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color.White)
-            }
+                })
+
+
         },
         topBar = {
             Row(
@@ -251,10 +274,11 @@ fun AddNotesScreen(
                         tint = MaterialTheme.colorScheme.scrim
                     )
                 }
-                Text(text = header,
+                Text(
+                    text = header,
                     color = MaterialTheme.colorScheme.scrim,
                     style = MaterialTheme.typography.bodyLarge
-                    )
+                )
             }
         }
     ) {
@@ -306,7 +330,7 @@ fun AddNotesScreen(
                     Icon(
                         imageVector = Icons.Rounded.Notes,
                         contentDescription = "",
-                        tint = MaterialTheme.colorScheme.scrim.copy(0.8f)
+                        tint = if (body.isEmpty()) MaterialTheme.colorScheme.scrim.copy(0.8f) else MaterialTheme.colorScheme.primary
                     )
                 },
                 colors = TextFieldDefaults.colors(
@@ -348,8 +372,25 @@ fun AddNotesScreen(
                     Icon(
                         imageVector = Icons.Rounded.PhoneIphone,
                         contentDescription = "",
-                        tint = MaterialTheme.colorScheme.scrim.copy(0.8f)
+                        tint = if (contactPhone.isEmpty()) MaterialTheme.colorScheme.scrim.copy(0.8f)
+                        else MaterialTheme.colorScheme.primary,
                     )
+                },
+                trailingIcon = {
+                    if (contactPhone.isNotEmpty()) {
+                        IconButton(onClick = {
+                            val intent = Intent(Intent.ACTION_DIAL)
+                            intent.data = Uri.parse("tel:$contactPhone")
+                            ContextCompat.startActivity(context, intent, null)
+
+                        }) {
+                            Icon(
+                                imageVector = Icons.Rounded.Call,
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                 },
                 placeholder = {
                     Text(
@@ -389,7 +430,7 @@ fun AddNotesScreen(
                     Icon(
                         imageVector = Icons.Outlined.LocationOn,
                         contentDescription = "",
-                        tint = MaterialTheme.colorScheme.scrim.copy()
+                        tint = if (address.isEmpty()) MaterialTheme.colorScheme.scrim.copy(0.8f) else MaterialTheme.colorScheme.primary
                     )
                 },
                 placeholder = {
@@ -412,7 +453,7 @@ fun AddNotesScreen(
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     textAlign = TextAlign.Start
                 ),
-                maxLines = 3,
+                maxLines = 4,
                 value = address,
                 onValueChange = { itt ->
                     address = TaskHelper.taskByLocate(itt)
@@ -496,8 +537,7 @@ fun AddNotesScreen(
             Card(
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
                 modifier = Modifier
-                    .fillMaxWidth()
-                ,
+                    .fillMaxWidth(),
                 onClick = {
                     expanded = !expanded
                 })
@@ -514,7 +554,7 @@ fun AddNotesScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                          imageVector =   Icons.Rounded.AttachFile,
+                            imageVector = Icons.Rounded.AttachFile,
                             modifier = Modifier.padding(start = 2.dp, end = 4.dp),
                             contentDescription = "",
                             tint = MaterialTheme.colorScheme.scrim.copy()
@@ -592,16 +632,17 @@ fun AddNotesScreen(
                     {
                         Row(
                             modifier = Modifier
-                                .padding(vertical = 8.dp,),
+                                .padding(vertical = 8.dp),
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(painter = painterResource(id = R.drawable.attachment_ic),
+                            Icon(
+                                painter = painterResource(id = R.drawable.attachment_ic),
                                 contentDescription = "",
                                 modifier = Modifier
                                     .padding(horizontal = 8.dp)
                                     .size(30.dp)
-                                )
+                            )
                             Text(
                                 text = "اضافه کردن عکس, فایل",
                                 color = MaterialTheme.colorScheme.scrim,
@@ -645,6 +686,55 @@ fun dateTimeButton(
 }
 
 
+@Composable
+private fun Bottom(
+    title :String,
+    onUpsertItem: () -> Unit,
+    onBack: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
 
+        Button(
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = Color.White
+            ),
+            modifier = Modifier
+                .weight(0.6f)
+                .padding(horizontal = 4.dp),
+            onClick = { onUpsertItem() }) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+        OutlinedButton(
+            modifier = Modifier
+                .weight(0.4f)
+                .padding(horizontal = 4.dp),
+            shape = RoundedCornerShape(12.dp),
+
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.scrim),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.scrim
+            ),
+            onClick = { onBack() }) {
+            Text(
+                text = "لفو",
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+    }
+
+}
 
 

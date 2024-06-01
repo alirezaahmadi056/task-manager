@@ -1,6 +1,7 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.task.addTask
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -44,8 +45,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -71,6 +75,7 @@ fun AddTaskScreen(
     var subTaskItem by remember { mutableStateOf(Task()) }
     var subTaskId by remember { mutableIntStateOf(0) }
 
+    val context = LocalContext.current
 
     val taskColor = when (selectedColor) {
         2 -> {
@@ -133,17 +138,27 @@ fun AddTaskScreen(
         },
         bottomBar = {
             Bottom(onUpsertItem = {
-                val taskItem = TaskItem(
-                    id = id,
-                    title = taskTitle,
-                    subTask = subTask,
-                    taskColor = selectedColor
-                )
-                taskViewModel.upsertTask(taskItem)
-                navHostController.popBackStack()
+                if (taskTitle.isEmpty()) {
+                    Toast.makeText(context, "عنوان وظیفه را مشخص کنید", Toast.LENGTH_SHORT).show()
+                } else if (taskTitle.length < 10){
+                    Toast.makeText(context, "عنوان وظیفه بزرگ تری وارد کنید", Toast.LENGTH_SHORT).show()
+                }else if (subTask.isEmpty()) {
+                    Toast.makeText(context, "حداقل یک وظیفه وارد کنید", Toast.LENGTH_SHORT).show()
+                }else {
+                    val taskItem = TaskItem(
+                        id = id,
+                        title = taskTitle,
+                        subTask = subTask,
+                        taskColor = selectedColor
+                    )
+                    taskViewModel.upsertTask(taskItem)
+                    navHostController.popBackStack()
+                }
             }, onBack = {
                 navHostController.popBackStack()
-            })
+            }
+
+            )
         }
     ) {
         LazyColumn(
@@ -241,11 +256,28 @@ fun AddTaskScreen(
 
 
                     }
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        color = Color.LightGray.copy(0.5f)
-                    )
 
+
+                }
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = Color.LightGray.copy(0.5f)
+                )
+            }
+            item {
+                DetailTaskSection(subTask.size)
+            }
+
+            if (subTask.isEmpty()) {
+                item {
+                    Text(
+                        text = "هیچ وظیفه ای اضافه نکرده اید",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(5.dp),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
                 }
             }
             itemsIndexed(subTask) { index, item ->
@@ -263,8 +295,21 @@ fun AddTaskScreen(
 
             }
             item {
-                Button(onClick = { showBottomSheetAddTask.value = true }) {
-                    Text(text = "add task")
+                OutlinedButton(
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.scrim),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.scrim
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp),
+                    onClick = { showBottomSheetAddTask.value = true }) {
+                    Text(
+                        text = "افزودن وظیفه",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             }
 
@@ -323,9 +368,10 @@ private fun Bottom(
                 .weight(0.6f)
                 .padding(horizontal = 4.dp),
             onClick = { onUpsertItem() }) {
-            Text(text = "ذخیره",
+            Text(
+                text = "ذخیره",
                 style = MaterialTheme.typography.bodyLarge
-                )
+            )
         }
         OutlinedButton(
             modifier = Modifier
@@ -333,13 +379,14 @@ private fun Bottom(
                 .padding(horizontal = 4.dp),
             shape = RoundedCornerShape(12.dp),
 
-            border = BorderStroke(1.dp,MaterialTheme.colorScheme.scrim),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.scrim),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.background,
                 contentColor = MaterialTheme.colorScheme.scrim
             ),
             onClick = { onBack() }) {
-            Text(text = "لفو",
+            Text(
+                text = "لفو",
                 style = MaterialTheme.typography.bodyLarge
             )
         }

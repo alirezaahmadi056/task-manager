@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -65,12 +66,10 @@ fun TaskItemCard(navHostController: NavHostController, item: TaskItem) {
     }
 
     Card(
-        enabled = progress !=1f,
         colors =CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            disabledContainerColor = MaterialTheme.colorScheme.scrim.copy(0.1f)),
+            containerColor = if (progress==1f)MaterialTheme.colorScheme.scrim.copy(0.1f) else MaterialTheme.colorScheme.background,
+            ),
         border = BorderStroke(0.8.dp, Color.LightGray),
-        elevation = CardDefaults.cardElevation(2.dp),
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth()
@@ -104,7 +103,8 @@ fun TaskItemCard(navHostController: NavHostController, item: TaskItem) {
                     text ="${TaskHelper.taskByLocate ((progress * 100).roundToInt().toString())}${"%"}",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.scrim
+                    color = MaterialTheme.colorScheme.scrim,
+                    fontWeight = FontWeight.Bold
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
