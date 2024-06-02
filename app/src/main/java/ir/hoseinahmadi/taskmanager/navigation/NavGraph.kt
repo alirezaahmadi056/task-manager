@@ -61,7 +61,8 @@ fun NavGraph(navHostController: NavHostController) {
                     type = NavType.IntType
                     defaultValue =0
                 }
-            )
+            ),
+
             ) {
             AddTaskScreen(navHostController = navHostController,
                 id =it.arguments?.getInt("id")?:0

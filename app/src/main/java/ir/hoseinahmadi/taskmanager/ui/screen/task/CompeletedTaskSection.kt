@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.data.db.task.TaskItem
@@ -73,10 +74,9 @@ fun CompletedTaskSection(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = TaskHelper.taskByLocate(item.size.toString()),
-                    color = MaterialTheme.colorScheme.scrim,
+                    text ="( ${ TaskHelper.taskByLocate(item.size.toString())} ${"وظیفه )"}",
+                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
                 )
 
 

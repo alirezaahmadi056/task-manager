@@ -24,9 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import ir.hoseinahmadi.taskmanager.data.db.task.Task
-import ir.hoseinahmadi.taskmanager.viewModel.TaskViewModel
+
 
 val showBottomSheetAddTask = mutableStateOf(false)
 
@@ -39,7 +37,7 @@ fun BottomSheetAddTask(
 
     if (show) {
         var taskTitle by remember { mutableStateOf("") }
-val context = LocalContext.current
+        val context = LocalContext.current
         ModalBottomSheet(onDismissRequest = { showBottomSheetAddTask.value = false }) {
             Column(
                 modifier = Modifier
@@ -81,13 +79,13 @@ val context = LocalContext.current
                         .fillMaxWidth()
                         .padding(vertical = 10.dp, horizontal = 4.dp),
                     onClick = {
-                        if (taskTitle.length < 5){
+                        if (taskTitle.length < 5) {
                             Toast.makeText(
                                 context,
                                 "عنوان طولانی تری وارد کنید",
                                 Toast.LENGTH_SHORT
                             ).show()
-                        }else{
+                        } else {
                             obClick(taskTitle)
                             taskTitle = ""
                             showBottomSheetAddTask.value = false

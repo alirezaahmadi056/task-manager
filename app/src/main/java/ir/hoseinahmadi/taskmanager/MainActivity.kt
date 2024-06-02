@@ -30,6 +30,7 @@ import ir.hoseinahmadi.taskmanager.ui.component.AppConfig
 import ir.hoseinahmadi.taskmanager.ui.theme.TaskManagerTheme
 import ir.hoseinahmadi.taskmanager.uiMain.DrawerContent
 import ir.hoseinahmadi.taskmanager.uiMain.TopBar
+import ir.hoseinahmadi.taskmanager.util.Constants
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -40,7 +41,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppConfig()
             var darkThem by rememberSaveable {
-                mutableStateOf(false)
+                mutableStateOf(Constants.isThemDark)
             }
             navHostController = rememberNavController()
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)

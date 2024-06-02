@@ -52,11 +52,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import ir.hoseinahmadi.taskmanager.R
 import ir.hoseinahmadi.taskmanager.navigation.Screen
+import ir.hoseinahmadi.taskmanager.ui.component.showSelectedSortNotList
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.showBottomSheetSelectedColor
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.showDialogSelectedGridList
+import ir.hoseinahmadi.taskmanager.util.Constants
+import ir.hoseinahmadi.taskmanager.viewModel.DatStoreViewModel
 
 @Composable
 fun TopBar(
@@ -73,7 +77,7 @@ fun TopBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding( vertical = 12.dp),
+                    .padding(vertical = 12.dp),
                 horizontalArrangement = Arrangement.Absolute.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -89,7 +93,6 @@ fun TopBar(
                             tint = MaterialTheme.colorScheme.scrim
                         )
                     }
-                    if (isNote) {
                         var expand by remember {
                             mutableStateOf(false)
                         }
@@ -126,42 +129,39 @@ fun TopBar(
                                             tint = MaterialTheme.colorScheme.scrim
                                         )
                                     },
-                                    onClick = { })
-                                HorizontalDivider(
-                                    thickness = 0.5.dp,
-                                    color = Color.LightGray
-                                )
-
-                                DropdownMenuItem(
-                                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                                    text = {
-                                        Text(
-                                            text = "نوع شاهده لیست",
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.scrim
-                                        )
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.Outlined.FilterList,
-                                            contentDescription = "",
-                                            tint = MaterialTheme.colorScheme.scrim
-                                        )
-                                    },
                                     onClick = {
-                                        showDialogSelectedGridList.value = true
+                                        showSelectedSortNotList.value = true
                                         expand = false
                                     })
-                            }
-                        }
-                    } else {
-                        IconButton(onClick = {}) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.menu_dots),
-                                contentDescription = "",
-                                modifier = Modifier.size(24.dp),
-                                tint = MaterialTheme.colorScheme.scrim.copy()
-                            )
+
+                                if (isNote) {
+                                    HorizontalDivider(
+                                        thickness = 0.5.dp,
+                                        color = Color.LightGray
+                                    )
+                                    DropdownMenuItem(
+                                        modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                                        text = {
+                                            Text(
+                                                text = "نوع شاهده لیست",
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.scrim
+                                            )
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                imageVector = Icons.Outlined.FilterList,
+                                                contentDescription = "",
+                                                tint = MaterialTheme.colorScheme.scrim
+                                            )
+                                        },
+                                        onClick = {
+                                            showDialogSelectedGridList.value = true
+                                            expand = false
+                                        })
+                                }
+
+
                         }
                     }
                 }
@@ -194,10 +194,11 @@ fun TopBar(
 
 @Composable
 fun DrawerContent(
-    changeThem: (Boolean) -> Unit
+    changeThem: (Boolean) -> Unit,
+    datStoreViewModel: DatStoreViewModel = hiltViewModel()
 ) {
     var darkThem by remember {
-        mutableStateOf(false)
+        mutableStateOf(Constants.isThemDark)
     }
     Column(
         modifier = Modifier
@@ -237,12 +238,14 @@ fun DrawerContent(
                     onCheckedChange = {
                         darkThem = it
                         changeThem(it)
+                        datStoreViewModel.saveDarkThem(it)
                     }
                 )
             },
             onClick = {
                 darkThem = !darkThem
                 changeThem(darkThem)
+                datStoreViewModel.saveDarkThem(darkThem)
             })
         DrawerItem(
             text = "ارتباط با تیم توسعه دهنده",

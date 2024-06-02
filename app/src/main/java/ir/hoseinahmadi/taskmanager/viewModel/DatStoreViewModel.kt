@@ -15,7 +15,10 @@ class DatStoreViewModel @Inject constructor(
 ) : ViewModel() {
 
     companion object {
-        const val CHECKED_GRID_LIST ="CHECKED_GRID_LIST"
+        const val CHECKED_GRID_LIST = "CHECKED_GRID_LIST"
+        const val IS_THEME_DARK = "IS_THEME_DARK"
+        const val NOTE_SORT = "NOTE_SORT"
+        const val TASK_SORT = "TASK_SORT"
     }
 
 
@@ -25,10 +28,33 @@ class DatStoreViewModel @Inject constructor(
         }
     }
 
-    fun getGridList(): Boolean = runBlocking {
-        repository.getBoolean(CHECKED_GRID_LIST) ?:true
+    fun saveDarkThem(value: Boolean) {
+        viewModelScope.launch {
+            repository.putBoolean(IS_THEME_DARK, value)
+        }
     }
 
+    fun saveNoteSort(value: Int) {
+        viewModelScope.launch {
+            repository.putInt(NOTE_SORT, value)
+        }
+    }
+    fun saveTaskSort(value: Int) {
+        viewModelScope.launch {
+            repository.putInt(TASK_SORT, value)
+        }
+    }
+
+    fun getGridList(): Boolean = runBlocking {
+        repository.getBoolean(CHECKED_GRID_LIST) ?: true
+    }
+
+    fun getDarkThem(): Boolean = runBlocking {
+        repository.getBoolean(IS_THEME_DARK) ?: false
+    }
+
+    fun getNoteSort(): Int = runBlocking { repository.getInt(NOTE_SORT) ?: 0 }
+    fun getTaskSort(): Int = runBlocking { repository.getInt(TASK_SORT) ?: 0 }
 
 
 }

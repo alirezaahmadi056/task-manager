@@ -12,4 +12,7 @@ fun AppConfig(datStoreViewModel: DatStoreViewModel = hiltViewModel()) {
 
 fun getDataStore(datStoreViewModel: DatStoreViewModel) {
     Constants.GRIDLIST = datStoreViewModel.getGridList()
+    Constants.SORT_TASK = datStoreViewModel.getTaskSort()
+    Constants.SORT_NOTE = datStoreViewModel.getNoteSort()
+    Constants.isThemDark = datStoreViewModel.getDarkThem()
 }

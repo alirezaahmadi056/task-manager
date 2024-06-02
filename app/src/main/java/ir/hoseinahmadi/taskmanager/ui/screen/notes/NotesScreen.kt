@@ -29,7 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -39,17 +38,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
 import ir.hoseinahmadi.taskmanager.navigation.Screen
+import ir.hoseinahmadi.taskmanager.ui.component.SelectedSortNotList
 import ir.hoseinahmadi.taskmanager.util.Constants
 import ir.hoseinahmadi.taskmanager.viewModel.NotesViewModel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @Composable
 fun NotesScreen(
@@ -58,7 +55,7 @@ fun NotesScreen(
 ) {
     var gridItem by remember { mutableStateOf(Constants.GRIDLIST) }
     var notesItem by remember { mutableStateOf<List<NotesItem>>(emptyList()) }
-    var sortOrder by remember { mutableIntStateOf(0) }
+    var sortOrder by remember { mutableIntStateOf(Constants.SORT_NOTE) }
 
     val sortedNotesItem = when (sortOrder) {
         1 -> notesItem.sortedBy { it.taskColor } // اولویت کم
@@ -66,6 +63,10 @@ fun NotesScreen(
         3 -> notesItem.sortedByDescending { it.taskColor } // اولویت زیاد
         else -> notesItem.reversed() //  حالت پیش ‌فرض بر اساس اخرین یادداشت
     }
+    SelectedSortNotList(true, noteSort = {  selectedSort ->
+        sortOrder = selectedSort
+    }, taskSort = {})
+
     LaunchedEffect(key1 = true) {
         notesViewModel.allNotesItem.collectLatest {
             notesItem = it
@@ -80,54 +81,28 @@ fun NotesScreen(
     val lazyListState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     AlertDialogSelectedGridList(gridList = {
-        gridItem =it
+        gridItem = it
     })
     Scaffold(
-        topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Button(onClick = { sortOrder = 1 }) {
-                    Text("اولویت کم",
-                        style = MaterialTheme.typography.bodySmall
-                        )
-                }
-                Button(onClick = { sortOrder = 2 }) {
-                    Text("اولویت معمولی",
-                        style = MaterialTheme.typography.bodySmall
-
-                    )
-                }
-                Button(onClick = { sortOrder = 3 }) {
-                    Text("اولویت زیاد",
-                        style = MaterialTheme.typography.bodySmall
-
-                    )
-                }
-            }
-        },
         floatingActionButton = {
-                ExtendedFloatingActionButton(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    expanded = extanded,
-                    text = {
-                        Text(
-                            text = "یادداشت",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White
-                        )
-                    },
-                    icon = {
-                        Icon(
-                            Icons.AutoMirrored.Rounded.NoteAdd,
-                            contentDescription = "",
-                            tint = Color.White
-                        )
-                    },
-                    onClick = { navHostController.navigate(Screen.AddNotesScreen.route) })
+            ExtendedFloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primary,
+                expanded = extanded,
+                text = {
+                    Text(
+                        text = "یادداشت",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White
+                    )
+                },
+                icon = {
+                    Icon(
+                        Icons.AutoMirrored.Rounded.NoteAdd,
+                        contentDescription = "",
+                        tint = Color.White
+                    )
+                },
+                onClick = { navHostController.navigate(Screen.AddNotesScreen.route) })
 
         },
         floatingActionButtonPosition = FabPosition.Start
@@ -138,7 +113,8 @@ fun NotesScreen(
             exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
         ) {
 
-            extanded = (lazyStateStagger.firstVisibleItemScrollOffset==0||lazyStateStagger.canScrollForward)
+            extanded =
+                (lazyStateStagger.firstVisibleItemScrollOffset == 0 || lazyStateStagger.canScrollForward)
 
             LazyVerticalStaggeredGrid(
                 state = lazyStateStagger,
@@ -161,7 +137,8 @@ fun NotesScreen(
             enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
             exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
         ) {
-            extanded = (lazyListState.firstVisibleItemScrollOffset==0||lazyListState.canScrollForward)
+            extanded =
+                (lazyListState.firstVisibleItemScrollOffset == 0 || lazyListState.canScrollForward)
 
             LazyColumn(
                 state = lazyListState,

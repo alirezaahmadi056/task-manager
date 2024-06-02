@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.navigation.Screen
+import ir.hoseinahmadi.taskmanager.ui.component.SelectedSortNotList
+import ir.hoseinahmadi.taskmanager.util.Constants
 import ir.hoseinahmadi.taskmanager.viewModel.TaskViewModel
 
 @Composable
@@ -37,7 +39,7 @@ fun TaskScreen(
     taskViewModel: TaskViewModel = hiltViewModel()
 ) {
     val item by taskViewModel.allItem.collectAsState(initial = emptyList())
-    var sortOrder by remember { mutableIntStateOf(0) }
+    var sortOrder by remember { mutableIntStateOf(Constants.SORT_TASK) }
 
     // مرتب‌سازی آیتم‌ها بر اساس sortOrder
     val sortedNotesItem = when (sortOrder) {
@@ -50,34 +52,12 @@ fun TaskScreen(
     val (completedTasks, incompleteTasks) = sortedNotesItem.partition { sort ->
         sort.subTask.all { it.isCompleted }
     }
+    SelectedSortNotList(false, noteSort = {}, taskSort = { selectedSort ->
+        sortOrder = selectedSort
 
+    }
+    )
     Scaffold(
-        topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Button(onClick = { sortOrder = 1 }) {
-                    Text("اولویت کم",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-                Button(onClick = { sortOrder = 2 }) {
-                    Text("اولویت معمولی",
-                        style = MaterialTheme.typography.bodySmall
-
-                    )
-                }
-                Button(onClick = { sortOrder = 3 }) {
-                    Text("اولویت زیاد",
-                        style = MaterialTheme.typography.bodySmall
-
-                    )
-                }
-            }
-        },
 
         floatingActionButton = {
             ExtendedFloatingActionButton(
@@ -105,14 +85,13 @@ fun TaskScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
-
-            ) {
-            items(incompleteTasks) {
-                TaskItemCard(navHostController = navHostController, item = it)
+        ) {
+            items(incompleteTasks) { taskItem ->
+                TaskItemCard(navHostController = navHostController, item = taskItem)
             }
 
             item {
-                CompletedTaskSection(navHostController,completedTasks)
+                CompletedTaskSection(navHostController, completedTasks)
             }
 
         }
