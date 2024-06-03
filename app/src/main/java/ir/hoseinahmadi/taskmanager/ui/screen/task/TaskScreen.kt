@@ -20,12 +20,14 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -96,8 +98,10 @@ fun TaskScreen(
             taskViewModel.deleteTask(singleDeleteTask)
             showDialogDelete = false
             scope.launch {
-                snackBarHostState.showSnackbar("وظیفه با موفقیت حذف شد",
-                    duration =SnackbarDuration.Short )
+                snackBarHostState.showSnackbar(
+                    "وظیفه با موفقیت حذف شد",
+                    duration = SnackbarDuration.Short
+                )
             }
         },
         show = showDialogDelete
@@ -105,7 +109,32 @@ fun TaskScreen(
 
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
+        snackbarHost = {
+            SnackbarHost(snackBarHostState) { data ->
+                Snackbar(
+                    action = {
+                        TextButton(onClick = {
+                            taskViewModel.upsertTask(singleDeleteTask)
+                        }) {
+                            Text(
+                                "بازگردانی",
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    },
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+                ) {
+                    Text(
+                        data.visuals.message,
+                        color = MaterialTheme.colorScheme.background,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+        },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,

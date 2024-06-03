@@ -1,5 +1,6 @@
 package ir.hoseinahmadi.taskmanager.ui.component
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,7 +49,6 @@ fun DialogDeleteItemTask(
                     style = MaterialTheme.typography.bodyLarge
                 )
             },
-            containerColor = MaterialTheme.colorScheme.background,
             onDismissRequest = { onBack() },
             confirmButton = {
                 Button(
