@@ -214,7 +214,7 @@ fun AddNotesScreen(
     Scaffold(
         bottomBar = {
             Bottom(
-                  title = bottom,
+                title = bottom,
                 onUpsertItem = {
                     if (title.isEmpty()) {
                         Toast.makeText(context, "عنوان یادداشت را مشخص کنید", Toast.LENGTH_SHORT)
@@ -322,7 +322,7 @@ fun AddNotesScreen(
 
             HorizontalDivider(
                 modifier = Modifier.padding(top = 10.dp, bottom = 3.dp),
-                thickness = 1.dp,
+                thickness = 0.6.dp,
                 color = Color.LightGray.copy(0.5f)
             )
 
@@ -362,7 +362,7 @@ fun AddNotesScreen(
                 )
             )
             HorizontalDivider(
-                thickness = 1.dp,
+                thickness = 0.6.dp,
                 color = Color.LightGray.copy(0.5f)
             )
 
@@ -419,9 +419,9 @@ fun AddNotesScreen(
                 onValueChange = { phone ->
                     contactPhone = TaskHelper.taskByLocate(phone)
                 })
-//address
+           //address
             HorizontalDivider(
-                thickness = 1.dp,
+                thickness = 0.6.dp,
                 color = Color.LightGray.copy(0.5f)
             )
 
@@ -461,7 +461,7 @@ fun AddNotesScreen(
                 })
 
             HorizontalDivider(
-                thickness = 1.dp,
+                thickness = 0.6.dp,
                 color = Color.LightGray.copy(0.5f)
             )
             Card(
@@ -689,7 +689,7 @@ fun dateTimeButton(
 
 @Composable
 private fun Bottom(
-    title :String,
+    title: String,
     onUpsertItem: () -> Unit,
     onBack: () -> Unit,
 ) {

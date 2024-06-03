@@ -16,6 +16,9 @@ class TaskRepository @Inject constructor(
 
     fun getAllTaskItem(): Flow<List<TaskItem>> = dao.getAllTaskItem()
 
-    fun getSingleTaskById(id: Int) :Flow<TaskItem> = dao.getSingleTaskById(id)
+    fun getSingleTaskById(id: Int): Flow<TaskItem> = dao.getSingleTaskById(id)
+
+    suspend fun deleteTask(item: TaskItem) = dao.deleteTask(item)
+
 
 }

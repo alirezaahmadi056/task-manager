@@ -24,4 +24,11 @@ class TaskViewModel @Inject constructor(
 
     fun getSingleTaskById(id: Int):Flow<TaskItem>  =  repository.getSingleTaskById(id)
 
+    fun deleteTask(item: TaskItem){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteTask(item)
+        }
+    }
+
+
 }

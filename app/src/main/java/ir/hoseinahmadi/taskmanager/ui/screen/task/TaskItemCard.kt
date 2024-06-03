@@ -1,6 +1,7 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.task
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,7 +38,10 @@ import ir.hoseinahmadi.taskmanager.util.TaskHelper
 import kotlin.math.roundToInt
 
 @Composable
-fun TaskItemCard(navHostController: NavHostController, item: TaskItem) {
+fun TaskItemCard(
+    navHostController: NavHostController,
+    item: TaskItem
+) {
     val taskColor = when (item.taskColor) {
         2 -> {
             MaterialTheme.colorScheme.onSecondary
@@ -66,15 +69,15 @@ fun TaskItemCard(navHostController: NavHostController, item: TaskItem) {
     }
 
     Card(
-        colors =CardDefaults.cardColors(
-            containerColor = if (progress==1f)MaterialTheme.colorScheme.scrim.copy(0.1f) else MaterialTheme.colorScheme.background,
-            ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background,
+        ),
         border = BorderStroke(0.8.dp, Color.LightGray),
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth()
             .height(90.dp),
-        onClick = { navHostController.navigate(Screen.AddTaskScreen.route+"?id=${item.id}") }
+        onClick = { navHostController.navigate(Screen.AddTaskScreen.route + "?id=${item.id}") }
     ) {
         Row(
             modifier = Modifier
@@ -100,7 +103,11 @@ fun TaskItemCard(navHostController: NavHostController, item: TaskItem) {
                 )
 
                 Text(
-                    text ="${TaskHelper.taskByLocate ((progress * 100).roundToInt().toString())}${"%"}",
+                    text = "${
+                        TaskHelper.taskByLocate(
+                            (progress * 100).roundToInt().toString()
+                        )
+                    }${"%"}",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.align(Alignment.Center),
                     color = MaterialTheme.colorScheme.scrim,
@@ -109,14 +116,13 @@ fun TaskItemCard(navHostController: NavHostController, item: TaskItem) {
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                textDecoration = if(progress==1f) TextDecoration.LineThrough else TextDecoration.None,
+                textDecoration = if (progress == 1f) TextDecoration.LineThrough else TextDecoration.None,
                 text = item.title,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(start = 8.dp)
             )
         }
     }
-
 
 
 }

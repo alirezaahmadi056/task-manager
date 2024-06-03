@@ -29,7 +29,6 @@ import ir.hoseinahmadi.taskmanager.viewModel.DatStoreViewModel
 val showSelectedSortNotList = mutableStateOf(false)
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectedSortNotList(
     isNoteScreen: Boolean,
@@ -44,7 +43,7 @@ fun SelectedSortNotList(
     }
     if (show) {
         val item = listOf(
-            "آخرین نوشته",
+            "جدید ترین",
             "اولویت کم",
             "اولویت معمولی",
             "اولویت بالا",

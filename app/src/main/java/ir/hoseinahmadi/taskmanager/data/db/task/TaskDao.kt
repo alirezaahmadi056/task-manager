@@ -1,6 +1,7 @@
 package ir.hoseinahmadi.taskmanager.data.db.task
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
@@ -14,6 +15,8 @@ interface TaskDao {
     fun getAllTaskItem(): Flow<List<TaskItem>>
 
     @Query("select * from taskitem where id =:id")
-    fun getSingleTaskById(id: Int) :Flow<TaskItem>
+    fun getSingleTaskById(id: Int): Flow<TaskItem>
+    @Delete
+    suspend fun deleteTask(item: TaskItem)
 
 }

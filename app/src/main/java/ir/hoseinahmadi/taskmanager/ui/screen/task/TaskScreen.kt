@@ -1,38 +1,59 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.task
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.NoteAdd
+import androidx.compose.material.icons.rounded.DeleteSweep
+import androidx.compose.material.icons.rounded.EditNote
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import ir.hoseinahmadi.taskmanager.data.db.task.TaskItem
 import ir.hoseinahmadi.taskmanager.navigation.Screen
+import ir.hoseinahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import ir.hoseinahmadi.taskmanager.ui.component.SelectedSortNotList
 import ir.hoseinahmadi.taskmanager.util.Constants
 import ir.hoseinahmadi.taskmanager.viewModel.TaskViewModel
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskScreen(
     navHostController: NavHostController,
@@ -40,6 +61,7 @@ fun TaskScreen(
 ) {
     val item by taskViewModel.allItem.collectAsState(initial = emptyList())
     var sortOrder by remember { mutableIntStateOf(Constants.SORT_TASK) }
+
 
     // مرتب‌سازی آیتم‌ها بر اساس sortOrder
     val sortedNotesItem = when (sortOrder) {
@@ -54,11 +76,36 @@ fun TaskScreen(
     }
     SelectedSortNotList(false, noteSort = {}, taskSort = { selectedSort ->
         sortOrder = selectedSort
-
     }
     )
-    Scaffold(
 
+
+    var singleDeleteTask by remember {
+        mutableStateOf(TaskItem())
+    }
+    var showDialogDelete by remember {
+        mutableStateOf(false)
+    }
+    val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    DialogDeleteItemTask(
+        onBack = {
+            showDialogDelete = false
+        }, onDeleteItem = {
+            taskViewModel.deleteTask(singleDeleteTask)
+            showDialogDelete = false
+            scope.launch {
+                snackBarHostState.showSnackbar("وظیفه با موفقیت حذف شد",
+                    duration =SnackbarDuration.Short )
+            }
+        },
+        show = showDialogDelete
+    )
+
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -86,12 +133,88 @@ fun TaskScreen(
                 .fillMaxSize()
                 .padding(it),
         ) {
-            items(incompleteTasks) { taskItem ->
-                TaskItemCard(navHostController = navHostController, item = taskItem)
-            }
+            items(incompleteTasks, key = { task -> task.id })
+            { taskItem ->
+                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                    val swipeToDismiss = rememberSwipeToDismissBoxState(
+                        confirmValueChange = { swip ->
+                            when (swip) {
+                                SwipeToDismissBoxValue.StartToEnd -> {
+                                    navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}")
+                                }
 
+                                SwipeToDismissBoxValue.EndToStart -> {
+                                    singleDeleteTask = taskItem
+                                    showDialogDelete = true
+                                }
+
+                                SwipeToDismissBoxValue.Settled -> {
+                                }
+                            }
+                            return@rememberSwipeToDismissBoxState false
+                        }
+                    )
+                    SwipeToDismissBox(
+                        enableDismissFromEndToStart = true,
+                        enableDismissFromStartToEnd = true,
+                        state = swipeToDismiss,
+                        backgroundContent = {
+                            when (swipeToDismiss.dismissDirection) {
+                                SwipeToDismissBoxValue.StartToEnd -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(5.dp)
+                                            .clip(RoundedCornerShape(11.dp))
+                                            .background(MaterialTheme.colorScheme.onPrimary),
+                                        contentAlignment = Alignment.CenterStart
+                                    )
+                                    {
+                                        Icon(
+                                            Icons.Rounded.EditNote,
+                                            contentDescription = "",
+                                            tint = Color.White,
+                                            modifier = Modifier.size(50.dp)
+                                        )
+
+                                    }
+                                }
+
+                                SwipeToDismissBoxValue.EndToStart -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(5.dp)
+                                            .clip(RoundedCornerShape(11.dp))
+                                            .background(MaterialTheme.colorScheme.error),
+                                        contentAlignment = Alignment.CenterEnd
+                                    )
+                                    {
+                                        Icon(
+                                            Icons.Rounded.DeleteSweep,
+                                            contentDescription = "",
+                                            tint = Color.White, modifier = Modifier.size(50.dp)
+                                        )
+
+                                    }
+                                }
+
+                                SwipeToDismissBoxValue.Settled -> {}
+                            }
+
+                        }
+                    ) {
+                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                            TaskItemCard(navHostController = navHostController, item = taskItem)
+                        }
+                    }
+                }
+            }
             item {
-                CompletedTaskSection(navHostController, completedTasks)
+                CompletedTaskSection(navHostController, completedTasks) { deleted ->
+                    singleDeleteTask = deleted
+                    showDialogDelete = true
+                }
             }
 
         }

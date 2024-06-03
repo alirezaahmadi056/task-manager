@@ -144,9 +144,7 @@ fun AddTaskScreen(
             Bottom(onUpsertItem = {
                 if (taskTitle.isEmpty()) {
                     Toast.makeText(context, "عنوان وظیفه را مشخص کنید", Toast.LENGTH_SHORT).show()
-                } else if (taskTitle.length < 10){
-                    Toast.makeText(context, "عنوان وظیفه بزرگ تری وارد کنید", Toast.LENGTH_SHORT).show()
-                }else if (subTask.isEmpty()) {
+                } else if (subTask.isEmpty()) {
                     Toast.makeText(context, "حداقل یک وظیفه وارد کنید", Toast.LENGTH_SHORT).show()
                 }else {
                     val taskItem = TaskItem(
@@ -162,7 +160,6 @@ fun AddTaskScreen(
             }, onBack = {
                 navHostController.popBackStack()
             }
-
             )
         }
     ) {

@@ -2,9 +2,16 @@ package ir.hoseinahmadi.taskmanager.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -20,7 +27,19 @@ fun NavGraph(navHostController: NavHostController) {
 
     NavHost(
         navController = navHostController,
-        startDestination = Screen.NotesScreen.route
+        startDestination = Screen.NotesScreen.route,
+        enterTransition = {
+            slideInVertically(
+                initialOffsetY = { fullHeight -> fullHeight },
+                animationSpec = tween(800)
+            )
+        },
+        exitTransition = {
+            slideOutVertically(
+                targetOffsetY = { fullHeight -> fullHeight },
+                animationSpec = tween(800)
+            )
+        }
     ) {
         composable(Screen.NotesScreen.route) {
             NotesScreen(navHostController)
@@ -36,18 +55,6 @@ fun NavGraph(navHostController: NavHostController) {
                 },
             ),
 
-            enterTransition = {
-                slideInVertically(
-                    initialOffsetY = { fullHeight -> fullHeight },
-                    animationSpec = tween(800)
-                )
-            },
-            exitTransition = {
-                slideOutVertically(
-                    targetOffsetY = { fullHeight -> fullHeight },
-                    animationSpec = tween(800)
-                )
-            }
         ) {
             AddNotesScreen(
                 navHostController = navHostController,
