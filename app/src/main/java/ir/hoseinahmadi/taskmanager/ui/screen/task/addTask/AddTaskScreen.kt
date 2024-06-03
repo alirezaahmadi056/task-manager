@@ -1,27 +1,23 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.task.addTask
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.filled.ArrowBackIos
-import androidx.compose.material.icons.rounded.Notes
+import androidx.compose.material.icons.automirrored.rounded.Notes
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -33,6 +29,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -42,15 +42,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -60,8 +59,8 @@ import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.BottomSheetSelectedC
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.showBottomSheetSelectedColor
 import ir.hoseinahmadi.taskmanager.viewModel.TaskViewModel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AddTaskScreen(
     navHostController: NavHostController,
@@ -113,7 +112,7 @@ fun AddTaskScreen(
                 taskTitle = taskItem.title
                 selectedColor = taskItem.taskColor
                 subTask = taskItem.subTask
-                taskBody =taskItem.body
+                taskBody = taskItem.body
             }
         }
     }
@@ -127,15 +126,46 @@ fun AddTaskScreen(
             subTask = updatedSubTasks
         }
     )
+    val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     BottomSheetAddTask { title ->
-        subTask = subTask + Task(title = title)
+        if (title.isEmpty()){
+            Toast.makeText(context, "عنوان وظیفه را مشخص کنید", Toast.LENGTH_SHORT).show()
+        }else{
+            subTask = subTask + Task(title = title)
+            showBottomSheetAddTask.value = false
+        }
+
     }
 
     BottomSheetSelectedColor(onClick = { colorIndex -> selectedColor = colorIndex })
 
     Scaffold(
-        topBar = {
+        snackbarHost = {
+            SnackbarHost(snackBarHostState) { data ->
+                Snackbar(
+                    dismissAction = {
+                        IconButton(onClick = { data.dismiss() }) {
+                            Icon(
+                                imageVector = Icons.Rounded.Close,
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.background,
+                            )
+                        }
+                    },
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.padding(4.dp)
+                ) {
+                        Text(
+                            data.visuals.message,
+                            color = MaterialTheme.colorScheme.background,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                }
+            } },
+                topBar = {
             Top(title = if (id == 0) "افزودن وظیفه گروهی" else "ویرایش وظیفه گروهی") {
                 navHostController.popBackStack()
             }
@@ -143,10 +173,20 @@ fun AddTaskScreen(
         bottomBar = {
             Bottom(onUpsertItem = {
                 if (taskTitle.isEmpty()) {
-                    Toast.makeText(context, "عنوان وظیفه را مشخص کنید", Toast.LENGTH_SHORT).show()
+                    scope.launch {
+                        snackBarHostState.showSnackbar(
+                            "عنوان وظیفه را مشخص کنید",
+                            duration = SnackbarDuration.Short
+                        )
+                    }
                 } else if (subTask.isEmpty()) {
-                    Toast.makeText(context, "حداقل یک وظیفه وارد کنید", Toast.LENGTH_SHORT).show()
-                }else {
+                    scope.launch {
+                        snackBarHostState.showSnackbar(
+                            "حداقل یک وظیفه وارد کنید",
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                } else {
                     val taskItem = TaskItem(
                         id = id,
                         title = taskTitle,
@@ -192,24 +232,24 @@ fun AddTaskScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     value = taskTitle,
-                    onValueChange = { taskTitle = it },
+                    onValueChange = {title->
+                        taskTitle = title },
                     textStyle = MaterialTheme.typography.labelMedium.copy(
                         textAlign = TextAlign.Center
                     )
                 )
 
                 HorizontalDivider(
-                    thickness = 1.dp,
+                    thickness = 0.5.dp,
                     color = Color.LightGray.copy(0.5f)
                 )
             }
 
             item {
-
                 TextField(
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Rounded.Notes,
+                            imageVector = Icons.AutoMirrored.Rounded.Notes,
                             contentDescription = "",
                             tint = if (taskBody.isEmpty()) MaterialTheme.colorScheme.scrim.copy(0.8f) else MaterialTheme.colorScheme.primary
                         )
@@ -222,7 +262,7 @@ fun AddTaskScreen(
                         focusedTextColor = MaterialTheme.colorScheme.scrim,
                         cursorColor = Color(0xFF2196F3)
                     ),
-                    maxLines =3,
+                    maxLines = 3,
                     placeholder = {
                         Text(
                             modifier = Modifier
@@ -237,13 +277,13 @@ fun AddTaskScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     value = taskBody,
-                    onValueChange = { taskBody = it },
+                    onValueChange = {body-> taskBody = body },
                     textStyle = MaterialTheme.typography.bodyLarge.copy(
                         textAlign = TextAlign.Start
                     )
                 )
                 HorizontalDivider(
-                    thickness = 1.dp,
+                    thickness = 0.5.dp,
                     color = Color.LightGray.copy(0.5f)
                 )
             }
@@ -306,7 +346,7 @@ fun AddTaskScreen(
 
                 }
                 HorizontalDivider(
-                    thickness = 1.dp,
+                    thickness = 0.5.dp,
                     color = Color.LightGray.copy(0.5f)
                 )
             }

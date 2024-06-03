@@ -79,18 +79,7 @@ fun BottomSheetAddTask(
                         .fillMaxWidth()
                         .padding(vertical = 10.dp, horizontal = 4.dp),
                     onClick = {
-                        if (taskTitle.length < 5) {
-                            Toast.makeText(
-                                context,
-                                "عنوان طولانی تری وارد کنید",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
                             obClick(taskTitle)
-                            taskTitle = ""
-                            showBottomSheetAddTask.value = false
-                        }
-
                     }
                 ) {
                     Text(

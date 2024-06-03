@@ -41,6 +41,7 @@ import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.rounded.AttachFile
 import androidx.compose.material.icons.rounded.Call
 import androidx.compose.material.icons.rounded.CallEnd
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.LocationOn
@@ -62,8 +63,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -72,6 +78,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,6 +99,7 @@ import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
 import ir.hoseinahmadi.taskmanager.util.TaskHelper
 import ir.hoseinahmadi.taskmanager.viewModel.NotesViewModel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -208,33 +216,55 @@ fun AddNotesScreen(
         }
 
     }
+    val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     BottomSheetSelectedColor(onClick = { colorIndex -> selectedColor = colorIndex })
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackBarHostState) { data ->
+                Snackbar(
+                    dismissAction = {
+                        IconButton(onClick = { data.dismiss() }) {
+                            Icon(
+                                imageVector = Icons.Rounded.Close,
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.background,
+                            )
+                        }
+                    },
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+                ) {
+                    Text(
+                        data.visuals.message,
+                        color = MaterialTheme.colorScheme.background,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+        },
+
         bottomBar = {
             Bottom(
                 title = bottom,
                 onUpsertItem = {
                     if (title.isEmpty()) {
-                        Toast.makeText(context, "عنوان یادداشت را مشخص کنید", Toast.LENGTH_SHORT)
-                            .show()
-                    } else if (title.length < 10) {
-                        Toast.makeText(
-                            context,
-                            "عنوان یادداشت بزرگ تری وارد کنید",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        scope.launch {
+                            snackBarHostState.showSnackbar(
+                                "عنوان یادداشت را مشخص کنید",
+                                duration = SnackbarDuration.Short
+                            )
+                        }
                     } else if (body.isEmpty()) {
-                        Toast.makeText(context, "توضیحات یادداشت را مشخص کنید", Toast.LENGTH_SHORT)
-                            .show()
-                    } else if (body.length < 12) {
-                        Toast.makeText(
-                            context,
-                            "توضیحات یادداشت بزرگ تری وارد کنید",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
+                        scope.launch {
+                            snackBarHostState.showSnackbar(
+                                "توضیحات یادداشت را مشخص کنید",
+                                duration = SnackbarDuration.Short
+                            )
+                        }
                     } else {
                         notesViewModel.upsertNotesItem(
                             NotesItem(
@@ -255,7 +285,6 @@ fun AddNotesScreen(
                 onBack = {
                     navHostController.popBackStack()
                 })
-
 
         },
         topBar = {
@@ -314,7 +343,8 @@ fun AddNotesScreen(
                 },
                 modifier = Modifier.fillMaxWidth(),
                 value = title,
-                onValueChange = { title = it },
+                onValueChange = {isTitle->
+                    title = isTitle },
                 textStyle = MaterialTheme.typography.labelMedium.copy(
                     textAlign = TextAlign.Center
                 )
@@ -356,7 +386,9 @@ fun AddNotesScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 value = body,
-                onValueChange = { body = it },
+                onValueChange = { isBody ->
+                    body = isBody
+                },
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     textAlign = TextAlign.Start
                 )
@@ -419,7 +451,7 @@ fun AddNotesScreen(
                 onValueChange = { phone ->
                     contactPhone = TaskHelper.taskByLocate(phone)
                 })
-           //address
+            //address
             HorizontalDivider(
                 thickness = 0.6.dp,
                 color = Color.LightGray.copy(0.5f)
