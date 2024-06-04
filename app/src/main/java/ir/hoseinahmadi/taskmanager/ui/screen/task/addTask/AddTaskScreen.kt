@@ -29,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -139,7 +140,7 @@ fun AddTaskScreen(
 
     }
 
-    BottomSheetSelectedColor(onClick = { colorIndex -> selectedColor = colorIndex })
+    BottomSheetSelectedColor(title =  "لطفا اولویت وظیفه را انتخاب کنید", onClick = { colorIndex -> selectedColor = colorIndex })
 
     Scaffold(
         snackbarHost = {
@@ -246,6 +247,7 @@ fun AddTaskScreen(
             }
 
             item {
+
                 TextField(
                     leadingIcon = {
                         Icon(

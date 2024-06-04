@@ -12,8 +12,11 @@ class NotesRepository @Inject constructor(
         dao.upsertDao(item)
     }
 
-     fun getAllNoteItem(): Flow<List<NotesItem>> = dao.allNotesItem()
+    fun getAllNoteItem(): Flow<List<NotesItem>> = dao.allNotesItem()
 
-    fun getItemById(id:Int) = dao.getItemById(id)
+    fun getItemById(id: Int) = dao.getItemById(id)
+    suspend fun deleteTask(item: NotesItem){
+        dao.deleteTask(item)
+    }
 
 }

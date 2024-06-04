@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DialogDeleteItemTask(
+    title:String,
+    body :String,
     show: Boolean,
     onDeleteItem: () -> Unit,
     onBack: () -> Unit,
@@ -39,20 +41,20 @@ fun DialogDeleteItemTask(
             },
             title = {
                 Text(
-                    text = "حذف وظیفه",
+                    text =title,
                     style = MaterialTheme.typography.labelMedium
                 )
             },
             text = {
                 Text(
-                    text = "آیا از حذف این وظیفه اطمینان دارید؟",
+                    text = body,
                     style = MaterialTheme.typography.bodyLarge
                 )
             },
             onDismissRequest = { onBack() },
             confirmButton = {
                 Button(
-                    modifier = Modifier.padding(horizontal = 4.dp),
+                    modifier = Modifier.padding(horizontal = 3.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = Color.White

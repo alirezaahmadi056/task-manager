@@ -1,6 +1,7 @@
 package ir.hoseinahmadi.taskmanager.data.db.notes
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
@@ -16,5 +17,9 @@ interface NotesDao {
 
     @Query("select * from notesitem where id=:id")
     fun getItemById(id: Int): Flow<NotesItem>
+
+    @Delete
+    suspend fun deleteTask(item: NotesItem)
+
 
 }

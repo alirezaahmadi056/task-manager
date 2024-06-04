@@ -94,9 +94,12 @@ fun TaskScreen(
     val scope = rememberCoroutineScope()
 
     DialogDeleteItemTask(
+        title ="حذف وظیفه",
+        body = "آیا از حذف این وظیفه اطمینان دارید؟",
         onBack = {
             showDialogDelete = false
-        }, onDeleteItem = {
+        },
+        onDeleteItem = {
             taskViewModel.deleteTask(singleDeleteTask)
             showDialogDelete = false
             scope.launch {

@@ -219,7 +219,7 @@ fun AddNotesScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    BottomSheetSelectedColor(onClick = { colorIndex -> selectedColor = colorIndex })
+    BottomSheetSelectedColor(title = "لطفا اولویت یادداشت رو انتخاب کنید",onClick = { colorIndex -> selectedColor = colorIndex })
 
     Scaffold(
         snackbarHost = {

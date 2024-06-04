@@ -36,7 +36,11 @@ class NotesViewModel @Inject constructor(
         }
     }
 
-
+    fun deleteTask(item: NotesItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteTask(item)
+        }
+    }
 }
 
 

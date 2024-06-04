@@ -21,7 +21,7 @@ private val DarkColorScheme = darkColorScheme(
     secondary = PurpleGrey80,
     tertiary = Pink80,
 
-    background = Color.Black,
+    background = Color(0xff121212),
 
     scrim = Color.White,
 

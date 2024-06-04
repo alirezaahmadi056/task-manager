@@ -28,7 +28,7 @@ val DarkRed =Color(0xFF8D2633)
 val DarkOrange =Color(0xFFFF5722)
 val LightOrange =Color(0xFFff6f00)
 
-val LightGreen =Color(0xff089000)
-val DarkGreen =Color(0xFF0a5d00)
+val LightGreen =Color(0xff00ab41)
+val DarkGreen =Color(0xFF004225)
 
 
