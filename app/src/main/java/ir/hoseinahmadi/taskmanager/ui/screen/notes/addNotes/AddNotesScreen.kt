@@ -1,15 +1,13 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes
 
+import PersianDate
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -18,7 +16,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,29 +27,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.AbsoluteCutCornerShape
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.rounded.AttachFile
 import androidx.compose.material.icons.rounded.Call
-import androidx.compose.material.icons.rounded.CallEnd
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.LocationOn
-import androidx.compose.material.icons.rounded.LowPriority
 import androidx.compose.material.icons.rounded.Notes
-import androidx.compose.material.icons.rounded.Phone
-import androidx.compose.material.icons.rounded.PhoneEnabled
 import androidx.compose.material.icons.rounded.PhoneIphone
 import androidx.compose.material.icons.rounded.PriorityHigh
-import androidx.compose.material.icons.rounded.RunningWithErrors
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -61,7 +52,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
@@ -69,7 +59,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -85,7 +74,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -100,8 +88,6 @@ import ir.hoseinahmadi.taskmanager.util.TaskHelper
 import ir.hoseinahmadi.taskmanager.viewModel.NotesViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalLayoutApi::class)
@@ -169,8 +155,12 @@ fun AddNotesScreen(
         mutableIntStateOf(1)
     }
 
-    val createTime by remember {
-        mutableStateOf(dateTimeButton())
+    var createTime by remember {
+        mutableStateOf("")
+    }
+
+    var createDate by remember {
+        mutableStateOf("")
     }
 
     val taskColor = when (selectedColor) {
@@ -211,10 +201,10 @@ fun AddNotesScreen(
                 address = item.address
                 selectedColor = item.taskColor
                 selectedImageUriList = item.uri ?: emptyList()
+                createTime =item.createTime
+                createDate =item.createDate
             }
-
         }
-
     }
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -266,6 +256,7 @@ fun AddNotesScreen(
                             )
                         }
                     } else {
+                        val dates = PersianDate()
                         notesViewModel.upsertNotesItem(
                             NotesItem(
                                 id = id,
@@ -275,7 +266,8 @@ fun AddNotesScreen(
                                 phone = contactPhone,
                                 address = address,
                                 uri = selectedImageUriList,
-                                createDate = createTime
+                                createDate = "${dates.year}/${dates.day}/${dates.month}",
+                                createTime ="${dates.hour}:${dates.min}"
                             )
                         )
                         navHostController.popBackStack()
@@ -288,26 +280,48 @@ fun AddNotesScreen(
 
         },
         topBar = {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 5.dp),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            )
-            {
-                IconButton(onClick = { navHostController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
-                        contentDescription = "",
-                        Modifier.size(30.dp),
-                        tint = MaterialTheme.colorScheme.scrim
-                    )
+            Column {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 5.dp, horizontal = 2.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                )
+                {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = { navHostController.popBackStack() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.scrim
+                            )
+                        }
+                        Text(
+                            text = header,
+                            color = MaterialTheme.colorScheme.scrim,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                    if (createDate.isNotEmpty()) {
+                        Text(
+                            modifier = Modifier
+                                .padding(end = 5.dp)
+                                .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
+                                .padding(horizontal = 8.dp, vertical = 4.dp),
+                            text = TaskHelper.taskByLocate(createDate),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.scrim
+                        )
+                    }
+
                 }
-                Text(
-                    text = header,
-                    color = MaterialTheme.colorScheme.scrim,
-                    style = MaterialTheme.typography.bodyLarge
+                HorizontalDivider(
+                    thickness = 2.dp,
+                    color = Color.LightGray.copy(0.3f),
                 )
             }
         }
@@ -698,25 +712,6 @@ fun AddNotesScreen(
     }
 }
 
-fun dateTimeButton(
-): String {
-    val currentDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        LocalDateTime.now()
-    } else {
-        TODO("VERSION.SDK_INT < O")
-    }
-    val dateFormatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    } else {
-        TODO("VERSION.SDK_INT < O")
-    }
-    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
-
-    val currentDate = currentDateTime.format(dateFormatter) ?: ""
-    val currentTime = currentDateTime.format(timeFormatter) ?: ""
-
-    return "$currentDate--$currentTime"
-}
 
 
 @Composable

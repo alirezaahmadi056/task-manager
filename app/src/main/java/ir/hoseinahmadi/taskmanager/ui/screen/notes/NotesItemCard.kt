@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
 import ir.hoseinahmadi.taskmanager.navigation.Screen
+import ir.hoseinahmadi.taskmanager.util.TaskHelper
 
 @Composable
 fun NotesItemCard(navHostController: NavHostController, item: NotesItem) {
@@ -55,10 +56,10 @@ fun NotesItemCard(navHostController: NavHostController, item: NotesItem) {
             )
             Text(
                 modifier = Modifier.fillMaxWidth().padding(4.dp),
-                text = item.createDate,
-                textAlign = TextAlign.End,
+                text = TaskHelper.taskByLocate("${item.createTime} | ${item.createDate}"),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.scrim.copy(0.7f),
+                textAlign = TextAlign.End,
+                color = MaterialTheme.colorScheme.scrim
             )
         }
 

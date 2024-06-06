@@ -1,7 +1,6 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.task
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -86,7 +85,7 @@ fun TaskItemCard(
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth()
-            .height(90.dp),
+            .height(100.dp),
         onClick = { navHostController.navigate(Screen.AddTaskScreen.route + "?id=${item.id}") }
     ) {
         Row(
@@ -111,7 +110,6 @@ fun TaskItemCard(
                     strokeCap = StrokeCap.Butt,
                     trackColor = taskColor.copy(alpha = 0.2f),
                 )
-
                 Text(
                     text = "${
                         TaskHelper.taskByLocate(
@@ -126,11 +124,11 @@ fun TaskItemCard(
             }
             Column(
                 modifier = Modifier
-                    .padding(top = 9.dp)
-                    .fillMaxWidth()
+                    .padding(bottom = 4.dp)
+                    .fillMaxSize()
                     .padding(start = 8.dp, end = 4.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
@@ -144,54 +142,67 @@ fun TaskItemCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
-                        horizontalArrangement = Arrangement.Start,
+                    horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.TaskAlt,
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.onPrimary,
+                                modifier = Modifier
+                                    .padding(end = 4.dp)
+                                    .size(17.dp)
+                            )
 
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.TaskAlt,
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier
-                                .padding(end = 4.dp)
-                                .size(17.dp)
-                        )
+                            Text(
+                                text = "${TaskHelper.taskByLocate(completedSubtasks.toString())} وظیفه",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                        if (pendingSubtasks != 0) {
+                            VerticalDivider(
+                                modifier = Modifier
+                                    .height(15.dp)
+                                    .padding(horizontal = 10.dp),
+                                thickness = 0.8.dp,
+                                color = Color.LightGray
+                            )
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.PendingActions,
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier
+                                        .padding(end = 4.dp)
+                                        .size(17.dp)
+                                )
+                                Text(
+                                    text = "${TaskHelper.taskByLocate(pendingSubtasks.toString())} وظیفه ",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        }
 
-                        Text(
-                            text = "${TaskHelper.taskByLocate(completedSubtasks.toString())} وظیفه",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                    VerticalDivider(
-                        modifier = Modifier.height(20.dp).padding(horizontal = 12.dp),
-                        thickness = 1.dp,
-                        color = Color.LightGray
-                    )
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.PendingActions,
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.error,
-                            modifier = Modifier
-                                .padding(end = 4.dp)
-                                .size(17.dp)
-                        )
-                        Text(
-                            text = "${TaskHelper.taskByLocate(pendingSubtasks.toString())} وظیفه ",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color =MaterialTheme.colorScheme.error
-                        )
-                    }
+
+
                 }
-
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd) {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 5.dp),
+                        text = TaskHelper.taskByLocate("${item.time} | ${item.date}"),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.scrim.copy(0.8f)
+                    )
+                }
 
             }
 

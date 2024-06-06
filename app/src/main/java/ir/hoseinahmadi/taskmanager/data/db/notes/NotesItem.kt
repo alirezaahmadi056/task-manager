@@ -35,6 +35,7 @@ data class NotesItem(
     val address: String = "",
     val uri: List<Uri>? = null,
     val createDate: String = "",
+    val createTime: String = "",
 )
 
 

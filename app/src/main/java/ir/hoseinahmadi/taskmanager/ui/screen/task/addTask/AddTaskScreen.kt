@@ -1,10 +1,14 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.task.addTask
 
+import PersianDate
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,9 +18,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.Notes
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.Button
@@ -47,7 +53,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -58,6 +66,7 @@ import ir.hoseinahmadi.taskmanager.data.db.task.Task
 import ir.hoseinahmadi.taskmanager.data.db.task.TaskItem
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.BottomSheetSelectedColor
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.showBottomSheetSelectedColor
+import ir.hoseinahmadi.taskmanager.util.TaskHelper
 import ir.hoseinahmadi.taskmanager.viewModel.TaskViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -75,6 +84,13 @@ fun AddTaskScreen(
     var taskBody by remember {
         mutableStateOf("")
     }
+    var date by remember {
+        mutableStateOf("")
+    }
+    var time by remember {
+        mutableStateOf("")
+    }
+
     var subTaskItem by remember { mutableStateOf(Task()) }
     var subTaskId by remember { mutableIntStateOf(0) }
 
@@ -114,10 +130,15 @@ fun AddTaskScreen(
                 selectedColor = taskItem.taskColor
                 subTask = taskItem.subTask
                 taskBody = taskItem.body
+                date = taskItem.date
+                time = taskItem.time
             }
         }
     }
 
+
+
+    Log.e("pasi", date)
     BottomUpdateSheetTask(
         title = subTaskItem.title,
         obClick = { newTitle ->
@@ -131,16 +152,19 @@ fun AddTaskScreen(
     val scope = rememberCoroutineScope()
 
     BottomSheetAddTask { title ->
-        if (title.isEmpty()){
+        if (title.isEmpty()) {
             Toast.makeText(context, "عنوان وظیفه را مشخص کنید", Toast.LENGTH_SHORT).show()
-        }else{
+        } else {
             subTask = subTask + Task(title = title)
             showBottomSheetAddTask.value = false
         }
 
     }
 
-    BottomSheetSelectedColor(title =  "لطفا اولویت وظیفه را انتخاب کنید", onClick = { colorIndex -> selectedColor = colorIndex })
+    BottomSheetSelectedColor(
+        title = "لطفا اولویت وظیفه را انتخاب کنید",
+        onClick = { colorIndex -> selectedColor = colorIndex })
+
 
     Scaffold(
         snackbarHost = {
@@ -159,15 +183,16 @@ fun AddTaskScreen(
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier.padding(4.dp)
                 ) {
-                        Text(
-                            data.visuals.message,
-                            color = MaterialTheme.colorScheme.background,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                    Text(
+                        data.visuals.message,
+                        color = MaterialTheme.colorScheme.background,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
-            } },
-                topBar = {
-            Top(title = if (id == 0) "افزودن وظیفه گروهی" else "ویرایش وظیفه گروهی") {
+            }
+        },
+        topBar = {
+            Top(date, title = if (id == 0) "افزودن وظیفه گروهی" else "ویرایش وظیفه گروهی") {
                 navHostController.popBackStack()
             }
         },
@@ -188,19 +213,20 @@ fun AddTaskScreen(
                         )
                     }
                 } else {
+                    val dates = PersianDate()
                     val taskItem = TaskItem(
                         id = id,
                         title = taskTitle,
                         subTask = subTask,
                         body = taskBody,
-                        taskColor = selectedColor
+                        taskColor = selectedColor,
+                        date = "${dates.year}/${dates.day}/${dates.month}",
+                        time = "${dates.hour}:${dates.min}",
                     )
                     taskViewModel.upsertTask(taskItem)
                     navHostController.popBackStack()
                 }
-            }, onBack = {
-                navHostController.popBackStack()
-            }
+            }, onBack = { navHostController.popBackStack() }
             )
         }
     ) {
@@ -233,8 +259,9 @@ fun AddTaskScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     value = taskTitle,
-                    onValueChange = {title->
-                        taskTitle = title },
+                    onValueChange = { title ->
+                        taskTitle = title
+                    },
                     textStyle = MaterialTheme.typography.labelMedium.copy(
                         textAlign = TextAlign.Center
                     )
@@ -279,7 +306,7 @@ fun AddTaskScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     value = taskBody,
-                    onValueChange = {body-> taskBody = body },
+                    onValueChange = { body -> taskBody = body },
                     textStyle = MaterialTheme.typography.bodyLarge.copy(
                         textAlign = TextAlign.Start
                     )
@@ -407,29 +434,52 @@ fun AddTaskScreen(
 }
 
 @Composable
-private fun Top(title: String, onBack: () -> Unit) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(vertical = 5.dp),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
-    )
-    {
-        IconButton(onClick = { onBack() }) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
-                contentDescription = "",
-                Modifier.size(30.dp),
-                tint = MaterialTheme.colorScheme.scrim
-            )
+private fun Top(date: String, title: String, onBack: () -> Unit) {
+    Column {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 5.dp, horizontal = 2.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        )
+        {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = { onBack() }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.scrim
+                    )
+                }
+                Text(
+                    text = title,
+                    color = MaterialTheme.colorScheme.scrim,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            if (date.isNotEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .padding(end = 5.dp)
+                        .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    text = TaskHelper.taskByLocate(date),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.scrim
+                )
+            }
+
         }
-        Text(
-            text = title,
-            color = MaterialTheme.colorScheme.scrim,
-            style = MaterialTheme.typography.bodyLarge
+        HorizontalDivider(
+            thickness = 2.dp,
+            color = Color.LightGray.copy(0.3f),
         )
     }
+
 }
 
 @Composable

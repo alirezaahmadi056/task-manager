@@ -51,7 +51,7 @@ fun NotesListItem(navHostController: NavHostController, item: NotesItem) {
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .height(92.dp)
+            .height(100.dp)
             .padding(4.dp),
         onClick = {
             navHostController.navigate(Screen.AddNotesScreen.route + "?id=${item.id}")
@@ -71,7 +71,7 @@ fun NotesListItem(navHostController: NavHostController, item: NotesItem) {
                     .padding(start = 18.dp)
             ) {
                 Text(
-                    modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                     text = item.title,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.scrim,
@@ -82,7 +82,7 @@ fun NotesListItem(navHostController: NavHostController, item: NotesItem) {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 2.dp),
+                        .padding(top = 3.dp),
                     text = item.body,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.scrim.copy(0.8f),
@@ -94,12 +94,10 @@ fun NotesListItem(navHostController: NavHostController, item: NotesItem) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 3.dp, bottom = 2.dp),
-                        text = TaskHelper.taskByLocate(item.createDate),
+                        text = TaskHelper.taskByLocate("${item.createTime} | ${item.createDate}"),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.scrim.copy(0.8f),
+                        color = MaterialTheme.colorScheme.scrim,
                         textAlign = TextAlign.End,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
                     )
                 }
 
