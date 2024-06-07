@@ -79,7 +79,8 @@ class MainActivity : ComponentActivity() {
                             bottomBar = {
                                 BottomNavigation(
                                     navHostController = navHostController,
-                                    isShow = showBottomBar
+                                    isShow = showBottomBar,
+                                 backStackEntry=   backStackEntry
                                 )
                             },
                         ) {

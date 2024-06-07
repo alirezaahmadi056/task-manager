@@ -49,6 +49,7 @@ fun TaskItemCard(
     navHostController: NavHostController,
     item: TaskItem
 ) {
+
     val taskColor = when (item.taskColor) {
         2 -> {
             MaterialTheme.colorScheme.onSecondary

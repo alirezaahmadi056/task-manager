@@ -220,7 +220,7 @@ fun AddTaskScreen(
                         subTask = subTask,
                         body = taskBody,
                         taskColor = selectedColor,
-                        date = "${dates.year}/${dates.day}/${dates.month}",
+                        date = "${dates.year}/${dates.month}/${dates.day}",
                         time = "${dates.hour}:${dates.min}",
                     )
                     taskViewModel.upsertTask(taskItem)

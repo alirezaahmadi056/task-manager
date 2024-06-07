@@ -266,7 +266,7 @@ fun AddNotesScreen(
                                 phone = contactPhone,
                                 address = address,
                                 uri = selectedImageUriList,
-                                createDate = "${dates.year}/${dates.day}/${dates.month}",
+                                createDate = "${dates.year}/${dates.month}/${dates.day}",
                                 createTime ="${dates.hour}:${dates.min}"
                             )
                         )

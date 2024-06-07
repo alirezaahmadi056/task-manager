@@ -55,7 +55,7 @@ fun NotesItemCard(navHostController: NavHostController, item: NotesItem) {
                 color = MaterialTheme.colorScheme.scrim.copy(0.7f),
             )
             Text(
-                modifier = Modifier.fillMaxWidth().padding(4.dp),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 3.dp),
                 text = TaskHelper.taskByLocate("${item.createTime} | ${item.createDate}"),
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.End,
