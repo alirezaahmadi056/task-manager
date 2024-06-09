@@ -116,7 +116,7 @@ fun TopBar(
                                     modifier = Modifier.background(MaterialTheme.colorScheme.background),
                                     text = {
                                         Text(
-                                            text = "ترتیب یادداشت ها",
+                                            text = "ترتیب لیست",
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.scrim
 

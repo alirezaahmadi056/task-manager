@@ -54,6 +54,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -68,6 +69,7 @@ import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.BottomSheetSelectedC
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.showBottomSheetSelectedColor
 import ir.hoseinahmadi.taskmanager.util.TaskHelper
 import ir.hoseinahmadi.taskmanager.viewModel.TaskViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -138,7 +140,6 @@ fun AddTaskScreen(
 
 
 
-    Log.e("pasi", date)
     BottomUpdateSheetTask(
         title = subTaskItem.title,
         obClick = { newTitle ->
@@ -192,7 +193,7 @@ fun AddTaskScreen(
             }
         },
         topBar = {
-            Top(date, title = if (id == 0) "افزودن وظیفه گروهی" else "ویرایش وظیفه گروهی") {
+            Top(date,time, title = if (id == 0) "افزودن وظیفه گروهی" else "ویرایش وظیفه گروهی") {
                 navHostController.popBackStack()
             }
         },
@@ -434,7 +435,7 @@ fun AddTaskScreen(
 }
 
 @Composable
-private fun Top(date: String, title: String, onBack: () -> Unit) {
+ fun Top(date: String,time:String, title: String, onBack: () -> Unit) {
     Column {
         Row(
             Modifier
@@ -465,9 +466,9 @@ private fun Top(date: String, title: String, onBack: () -> Unit) {
                 Text(
                     modifier = Modifier
                         .padding(end = 5.dp)
-                        .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                    text = TaskHelper.taskByLocate(date),
+                        .border(1.dp, Color.LightGray, RoundedCornerShape(9.dp))
+                        .padding(horizontal = 9.dp, vertical = 4.dp),
+                    text = TaskHelper.taskByLocate("$time - $date"),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.scrim
                 )

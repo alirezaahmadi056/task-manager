@@ -60,53 +60,53 @@ fun BottomNavigation(
             ),
 
             )
-Column {
-    HorizontalDivider(
-        thickness = 1.dp,
-        color = Color.LightGray.copy(alpha = 0.4f)
-    )
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        item.forEachIndexed { index, navItem ->
-            val selected = navItem.route == backStackEntry.value?.destination?.route
-            NavigationBarItem(selected = selected,
-                onClick = {
-                    navHostController.navigate(navItem.route) {
-                        popUpTo(0) {
-                            inclusive = true
+        Column {
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = Color.LightGray.copy(alpha = 0.4f)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                item.forEachIndexed { index, navItem ->
+                    val selected = navItem.route == backStackEntry.value?.destination?.route
+                    NavigationBarItem(selected = selected,
+                        onClick = {
+                            navHostController.navigate(navItem.route) {
+                                popUpTo(0) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = if (selected) navItem.selectedIcon else navItem.unSelectedIcon,
+                                contentDescription = ""
+                            )
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.White,
+                            unselectedIconColor = MaterialTheme.colorScheme.scrim.copy(0.7f),
+                            selectedTextColor = MaterialTheme.colorScheme.scrim,
+                            unselectedTextColor = MaterialTheme.colorScheme.scrim.copy(0.7f),
+                            indicatorColor = MaterialTheme.colorScheme.primary
+                        ),
+                        label = {
+                            Text(
+                                text = navItem.text,
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
                         }
-                    }
-                },
-                icon = {
-                    Icon(
-                        imageVector = if (selected) navItem.selectedIcon else navItem.unSelectedIcon,
-                        contentDescription = ""
-                    )
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.White,
-                    unselectedIconColor = MaterialTheme.colorScheme.scrim.copy(0.7f),
-                    selectedTextColor = MaterialTheme.colorScheme.scrim,
-                    unselectedTextColor = MaterialTheme.colorScheme.scrim.copy(0.7f),
-                    indicatorColor = MaterialTheme.colorScheme.primary
-                ),
-                label = {
-                    Text(
-                        text = navItem.text,
-                        style = MaterialTheme.typography.bodyLarge,
                     )
                 }
-            )
+
+
+            }
+
         }
-
-
-    }
-
-}
 
 
     }

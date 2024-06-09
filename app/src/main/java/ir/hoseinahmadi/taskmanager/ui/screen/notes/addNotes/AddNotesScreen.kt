@@ -84,6 +84,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.R
 import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
+import ir.hoseinahmadi.taskmanager.ui.screen.task.addTask.Top
 import ir.hoseinahmadi.taskmanager.util.TaskHelper
 import ir.hoseinahmadi.taskmanager.viewModel.NotesViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -108,7 +109,6 @@ fun AddNotesScreen(
     var title by remember {
         mutableStateOf("")
     }
-//    var subtasks by remember { mutableStateOf(subtaskFromOutside.toMutableList()) }
 
     var body by remember {
         mutableStateOf("")
@@ -176,6 +176,9 @@ fun AddNotesScreen(
             MaterialTheme.colorScheme.onPrimary
         }
     }
+
+
+
     val nameColor = when (selectedColor) {
         2 -> {
             "متوسط"
@@ -280,49 +283,8 @@ fun AddNotesScreen(
 
         },
         topBar = {
-            Column {
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 5.dp, horizontal = 2.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                )
-                {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        IconButton(onClick = { navHostController.popBackStack() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                                contentDescription = "",
-                                tint = MaterialTheme.colorScheme.scrim
-                            )
-                        }
-                        Text(
-                            text = header,
-                            color = MaterialTheme.colorScheme.scrim,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                    if (createDate.isNotEmpty()) {
-                        Text(
-                            modifier = Modifier
-                                .padding(end = 5.dp)
-                                .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
-                                .padding(horizontal = 8.dp, vertical = 4.dp),
-                            text = TaskHelper.taskByLocate(createDate),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.scrim
-                        )
-                    }
-
-                }
-                HorizontalDivider(
-                    thickness = 2.dp,
-                    color = Color.LightGray.copy(0.3f),
-                )
+                Top(createDate,createTime, title =header) {
+                    navHostController.popBackStack()
             }
         }
     ) {

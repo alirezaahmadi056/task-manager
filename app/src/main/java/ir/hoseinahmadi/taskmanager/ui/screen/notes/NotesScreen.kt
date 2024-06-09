@@ -63,7 +63,6 @@ import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
 import ir.hoseinahmadi.taskmanager.navigation.Screen
 import ir.hoseinahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import ir.hoseinahmadi.taskmanager.ui.component.SelectedSortNotList
-import ir.hoseinahmadi.taskmanager.ui.screen.task.TaskItemCard
 import ir.hoseinahmadi.taskmanager.util.Constants
 import ir.hoseinahmadi.taskmanager.viewModel.NotesViewModel
 import kotlinx.coroutines.flow.collectLatest

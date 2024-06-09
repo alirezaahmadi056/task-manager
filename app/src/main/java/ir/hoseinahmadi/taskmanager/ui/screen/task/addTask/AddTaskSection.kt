@@ -27,7 +27,7 @@ fun DetailTaskSection(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 12.dp),
+            .padding(horizontal = 15.dp, vertical = 15.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

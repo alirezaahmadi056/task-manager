@@ -54,7 +54,7 @@ fun SelectedSortNotList(
             confirmButton = { /*TODO*/ },
             title = {
                 Text(
-                    text = "ترتیب یادداشت ها بر اساس",
+                    text = " ترتیب لیست بر اساس",
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
@@ -91,7 +91,7 @@ fun SelectedSortNotList(
                         }
                         HorizontalDivider(
                             thickness = 0.3.dp,
-                            color = Color.LightGray.copy(0.3f)
+                            color = Color.LightGray.copy(0.4f)
                         )
                     }
 
