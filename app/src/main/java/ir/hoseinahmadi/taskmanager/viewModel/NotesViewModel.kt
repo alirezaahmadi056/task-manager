@@ -22,19 +22,13 @@ class NotesViewModel @Inject constructor(
 
     val allNotesItem: Flow<List<NotesItem>> = repository.getAllNoteItem()
 
-    val singleNotesItem: MutableStateFlow<NotesItem> = MutableStateFlow(NotesItem())
 
     fun upsertNotesItem(item: NotesItem) {
         viewModelScope.launch(Dispatchers.IO) { repository.upsertNotesItem(item) }
     }
 
-    fun getNotesItem(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.getItemById(id).collectLatest {
-                singleNotesItem.emit(it)
-            }
-        }
-    }
+    fun getNotesItem(id: Int):Flow<NotesItem> =repository.getItemById(id)
+
 
     fun deleteTask(item: NotesItem) {
         viewModelScope.launch(Dispatchers.IO) {

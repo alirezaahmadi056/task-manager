@@ -1,7 +1,6 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes
 
 import PersianDate
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -16,11 +15,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,8 +28,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.rounded.AttachFile
@@ -65,10 +60,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -90,20 +87,12 @@ import ir.hoseinahmadi.taskmanager.viewModel.NotesViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@SuppressLint("MutableCollectionMutableState")
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AddNotesScreen(
     navHostController: NavHostController,
     id: Int,
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
-
-    if (id != 0) {
-        LaunchedEffect(key1 = true) {
-            notesViewModel.getNotesItem(id)
-        }
-    }
 
 
     var title by remember {
@@ -123,21 +112,19 @@ fun AddNotesScreen(
         mutableStateOf("")
     }
 
-    var selectedImageUriList by remember {
-        mutableStateOf<List<Uri>>(emptyList())
-    }
+    val selectedImageUriList = remember { mutableStateListOf<Uri>() }
+
+
 
     val context = LocalContext.current
+
 
 
     val multipleImagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenMultipleDocuments(),
         onResult = { uriList: List<Uri> ->
             if (uriList.isNotEmpty()) {
-                val updatedList = selectedImageUriList.toMutableList().apply {
-                    addAll(uriList.filterNotNull())
-                }
-                selectedImageUriList = updatedList
+                selectedImageUriList.addAll(uriList.filterNotNull())
                 uriList.forEach { uri ->
                     context.contentResolver.takePersistableUriPermission(
                         uri,
@@ -145,9 +132,8 @@ fun AddNotesScreen(
                     )
                 }
             }
-        })
-
-
+        }
+    )
     var header = " یادداشت جدید"
     var bottom = "افزودن یادداشت"
 
@@ -178,7 +164,6 @@ fun AddNotesScreen(
     }
 
 
-
     val nameColor = when (selectedColor) {
         2 -> {
             "متوسط"
@@ -196,23 +181,29 @@ fun AddNotesScreen(
         header = "ویرایش یادداشت"
         bottom = "ویرایش یادداشت"
 
+
         LaunchedEffect(true) {
-            notesViewModel.singleNotesItem.collectLatest { item ->
+            notesViewModel.getNotesItem(id).collectLatest { item ->
                 title = item.title
                 body = item.body
                 contactPhone = item.phone
                 address = item.address
                 selectedColor = item.taskColor
-                selectedImageUriList = item.uri ?: emptyList()
-                createTime =item.createTime
-                createDate =item.createDate
+                item.uri?.let { uris ->
+                    val validUris = uris.filterNot { it == Uri.EMPTY }
+                    selectedImageUriList.addAll(validUris)
+                }
+                createTime = item.createTime
+                createDate = item.createDate
             }
         }
     }
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    BottomSheetSelectedColor(title = "لطفا اولویت یادداشت رو انتخاب کنید",onClick = { colorIndex -> selectedColor = colorIndex })
+    BottomSheetSelectedColor(
+        title = "لطفا اولویت یادداشت رو انتخاب کنید",
+        onClick = { colorIndex -> selectedColor = colorIndex })
 
     Scaffold(
         snackbarHost = {
@@ -239,7 +230,6 @@ fun AddNotesScreen(
                 }
             }
         },
-
         bottomBar = {
             Bottom(
                 title = bottom,
@@ -270,21 +260,18 @@ fun AddNotesScreen(
                                 address = address,
                                 uri = selectedImageUriList,
                                 createDate = "${dates.year}/${dates.month}/${dates.day}",
-                                createTime ="${dates.hour}:${dates.min}"
+                                createTime = "${dates.hour}:${dates.min}"
                             )
                         )
                         navHostController.popBackStack()
 
                     }
                 },
-                onBack = {
-                    navHostController.popBackStack()
-                })
-
+                onBack = { navHostController.popBackStack() })
         },
         topBar = {
-                Top(createDate,createTime, title =header) {
-                    navHostController.popBackStack()
+            Top(createDate, createTime, title = header) {
+                navHostController.popBackStack()
             }
         }
     ) {
@@ -295,17 +282,19 @@ fun AddNotesScreen(
                 .padding(it)
                 .verticalScroll(rememberScrollState())
         ) {
+            val textFieldColor = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedTextColor = MaterialTheme.colorScheme.scrim,
+                cursorColor = Color(0xFF2196F3)
+            )
+
 
             TextField(
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedTextColor = MaterialTheme.colorScheme.scrim,
-                    cursorColor = Color(0xFF2196F3)
-                ),
-                maxLines = 2,
+                colors = textFieldColor,
+                        maxLines = 2,
                 placeholder = {
                     Text(
                         modifier = Modifier
@@ -319,8 +308,9 @@ fun AddNotesScreen(
                 },
                 modifier = Modifier.fillMaxWidth(),
                 value = title,
-                onValueChange = {isTitle->
-                    title = isTitle },
+                onValueChange = { isTitle ->
+                    title = isTitle
+                },
                 textStyle = MaterialTheme.typography.labelMedium.copy(
                     textAlign = TextAlign.Center
                 )
@@ -340,14 +330,7 @@ fun AddNotesScreen(
                         tint = if (body.isEmpty()) MaterialTheme.colorScheme.scrim.copy(0.8f) else MaterialTheme.colorScheme.primary
                     )
                 },
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedTextColor = MaterialTheme.colorScheme.scrim,
-                    cursorColor = Color(0xFF2196F3)
-                ),
+                colors = textFieldColor,
                 placeholder = {
                     Text(
                         modifier = Modifier
@@ -409,15 +392,7 @@ fun AddNotesScreen(
                         style = MaterialTheme.typography.bodyLarge
                     )
                 },
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedTextColor = MaterialTheme.colorScheme.scrim,
-                    cursorColor = Color(0xFF2196F3),
-                    unfocusedTextColor = MaterialTheme.colorScheme.scrim.copy(0.8f)
-                ),
+                colors = textFieldColor,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     textAlign = TextAlign.End
@@ -450,15 +425,7 @@ fun AddNotesScreen(
                         style = MaterialTheme.typography.bodyLarge
                     )
                 },
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedTextColor = MaterialTheme.colorScheme.scrim,
-                    cursorColor = Color(0xFF2196F3),
-                    unfocusedTextColor = MaterialTheme.colorScheme.scrim.copy(0.8f)
-                ),
+                colors = textFieldColor,
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     textAlign = TextAlign.Start
                 ),
@@ -544,6 +511,7 @@ fun AddNotesScreen(
             )
 
             Card(
+                shape = RoundedCornerShape(0.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -554,7 +522,7 @@ fun AddNotesScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 14.dp, horizontal = 6.dp),
+                        .padding(vertical = 20.dp, horizontal = 6.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -577,15 +545,14 @@ fun AddNotesScreen(
 
                     }
 
+                        Icon(
+                            imageVector = Icons.Rounded.KeyboardArrowDown, contentDescription = "",
+                            modifier = Modifier
+                                .padding(start = 2.dp, end = 4.dp)
+                                .rotate(rotateState),
+                            tint = MaterialTheme.colorScheme.scrim.copy()
+                        )
 
-                    Icon(
-                        imageVector = Icons.Rounded.KeyboardArrowDown, contentDescription = "",
-                        modifier = Modifier
-                            .rotate(rotateState)
-                            .padding(end = 10.dp)
-                            .size(30.dp),
-                        tint = MaterialTheme.colorScheme.scrim.copy(0.8f)
-                    )
                 }
             }
 
@@ -601,11 +568,7 @@ fun AddNotesScreen(
                                 IconButton(
                                     modifier = Modifier.padding(bottom = 8.dp),
                                     onClick = {
-                                        selectedImageUriList =
-                                            selectedImageUriList.toMutableList().apply {
-                                                removeAt(index)
-                                            }
-                                        Log.e("pasi", index.toString())
+                                        selectedImageUriList.remove(uri)
                                     }) {
                                     Icon(
                                         imageVector = Icons.Rounded.DeleteForever,
@@ -627,8 +590,6 @@ fun AddNotesScreen(
                             textAlign = TextAlign.Center
                         )
                     }
-
-
                     Surface(
                         shape = RoundedCornerShape(9.dp),
                         modifier = Modifier
@@ -653,27 +614,24 @@ fun AddNotesScreen(
                                     .size(30.dp)
                             )
                             Text(
-                                text = "اضافه کردن عکس, فایل",
+                                text = "افزودن عکس , فایل",
                                 color = MaterialTheme.colorScheme.scrim,
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         }
 
                     }
+
                 }
-
-
             }
             HorizontalDivider(
                 thickness = 6.dp,
                 color = Color.LightGray.copy(0.1f)
             )
-
         }
 
     }
 }
-
 
 
 @Composable
