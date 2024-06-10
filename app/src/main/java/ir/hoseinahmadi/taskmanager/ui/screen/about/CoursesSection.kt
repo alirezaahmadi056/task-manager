@@ -34,7 +34,7 @@ fun CoursesSection(items: List<Course>) {
     )
     FlowRow(
         maxItemsInEachRow = 2,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 3.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         for (it in items) {

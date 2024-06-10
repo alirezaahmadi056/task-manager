@@ -14,7 +14,7 @@ import javax.inject.Inject
 class AboutViewModel @Inject constructor(
     private val repository: AboutRepository
 ) : ViewModel() {
-
+val loading =repository.loading
     val allData: StateFlow<AboutResponse> = repository.allData
 
     fun getAllData() {

@@ -14,7 +14,10 @@ class AboutRepository @Inject constructor(
     private val _allData = MutableStateFlow(AboutResponse())
     val allData = _allData.asStateFlow()
 
+
+    val loading =MutableStateFlow(false)
     suspend fun getAboutData() {
+        loading.emit(true)
         val response =try {
             apiInterFace.getAboutData()
         }catch (e:Exception){
@@ -22,10 +25,11 @@ class AboutRepository @Inject constructor(
             return
         }
         if (response.isSuccessful){
-          val body =  response.body()
+            val body =  response.body()
             body?.let {
                 _allData.emit(it)
             }
+            loading.emit(false)
         }else{
             Log.e("hosein","getAboutData not success")
         }
