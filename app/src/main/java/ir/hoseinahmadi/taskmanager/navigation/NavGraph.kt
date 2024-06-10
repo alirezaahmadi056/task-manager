@@ -17,6 +17,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import ir.hoseinahmadi.taskmanager.ui.screen.about.AboutMeScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.AddNotesScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.NotesScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.task.TaskScreen
@@ -69,11 +70,13 @@ fun NavGraph(navHostController: NavHostController) {
                     defaultValue =0
                 }
             ),
-
             ) {
             AddTaskScreen(navHostController = navHostController,
                 id =it.arguments?.getInt("id")?:0
             )
+        }
+        composable(Screen.AboutMeScreen.route){
+            AboutMeScreen(navHostController)
         }
     }
 

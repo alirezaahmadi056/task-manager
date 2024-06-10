@@ -59,9 +59,15 @@ class MainActivity : ComponentActivity() {
                         drawerState = drawerState,
                         drawerContent = {
                             DrawerContent(
+                                navHostController,
                                 changeThem = {
                                     darkThem = it
-                                }
+                                },
+                                onFinish ={
+                                    scope.launch {
+                                        drawerState.close()
+                                    }
+                                },
                             )
                         }) {
                         Scaffold(
@@ -93,7 +99,6 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-
                 }
             }
         }

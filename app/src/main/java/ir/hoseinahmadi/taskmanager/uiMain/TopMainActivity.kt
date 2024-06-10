@@ -14,19 +14,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FormatListNumberedRtl
-import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material.icons.rounded.AcUnit
 import androidx.compose.material.icons.rounded.AlignVerticalBottom
+import androidx.compose.material.icons.rounded.Approval
 import androidx.compose.material.icons.rounded.DarkMode
-import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.icons.sharp.DarkMode
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -35,7 +32,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -54,10 +50,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.R
 import ir.hoseinahmadi.taskmanager.navigation.Screen
 import ir.hoseinahmadi.taskmanager.ui.component.showSelectedSortNotList
-import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.showBottomSheetSelectedColor
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.showDialogSelectedGridList
 import ir.hoseinahmadi.taskmanager.util.Constants
 import ir.hoseinahmadi.taskmanager.viewModel.DatStoreViewModel
@@ -194,8 +190,10 @@ fun TopBar(
 
 @Composable
 fun DrawerContent(
+    navHostController: NavHostController,
     changeThem: (Boolean) -> Unit,
-    datStoreViewModel: DatStoreViewModel = hiltViewModel()
+    onFinish: () -> Unit,
+    datStoreViewModel: DatStoreViewModel = hiltViewModel(),
 ) {
     var darkThem by remember {
         mutableStateOf(Constants.isThemDark)
@@ -204,7 +202,7 @@ fun DrawerContent(
         modifier = Modifier
             .fillMaxWidth(0.8f)
             .fillMaxHeight()
-            .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
+            .clip(RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp))
             .background(MaterialTheme.colorScheme.background)
     ) {
         Image(
@@ -214,7 +212,11 @@ fun DrawerContent(
             painter = painterResource(id = R.drawable.taskhed),
             contentDescription = "",
         )
-        DrawerItem(text = "درباره ما", icon = Icons.Rounded.AcUnit, onClick = {})
+        DrawerItem(text = "درباره من", icon = Icons.Rounded.Approval,
+            onClick = {
+                navHostController.navigate(Screen.AboutMeScreen.route)
+                onFinish()
+            })
         DrawerItem(text = "درباره ما", icon = Icons.Rounded.AcUnit, onClick = {})
         DrawerItem(text = "درباره ما", icon = Icons.Rounded.AcUnit, onClick = {})
         DrawerItem(text = "پوسته تیره", icon = Icons.Rounded.DarkMode,

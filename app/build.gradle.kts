@@ -103,17 +103,11 @@ dependencies {
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     ksp("com.google.dagger:hilt-compiler:$hiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
 
     implementation("io.coil-kt:coil-compose:2.5.0")
 
-    //swipe refresh
-    implementation("com.google.accompanist:accompanist-swiperefresh:0.27.0")
-
-    //system ui controller
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
 
     //icon
     implementation("androidx.compose.material:material-icons-extended:1.7.0-beta02")
