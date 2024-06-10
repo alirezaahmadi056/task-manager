@@ -28,8 +28,8 @@ import ir.hoseinahmadi.taskmanager.navigation.NavGraph
 import ir.hoseinahmadi.taskmanager.navigation.Screen
 import ir.hoseinahmadi.taskmanager.ui.component.AppConfig
 import ir.hoseinahmadi.taskmanager.ui.theme.TaskManagerTheme
-import ir.hoseinahmadi.taskmanager.uiMain.DrawerContent
-import ir.hoseinahmadi.taskmanager.uiMain.TopBar
+import ir.hoseinahmadi.taskmanager.topBarMain.DrawerContent
+import ir.hoseinahmadi.taskmanager.topBarMain.TopBar
 import ir.hoseinahmadi.taskmanager.util.Constants
 import kotlinx.coroutines.launch
 
@@ -73,6 +73,7 @@ class MainActivity : ComponentActivity() {
                         Scaffold(
                             topBar = {
                                 TopBar(
+                                    navHostController,
                                     backStackEntry,
                                     showBottomBar,
                                     openDrawer = {

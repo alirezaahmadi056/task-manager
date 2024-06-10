@@ -17,6 +17,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import ir.hoseinahmadi.taskmanager.ui.screen.SearchScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.about.AboutMeScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.AddNotesScreen
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.NotesScreen
@@ -29,18 +30,6 @@ fun NavGraph(navHostController: NavHostController) {
     NavHost(
         navController = navHostController,
         startDestination = Screen.NotesScreen.route,
-        enterTransition = {
-            slideInVertically(
-                initialOffsetY = { fullHeight -> fullHeight },
-                animationSpec = tween(800)
-            )
-        },
-        exitTransition = {
-            slideOutVertically(
-                targetOffsetY = { fullHeight -> fullHeight },
-                animationSpec = tween(800)
-            )
-        }
     ) {
         composable(Screen.NotesScreen.route) {
             NotesScreen(navHostController)
@@ -55,7 +44,18 @@ fun NavGraph(navHostController: NavHostController) {
                     defaultValue = 0
                 },
             ),
-
+            enterTransition = {
+                slideInVertically(
+                    initialOffsetY = { fullHeight -> fullHeight },
+                    animationSpec = tween(800)
+                )
+            },
+            exitTransition = {
+                slideOutVertically(
+                    targetOffsetY = { fullHeight -> fullHeight },
+                    animationSpec = tween(800)
+                )
+            }
         ) {
             AddNotesScreen(
                 navHostController = navHostController,
@@ -70,6 +70,18 @@ fun NavGraph(navHostController: NavHostController) {
                     defaultValue =0
                 }
             ),
+            enterTransition = {
+                slideInVertically(
+                    initialOffsetY = { fullHeight -> fullHeight },
+                    animationSpec = tween(800)
+                )
+            },
+            exitTransition = {
+                slideOutVertically(
+                    targetOffsetY = { fullHeight -> fullHeight },
+                    animationSpec = tween(800)
+                )
+            }
             ) {
             AddTaskScreen(navHostController = navHostController,
                 id =it.arguments?.getInt("id")?:0
@@ -77,6 +89,9 @@ fun NavGraph(navHostController: NavHostController) {
         }
         composable(Screen.AboutMeScreen.route){
             AboutMeScreen(navHostController)
+        }
+        composable(Screen.SearchScreen.route){
+            SearchScreen(navHostController)
         }
     }
 

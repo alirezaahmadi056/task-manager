@@ -45,7 +45,7 @@ fun CourseItemCard(item: Course) {
             )
             Text(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                    .padding(horizontal = 5.dp, vertical = 2.dp),
                 text = item.title,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.scrim

@@ -1,4 +1,4 @@
-package ir.hoseinahmadi.taskmanager.uiMain
+package ir.hoseinahmadi.taskmanager.topBarMain
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -60,6 +60,7 @@ import ir.hoseinahmadi.taskmanager.viewModel.DatStoreViewModel
 
 @Composable
 fun TopBar(
+    navHostController: NavHostController,
     backStackEntry: State<NavBackStackEntry?>,
     isShow: Boolean,
     openDrawer: () -> Unit,
@@ -81,7 +82,9 @@ fun TopBar(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        navHostController.navigate(Screen.SearchScreen.route)
+                    }) {
                         Icon(
                             imageVector = Icons.Rounded.Search,
                             contentDescription = "",
