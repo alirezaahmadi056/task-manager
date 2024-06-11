@@ -24,4 +24,10 @@ class NotifeViewModel @Inject constructor(
         }
     }
 
+    fun resetResponse(){
+        viewModelScope.launch {
+            notifeResponse.emit(NotifeResponse())
+        }
+    }
+
 }

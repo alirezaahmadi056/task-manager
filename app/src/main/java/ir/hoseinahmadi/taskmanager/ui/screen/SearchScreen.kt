@@ -1,6 +1,7 @@
 package ir.hoseinahmadi.taskmanager.ui.screen
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,10 +31,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import ir.hoseinahmadi.taskmanager.R
 import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
 import ir.hoseinahmadi.taskmanager.data.db.task.TaskItem
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.NotesListItem
@@ -148,14 +151,23 @@ fun SearchScreenContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 if (filteredTasks.isEmpty() && filteredNotes.isEmpty()&&searchText.isNotEmpty()) {
-                    Text(
-                        text = "آیتمی یافت نشد",
-                        style = MaterialTheme.typography.bodyLarge,
+                    Column(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxWidth()
                             .padding(16.dp),
-                        color = Color.Gray
-                    )
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        Image(painter = painterResource(id = R.drawable.emptylist),
+                            contentDescription ="" )
+                        Text(
+                            text = "آیتمی یافت نشد",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.scrim
+                        )
+                    }
+
                 } else
                 {
                     LazyColumn(

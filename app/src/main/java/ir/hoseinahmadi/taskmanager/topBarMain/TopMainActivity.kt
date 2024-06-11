@@ -1,6 +1,11 @@
 package ir.hoseinahmadi.taskmanager.topBarMain
 
+import android.app.Activity
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +31,10 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.SignalWifiStatusbarConnectedNoInternet4
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -34,9 +43,11 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -71,7 +82,6 @@ fun TopBar(
 ) {
 
     if (isShow) {
-
         val isNote = backStackEntry.value?.destination?.route == Screen.NotesScreen.route
         Column {
             Row(
@@ -202,6 +212,9 @@ fun DrawerContent(
     onFinish: () -> Unit,
     datStoreViewModel: DatStoreViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current as Activity
+    val uriHandler = LocalUriHandler.current
+
     var darkThem by remember {
         mutableStateOf(Constants.isThemDark)
     }
@@ -209,15 +222,22 @@ fun DrawerContent(
     var showAlertSendMessage by remember {
         mutableStateOf(false)
     }
+
+    var showAlertNoInternet by remember {
+        mutableStateOf(false)
+    }
+
     AlertDialogSendMessage(
-        show =showAlertSendMessage,
+        show = showAlertSendMessage,
         onDismissRequest = {
             showAlertSendMessage = false
         }
     )
+    NoInterNet(show = showAlertNoInternet,
+        navHostController = navHostController, context = context,
+        onFinish = { showAlertNoInternet = false })
 
-    val context = LocalContext.current
-    val uriHandler = LocalUriHandler.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth(0.8f)
@@ -234,14 +254,18 @@ fun DrawerContent(
         )
         DrawerItem(text = "درباره من", icon = Icons.Outlined.Person,
             onClick = {
-                navHostController.navigate(Screen.AboutMeScreen.route)
+                if (isOnline(context)){
+                    navHostController.navigate(Screen.AboutMeScreen.route)
+                }else{
+                    showAlertNoInternet =true
+                }
                 onFinish()
             })
         DrawerItem(text = "سایر برنامه ها", icon = Icons.Outlined.Apps, onClick = {})
         DrawerItem(text = "پیشنهادات", icon = Icons.Outlined.QuestionAnswer,
             onClick = {
+                showAlertSendMessage = true
                 onFinish()
-                showAlertSendMessage =true
             })
         DrawerItem(text = "پوسته تیره", icon = Icons.Outlined.DarkMode,
             addComposable = {
@@ -278,8 +302,7 @@ fun DrawerContent(
             icon = Icons.AutoMirrored.Outlined.Message,
             onClick = {
                 try {
-//                    uriHandler.openUri("tg://resolve?domain=i_hoseinam")
-                    uriHandler.openUri("https://hoseinahmadi.ir")
+                    uriHandler.openUri("tg://resolve?domain=alirezaahmadi_info")
                 } catch (e: Exception) {
                     Toast.makeText(context, "تلگرام یافت نشد", Toast.LENGTH_SHORT).show()
                 }
@@ -347,3 +370,72 @@ fun DrawerItem(
     }
 }
 
+@Composable
+private fun NoInterNet(
+    show: Boolean,
+    navHostController: NavHostController,
+    context: Activity,
+    onFinish: () -> Unit
+) {
+    if (show) {
+        AlertDialog(
+            onDismissRequest = { onFinish() },
+            title = {
+                Text(
+                    text = "عدم اتصال اینترنت",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.scrim
+                )
+            },
+            text = {
+                Text(
+                    text = "لطفا دسترسی به اینترنت را بررسی کنید!",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.scrim
+                )
+            },
+            confirmButton = {
+                    Button(
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        onClick = {
+                            if (isOnline(context)) {
+                                navHostController.navigate(Screen.AboutMeScreen.route)
+                            } else {
+                                Toast.makeText(context, "عدم اتصال به اینترنت", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }) {
+                        Text(
+                            text = "تلاش مجدد",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White
+                        )
+                    }
+
+            },
+            dismissButton = {
+                TextButton(onClick = { onFinish() }) {
+                    Text(
+                        text = "بستن",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.scrim
+                    )
+                }
+            }
+            )
+    }
+
+}
+
+fun isOnline(context: Context): Boolean {
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = connectivityManager.activeNetwork ?: return false
+    val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+    return when {
+        activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+        activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+        activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+        else -> false
+    }
+}

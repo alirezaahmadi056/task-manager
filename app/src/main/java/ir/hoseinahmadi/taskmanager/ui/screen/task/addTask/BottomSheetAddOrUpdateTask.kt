@@ -37,11 +37,10 @@ fun BottomSheetAddTask(
 
     if (show) {
         var taskTitle by remember { mutableStateOf("") }
-        val context = LocalContext.current
         ModalBottomSheet(onDismissRequest = { showBottomSheetAddTask.value = false }) {
             Column(
                 modifier = Modifier
-                    .padding(vertical = 10.dp, horizontal = 5.dp)
+                    .padding( 10.dp)
                     .fillMaxWidth()
                     .padding(bottom = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -56,7 +55,7 @@ fun BottomSheetAddTask(
                         )
                     },
                     maxLines = 2,
-                    shape = RoundedCornerShape(15.dp),
+                    shape = RoundedCornerShape(11.dp),
                     colors = TextFieldDefaults.colors(
                         unfocusedContainerColor = MaterialTheme.colorScheme.scrim.copy(0.1f),
                         focusedContainerColor = MaterialTheme.colorScheme.scrim.copy(0.06f),
@@ -108,7 +107,7 @@ fun BottomUpdateSheetTask(
         ModalBottomSheet(onDismissRequest = { showBottomUpdateSheetTask.value = false }) {
             Column(
                 modifier = Modifier
-                    .padding(vertical = 10.dp, horizontal = 5.dp)
+                    .padding(10.dp)
                     .fillMaxWidth()
                     .padding(bottom = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,

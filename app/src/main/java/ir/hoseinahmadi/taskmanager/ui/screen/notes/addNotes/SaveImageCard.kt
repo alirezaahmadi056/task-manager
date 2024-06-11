@@ -52,7 +52,7 @@ fun SaveImageCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 6.dp, vertical = 3.dp),
+            .padding(horizontal = 8.dp, vertical = 3.dp),
     ) {
         Row(
             modifier = Modifier

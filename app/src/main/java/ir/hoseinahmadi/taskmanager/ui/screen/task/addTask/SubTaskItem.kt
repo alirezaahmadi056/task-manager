@@ -47,7 +47,7 @@ fun SubTaskItem(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 2.dp),
+            .padding(horizontal = 5.dp, vertical = 2.dp),
         onClick = { onClick() }) {
         Row(
             modifier = Modifier

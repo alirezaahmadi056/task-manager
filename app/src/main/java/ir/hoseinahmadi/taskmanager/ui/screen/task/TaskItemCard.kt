@@ -84,7 +84,7 @@ fun TaskItemCard(
         ),
         border = BorderStroke(0.8.dp, Color.LightGray),
         modifier = Modifier
-            .padding(4.dp)
+            .padding(horizontal = 6.dp, vertical = 4.dp)
             .fillMaxWidth()
             .height(100.dp),
         onClick = { navHostController.navigate(Screen.AddTaskScreen.route + "?id=${item.id}") }

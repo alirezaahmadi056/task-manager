@@ -62,6 +62,7 @@ import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.data.db.notes.NotesItem
 import ir.hoseinahmadi.taskmanager.navigation.Screen
 import ir.hoseinahmadi.taskmanager.ui.component.DialogDeleteItemTask
+import ir.hoseinahmadi.taskmanager.ui.component.EmptyList
 import ir.hoseinahmadi.taskmanager.ui.component.SelectedSortNotList
 import ir.hoseinahmadi.taskmanager.util.Constants
 import ir.hoseinahmadi.taskmanager.viewModel.NotesViewModel
@@ -189,115 +190,118 @@ fun NotesScreen(
 
             extanded =
                 (lazyStateStagger.firstVisibleItemScrollOffset == 0 || lazyStateStagger.canScrollForward)
+            if (sortedNotesItem.isNotEmpty()) {
+                LazyVerticalStaggeredGrid(
+                    state = lazyStateStagger,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                        .padding(horizontal = 4.dp),
+                    columns = StaggeredGridCells.Fixed(2),
+                    contentPadding = PaddingValues(3.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalItemSpacing = 8.dp
+                ) {
+                    items(sortedNotesItem, key = { it.id }) { notesItem ->
+                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                            val swipeToDismiss = rememberSwipeToDismissBoxState(
+                                confirmValueChange = { swip ->
+                                    when (swip) {
+                                        SwipeToDismissBoxValue.StartToEnd -> {
+                                            navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
+                                        }
 
-            LazyVerticalStaggeredGrid(
-                state = lazyStateStagger,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-                    .padding(horizontal = 4.dp),
-                columns = StaggeredGridCells.Fixed(2),
-                contentPadding = PaddingValues(3.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalItemSpacing = 8.dp
-            ) {
-                items(sortedNotesItem, key = { it.id }) { notesItem ->
-                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                        val swipeToDismiss = rememberSwipeToDismissBoxState(
-                            confirmValueChange = { swip ->
-                                when (swip) {
-                                    SwipeToDismissBoxValue.StartToEnd -> {
-                                        navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
-                                    }
+                                        SwipeToDismissBoxValue.EndToStart -> {
+                                            singleDeleteNotes = notesItem
+                                            showDialogDelete = true
+                                        }
 
-                                    SwipeToDismissBoxValue.EndToStart -> {
-                                        singleDeleteNotes = notesItem
-                                        showDialogDelete = true
-                                    }
-
-                                    SwipeToDismissBoxValue.Settled -> {
-                                    }
-                                }
-                                return@rememberSwipeToDismissBoxState false
-                            }
-                        )
-                        SwipeToDismissBox(
-                            enableDismissFromEndToStart = true,
-                            enableDismissFromStartToEnd = true,
-                            state = swipeToDismiss,
-                            backgroundContent = {
-                                when (swipeToDismiss.dismissDirection) {
-                                    SwipeToDismissBoxValue.StartToEnd -> {
-
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .padding(5.dp)
-                                                .clip(RoundedCornerShape(11.dp)),
-                                            contentAlignment = Alignment.CenterStart
-                                        )
-                                        {
-                                            Box(
-                                                Modifier
-                                                    .clip(CircleShape)
-                                                    .background(MaterialTheme.colorScheme.onPrimary),
-                                                contentAlignment = Alignment.Center
-                                            ) {
-                                                Icon(
-                                                    Icons.Rounded.EditNote,
-                                                    contentDescription = "",
-                                                    tint = Color.White,
-                                                    modifier = Modifier
-                                                        .padding(8.dp)
-                                                        .size(50.dp)
-                                                )
-                                            }
-
-
+                                        SwipeToDismissBoxValue.Settled -> {
                                         }
                                     }
+                                    return@rememberSwipeToDismissBoxState false
+                                }
+                            )
+                            SwipeToDismissBox(
+                                enableDismissFromEndToStart = true,
+                                enableDismissFromStartToEnd = true,
+                                state = swipeToDismiss,
+                                backgroundContent = {
+                                    when (swipeToDismiss.dismissDirection) {
+                                        SwipeToDismissBoxValue.StartToEnd -> {
 
-                                    SwipeToDismissBoxValue.EndToStart -> {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .padding(5.dp)
-                                                .clip(RoundedCornerShape(11.dp)),
-                                            contentAlignment = Alignment.CenterEnd
-                                        )
-                                        {
                                             Box(
-                                                Modifier
-                                                    .clip(CircleShape)
-                                                    .background(MaterialTheme.colorScheme.error),
-                                                contentAlignment = Alignment.Center
-                                            ) {
-                                                Icon(
-                                                    Icons.Rounded.DeleteSweep,
-                                                    contentDescription = "",
-                                                    tint = Color.White,
-                                                    modifier = Modifier
-                                                        .padding(8.dp)
-                                                        .size(50.dp)
-                                                )
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .padding(5.dp)
+                                                    .clip(RoundedCornerShape(11.dp)),
+                                                contentAlignment = Alignment.CenterStart
+                                            )
+                                            {
+                                                Box(
+                                                    Modifier
+                                                        .clip(CircleShape)
+                                                        .background(MaterialTheme.colorScheme.onPrimary),
+                                                    contentAlignment = Alignment.Center
+                                                ) {
+                                                    Icon(
+                                                        Icons.Rounded.EditNote,
+                                                        contentDescription = "",
+                                                        tint = Color.White,
+                                                        modifier = Modifier
+                                                            .padding(8.dp)
+                                                            .size(50.dp)
+                                                    )
+                                                }
+
+
                                             }
-
-
                                         }
+
+                                        SwipeToDismissBoxValue.EndToStart -> {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .padding(5.dp)
+                                                    .clip(RoundedCornerShape(11.dp)),
+                                                contentAlignment = Alignment.CenterEnd
+                                            )
+                                            {
+                                                Box(
+                                                    Modifier
+                                                        .clip(CircleShape)
+                                                        .background(MaterialTheme.colorScheme.error),
+                                                    contentAlignment = Alignment.Center
+                                                ) {
+                                                    Icon(
+                                                        Icons.Rounded.DeleteSweep,
+                                                        contentDescription = "",
+                                                        tint = Color.White,
+                                                        modifier = Modifier
+                                                            .padding(8.dp)
+                                                            .size(50.dp)
+                                                    )
+                                                }
+
+
+                                            }
+                                        }
+
+                                        SwipeToDismissBoxValue.Settled -> {}
                                     }
 
-                                    SwipeToDismissBoxValue.Settled -> {}
                                 }
-
-                            }
-                        ) {
-                            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                                NotesItemCard(navHostController, item = notesItem)
+                            ) {
+                                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                                    NotesItemCard(navHostController, item = notesItem)
+                                }
                             }
                         }
-                    }
 
+                    }
                 }
+            } else {
+                EmptyList()
             }
         }
         AnimatedVisibility(
@@ -307,91 +311,96 @@ fun NotesScreen(
         ) {
             extanded =
                 (lazyListState.firstVisibleItemScrollOffset == 0 || lazyListState.canScrollForward)
+            if (sortedNotesItem.isNotEmpty()) {
+                LazyColumn(
+                    state = lazyListState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                ) {
+                    items(sortedNotesItem) { notesItem ->
+                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                            val swipeToDismiss = rememberSwipeToDismissBoxState(
+                                confirmValueChange = { swip ->
+                                    when (swip) {
+                                        SwipeToDismissBoxValue.StartToEnd -> {
+                                            navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
+                                        }
 
-            LazyColumn(
-                state = lazyListState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-            ) {
-                items(sortedNotesItem) { notesItem ->
-                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                        val swipeToDismiss = rememberSwipeToDismissBoxState(
-                            confirmValueChange = { swip ->
-                                when (swip) {
-                                    SwipeToDismissBoxValue.StartToEnd -> {
-                                        navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
-                                    }
+                                        SwipeToDismissBoxValue.EndToStart -> {
+                                            singleDeleteNotes = notesItem
+                                            showDialogDelete = true
+                                        }
 
-                                    SwipeToDismissBoxValue.EndToStart -> {
-                                        singleDeleteNotes = notesItem
-                                        showDialogDelete = true
-                                    }
-
-                                    SwipeToDismissBoxValue.Settled -> {
-                                    }
-                                }
-                                return@rememberSwipeToDismissBoxState false
-                            }
-                        )
-                        SwipeToDismissBox(
-                            enableDismissFromEndToStart = true,
-                            enableDismissFromStartToEnd = true,
-                            state = swipeToDismiss,
-                            backgroundContent = {
-                                when (swipeToDismiss.dismissDirection) {
-                                    SwipeToDismissBoxValue.StartToEnd -> {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .padding(5.dp)
-                                                .clip(RoundedCornerShape(11.dp))
-                                                .background(MaterialTheme.colorScheme.onPrimary),
-                                            contentAlignment = Alignment.CenterStart
-                                        )
-                                        {
-                                            Icon(
-                                                Icons.Rounded.EditNote,
-                                                contentDescription = "",
-                                                tint = Color.White,
-                                                modifier = Modifier.size(50.dp)
-                                            )
-
+                                        SwipeToDismissBoxValue.Settled -> {
                                         }
                                     }
-
-                                    SwipeToDismissBoxValue.EndToStart -> {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .padding(5.dp)
-                                                .clip(RoundedCornerShape(11.dp))
-                                                .background(MaterialTheme.colorScheme.error),
-                                            contentAlignment = Alignment.CenterEnd
-                                        )
-                                        {
-                                            Icon(
-                                                Icons.Rounded.DeleteSweep,
-                                                contentDescription = "",
-                                                tint = Color.White, modifier = Modifier.size(50.dp)
+                                    return@rememberSwipeToDismissBoxState false
+                                }
+                            )
+                            SwipeToDismissBox(
+                                enableDismissFromEndToStart = true,
+                                enableDismissFromStartToEnd = true,
+                                state = swipeToDismiss,
+                                backgroundContent = {
+                                    when (swipeToDismiss.dismissDirection) {
+                                        SwipeToDismissBoxValue.StartToEnd -> {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .padding(5.dp)
+                                                    .clip(RoundedCornerShape(11.dp))
+                                                    .background(MaterialTheme.colorScheme.onPrimary),
+                                                contentAlignment = Alignment.CenterStart
                                             )
+                                            {
+                                                Icon(
+                                                    Icons.Rounded.EditNote,
+                                                    contentDescription = "",
+                                                    tint = Color.White,
+                                                    modifier = Modifier.size(50.dp)
+                                                )
 
+                                            }
                                         }
+
+                                        SwipeToDismissBoxValue.EndToStart -> {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .padding(5.dp)
+                                                    .clip(RoundedCornerShape(11.dp))
+                                                    .background(MaterialTheme.colorScheme.error),
+                                                contentAlignment = Alignment.CenterEnd
+                                            )
+                                            {
+                                                Icon(
+                                                    Icons.Rounded.DeleteSweep,
+                                                    contentDescription = "",
+                                                    tint = Color.White,
+                                                    modifier = Modifier.size(50.dp)
+                                                )
+
+                                            }
+                                        }
+
+                                        SwipeToDismissBoxValue.Settled -> {}
                                     }
 
-                                    SwipeToDismissBoxValue.Settled -> {}
                                 }
-
-                            }
-                        ) {
-                            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                                NotesListItem(navHostController, notesItem)
+                            ) {
+                                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                                    NotesListItem(navHostController, notesItem)
+                                }
                             }
                         }
-                    }
 
+                    }
                 }
+            } else {
+                EmptyList()
             }
+
         }
 
     }

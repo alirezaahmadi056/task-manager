@@ -1,5 +1,6 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.about
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -14,6 +15,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,10 +25,15 @@ import ir.hoseinahmadi.taskmanager.data.model.about.Course
 @OptIn( ExperimentalLayoutApi::class)
 @Composable
 fun CoursesSection(items: List<Course>) {
+
+    val utiHandle = LocalUriHandler.current
+    val context = LocalContext.current
     Spacer(modifier = Modifier.height(10.dp))
 
     Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 9.dp, vertical = 4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 9.dp, vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -36,7 +44,13 @@ fun CoursesSection(items: List<Course>) {
             fontWeight = FontWeight.Bold
         )
 
-        TextButton(onClick = { /*TODO*/ }) {
+        TextButton(onClick = {
+            try {
+                utiHandle.openUri("https://www.daneshjooyar.com/teacher/alireza-ahmadi/")
+            }catch (e:Exception){
+                Toast.makeText(context, "خطا", Toast.LENGTH_SHORT).show()
+            }
+        }) {
             Text(text = "مشاهده همه",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.primary

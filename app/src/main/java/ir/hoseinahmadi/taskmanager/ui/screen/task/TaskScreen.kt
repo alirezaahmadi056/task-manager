@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -52,6 +53,7 @@ import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.data.db.task.TaskItem
 import ir.hoseinahmadi.taskmanager.navigation.Screen
 import ir.hoseinahmadi.taskmanager.ui.component.DialogDeleteItemTask
+import ir.hoseinahmadi.taskmanager.ui.component.EmptyList
 import ir.hoseinahmadi.taskmanager.ui.component.SelectedSortNotList
 import ir.hoseinahmadi.taskmanager.util.Constants
 import ir.hoseinahmadi.taskmanager.viewModel.TaskViewModel
@@ -112,6 +114,10 @@ fun TaskScreen(
         show = showDialogDelete
     )
 
+    var extanded by remember {
+        mutableStateOf(false)
+    }
+    val lazyListState = rememberLazyListState()
 
     Scaffold(
         snackbarHost = {
@@ -144,7 +150,7 @@ fun TaskScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,
-                expanded = true,
+                expanded = extanded,
                 text = {
                     Text(
                         text = "وظیقه",
@@ -163,94 +169,104 @@ fun TaskScreen(
         },
         floatingActionButtonPosition = FabPosition.Start
     ) {
+        extanded =
+            (lazyListState.firstVisibleItemScrollOffset == 0 || lazyListState.canScrollForward)
         LazyColumn(
+            state = lazyListState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
         ) {
-            items(incompleteTasks, key = { task -> task.id })
-            { taskItem ->
-                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                    val swipeToDismiss = rememberSwipeToDismissBoxState(
-                        confirmValueChange = { swip ->
-                            when (swip) {
-                                SwipeToDismissBoxValue.StartToEnd -> {
-                                    navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}")
-                                }
+            if (item.isEmpty()){
+                item {
+                    EmptyList()
+                }
+            }else{
+                items(incompleteTasks, key = { task -> task.id })
+                { taskItem ->
+                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                        val swipeToDismiss = rememberSwipeToDismissBoxState(
+                            confirmValueChange = { swip ->
+                                when (swip) {
+                                    SwipeToDismissBoxValue.StartToEnd -> {
+                                        navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}")
+                                    }
 
-                                SwipeToDismissBoxValue.EndToStart -> {
-                                    singleDeleteTask = taskItem
-                                    showDialogDelete = true
-                                }
+                                    SwipeToDismissBoxValue.EndToStart -> {
+                                        singleDeleteTask = taskItem
+                                        showDialogDelete = true
+                                    }
 
-                                SwipeToDismissBoxValue.Settled -> {
-                                }
-                            }
-                            return@rememberSwipeToDismissBoxState false
-                        }
-                    )
-                    SwipeToDismissBox(
-                        enableDismissFromEndToStart = true,
-                        enableDismissFromStartToEnd = true,
-                        state = swipeToDismiss,
-                        backgroundContent = {
-                            when (swipeToDismiss.dismissDirection) {
-                                SwipeToDismissBoxValue.StartToEnd -> {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .padding(5.dp)
-                                            .clip(RoundedCornerShape(11.dp))
-                                            .background(MaterialTheme.colorScheme.onPrimary),
-                                        contentAlignment = Alignment.CenterStart
-                                    )
-                                    {
-                                        Icon(
-                                            Icons.Rounded.EditNote,
-                                            contentDescription = "",
-                                            tint = Color.White,
-                                            modifier = Modifier.size(50.dp)
-                                        )
-
+                                    SwipeToDismissBoxValue.Settled -> {
                                     }
                                 }
-
-                                SwipeToDismissBoxValue.EndToStart -> {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .padding(5.dp)
-                                            .clip(RoundedCornerShape(11.dp))
-                                            .background(MaterialTheme.colorScheme.error),
-                                        contentAlignment = Alignment.CenterEnd
-                                    )
-                                    {
-                                        Icon(
-                                            Icons.Rounded.DeleteSweep,
-                                            contentDescription = "",
-                                            tint = Color.White, modifier = Modifier.size(50.dp)
+                                return@rememberSwipeToDismissBoxState false
+                            }
+                        )
+                        SwipeToDismissBox(
+                            enableDismissFromEndToStart = true,
+                            enableDismissFromStartToEnd = true,
+                            state = swipeToDismiss,
+                            backgroundContent = {
+                                when (swipeToDismiss.dismissDirection) {
+                                    SwipeToDismissBoxValue.StartToEnd -> {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .padding(5.dp)
+                                                .clip(RoundedCornerShape(11.dp))
+                                                .background(MaterialTheme.colorScheme.onPrimary),
+                                            contentAlignment = Alignment.CenterStart
                                         )
+                                        {
+                                            Icon(
+                                                Icons.Rounded.EditNote,
+                                                contentDescription = "",
+                                                tint = Color.White,
+                                                modifier = Modifier.size(50.dp)
+                                            )
 
+                                        }
                                     }
+
+                                    SwipeToDismissBoxValue.EndToStart -> {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .padding(5.dp)
+                                                .clip(RoundedCornerShape(11.dp))
+                                                .background(MaterialTheme.colorScheme.error),
+                                            contentAlignment = Alignment.CenterEnd
+                                        )
+                                        {
+                                            Icon(
+                                                Icons.Rounded.DeleteSweep,
+                                                contentDescription = "",
+                                                tint = Color.White, modifier = Modifier.size(50.dp)
+                                            )
+
+                                        }
+                                    }
+
+                                    SwipeToDismissBoxValue.Settled -> {}
                                 }
 
-                                SwipeToDismissBoxValue.Settled -> {}
                             }
-
-                        }
-                    ) {
-                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                            TaskItemCard(navHostController = navHostController, item = taskItem)
+                        ) {
+                            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                                TaskItemCard(navHostController = navHostController, item = taskItem)
+                            }
                         }
                     }
                 }
-            }
-            item {
-                CompletedTaskSection(navHostController, completedTasks) { deleted ->
-                    singleDeleteTask = deleted
-                    showDialogDelete = true
+                item {
+                    CompletedTaskSection(navHostController, completedTasks) { deleted ->
+                        singleDeleteTask = deleted
+                        showDialogDelete = true
+                    }
                 }
             }
+
 
         }
 
