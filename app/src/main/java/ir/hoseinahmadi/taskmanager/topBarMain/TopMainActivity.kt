@@ -1,5 +1,6 @@
 package ir.hoseinahmadi.taskmanager.topBarMain
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,14 +15,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Message
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.outlined.Apps
+import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FormatListNumberedRtl
-import androidx.compose.material.icons.rounded.AcUnit
-import androidx.compose.material.icons.rounded.AlignVerticalBottom
-import androidx.compose.material.icons.rounded.Approval
-import androidx.compose.material.icons.rounded.DarkMode
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
@@ -46,6 +48,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -92,73 +96,73 @@ fun TopBar(
                             tint = MaterialTheme.colorScheme.scrim
                         )
                     }
-                        var expand by remember {
-                            mutableStateOf(false)
+                    var expand by remember {
+                        mutableStateOf(false)
+                    }
+                    Column {
+                        IconButton(onClick = {
+                            expand = true
+                        }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.menu_dots),
+                                contentDescription = "",
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.scrim.copy()
+                            )
                         }
-                        Column {
-                            IconButton(onClick = {
-                                expand = true
-                            }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.menu_dots),
-                                    contentDescription = "",
-                                    modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.scrim.copy()
-                                )
-                            }
-                            DropdownMenu(
+                        DropdownMenu(
+                            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                            expanded = expand,
+                            onDismissRequest = { expand = false })
+                        {
+                            DropdownMenuItem(
                                 modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                                expanded = expand,
-                                onDismissRequest = { expand = false })
-                            {
+                                text = {
+                                    Text(
+                                        text = "ترتیب لیست",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.scrim
+
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.FormatListNumberedRtl,
+                                        contentDescription = "",
+                                        tint = MaterialTheme.colorScheme.scrim
+                                    )
+                                },
+                                onClick = {
+                                    showSelectedSortNotList.value = true
+                                    expand = false
+                                })
+
+                            if (isNote) {
+                                HorizontalDivider(
+                                    thickness = 0.5.dp,
+                                    color = Color.LightGray
+                                )
                                 DropdownMenuItem(
                                     modifier = Modifier.background(MaterialTheme.colorScheme.background),
                                     text = {
                                         Text(
-                                            text = "ترتیب لیست",
+                                            text = "نوع شاهده لیست",
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.scrim
-
                                         )
                                     },
                                     leadingIcon = {
                                         Icon(
-                                            imageVector = Icons.Outlined.FormatListNumberedRtl,
+                                            imageVector = Icons.Outlined.FilterList,
                                             contentDescription = "",
                                             tint = MaterialTheme.colorScheme.scrim
                                         )
                                     },
                                     onClick = {
-                                        showSelectedSortNotList.value = true
+                                        showDialogSelectedGridList.value = true
                                         expand = false
                                     })
-
-                                if (isNote) {
-                                    HorizontalDivider(
-                                        thickness = 0.5.dp,
-                                        color = Color.LightGray
-                                    )
-                                    DropdownMenuItem(
-                                        modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                                        text = {
-                                            Text(
-                                                text = "نوع شاهده لیست",
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                color = MaterialTheme.colorScheme.scrim
-                                            )
-                                        },
-                                        leadingIcon = {
-                                            Icon(
-                                                imageVector = Icons.Outlined.FilterList,
-                                                contentDescription = "",
-                                                tint = MaterialTheme.colorScheme.scrim
-                                            )
-                                        },
-                                        onClick = {
-                                            showDialogSelectedGridList.value = true
-                                            expand = false
-                                        })
-                                }
+                            }
 
 
                         }
@@ -201,6 +205,19 @@ fun DrawerContent(
     var darkThem by remember {
         mutableStateOf(Constants.isThemDark)
     }
+
+    var showAlertSendMessage by remember {
+        mutableStateOf(false)
+    }
+    AlertDialogSendMessage(
+        show =showAlertSendMessage,
+        onDismissRequest = {
+            showAlertSendMessage = false
+        }
+    )
+
+    val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
     Column(
         modifier = Modifier
             .fillMaxWidth(0.8f)
@@ -215,14 +232,18 @@ fun DrawerContent(
             painter = painterResource(id = R.drawable.taskhed),
             contentDescription = "",
         )
-        DrawerItem(text = "درباره من", icon = Icons.Rounded.Approval,
+        DrawerItem(text = "درباره من", icon = Icons.Outlined.Person,
             onClick = {
                 navHostController.navigate(Screen.AboutMeScreen.route)
                 onFinish()
             })
-        DrawerItem(text = "درباره ما", icon = Icons.Rounded.AcUnit, onClick = {})
-        DrawerItem(text = "درباره ما", icon = Icons.Rounded.AcUnit, onClick = {})
-        DrawerItem(text = "پوسته تیره", icon = Icons.Rounded.DarkMode,
+        DrawerItem(text = "سایر برنامه ها", icon = Icons.Outlined.Apps, onClick = {})
+        DrawerItem(text = "پیشنهادات", icon = Icons.Outlined.QuestionAnswer,
+            onClick = {
+                onFinish()
+                showAlertSendMessage =true
+            })
+        DrawerItem(text = "پوسته تیره", icon = Icons.Outlined.DarkMode,
             addComposable = {
                 Switch(
                     modifier = Modifier.height(10.dp),
@@ -254,8 +275,15 @@ fun DrawerContent(
             })
         DrawerItem(
             text = "ارتباط با تیم توسعه دهنده",
-            icon = Icons.Rounded.AlignVerticalBottom,
-            onClick = {})
+            icon = Icons.AutoMirrored.Outlined.Message,
+            onClick = {
+                try {
+//                    uriHandler.openUri("tg://resolve?domain=i_hoseinam")
+                    uriHandler.openUri("https://hoseinahmadi.ir")
+                } catch (e: Exception) {
+                    Toast.makeText(context, "تلگرام یافت نشد", Toast.LENGTH_SHORT).show()
+                }
+            })
 
     }
 }
@@ -313,8 +341,9 @@ fun DrawerItem(
         }
         HorizontalDivider(
             modifier = Modifier.padding(start = 30.dp, end = 8.dp),
-            thickness = 0.7.dp,
+            thickness = 0.5.dp,
             color = Color.LightGray.copy(0.5f)
         )
     }
 }
+

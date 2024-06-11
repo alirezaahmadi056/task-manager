@@ -3,7 +3,7 @@ package ir.hoseinahmadi.taskmanager.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hoseinahmadi.taskmanager.data.model.AboutResponse
+import ir.hoseinahmadi.taskmanager.data.model.about.AboutResponse
 import ir.hoseinahmadi.taskmanager.repository.AboutRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow

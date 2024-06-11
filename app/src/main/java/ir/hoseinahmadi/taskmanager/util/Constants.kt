@@ -9,4 +9,8 @@ object Constants {
     var isThemDark = false
 
     const val ABOUT_BASE_URL="https://daneshjooyar.com/wp-json/wp/v2/"
+    const val NOTIFE_BASE_URL="https://notificator.ir/api/v1/"
+
+    const val TOKEN ="ExWIdNbkufZaoeBdCjaAZhU190Y2ti9SrqtZuEwr"
+
 }

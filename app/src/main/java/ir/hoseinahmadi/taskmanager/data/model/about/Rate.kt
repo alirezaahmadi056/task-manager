@@ -1,4 +1,4 @@
-package ir.hoseinahmadi.taskmanager.data.model
+package ir.hoseinahmadi.taskmanager.data.model.about
 
 data class Rate(
     val count: Int,

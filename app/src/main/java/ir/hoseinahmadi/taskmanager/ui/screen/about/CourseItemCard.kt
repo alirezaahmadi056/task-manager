@@ -17,7 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import ir.hoseinahmadi.taskmanager.data.model.Course
+import ir.hoseinahmadi.taskmanager.data.model.about.Course
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable

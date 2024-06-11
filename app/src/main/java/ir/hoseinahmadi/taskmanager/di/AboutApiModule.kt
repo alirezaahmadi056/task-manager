@@ -11,6 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -39,6 +40,7 @@ object AboutApiModule {
 
     @Provides
     @Singleton
+    @Named("About")
     fun provideAboutNetWork(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(Constants.ABOUT_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
@@ -47,7 +49,11 @@ object AboutApiModule {
 
     @Provides
     @Singleton
-    fun provideAboutApiInterFace(retrofit: Retrofit): AboutApiInterFace =
+    @Named("About")
+    fun provideAboutApiInterFace(
+        @Named("About")
+        retrofit: Retrofit
+    ): AboutApiInterFace =
         retrofit.create(AboutApiInterFace::class.java)
 
 }

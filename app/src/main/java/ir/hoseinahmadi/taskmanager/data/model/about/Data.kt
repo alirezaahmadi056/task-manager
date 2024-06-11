@@ -1,4 +1,4 @@
-package ir.hoseinahmadi.taskmanager.data.model
+package ir.hoseinahmadi.taskmanager.data.model.about
 
 data class Data(
     val avatar: String="",

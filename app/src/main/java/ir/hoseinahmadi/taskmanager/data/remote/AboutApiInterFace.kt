@@ -1,6 +1,6 @@
 package ir.hoseinahmadi.taskmanager.data.remote
 
-import ir.hoseinahmadi.taskmanager.data.model.AboutResponse
+import ir.hoseinahmadi.taskmanager.data.model.about.AboutResponse
 import retrofit2.Response
 import retrofit2.http.GET
 

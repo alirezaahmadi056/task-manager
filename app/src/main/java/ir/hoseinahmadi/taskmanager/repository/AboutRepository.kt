@@ -1,14 +1,15 @@
 package ir.hoseinahmadi.taskmanager.repository
 
 import android.util.Log
-import ir.hoseinahmadi.taskmanager.data.model.AboutResponse
+import ir.hoseinahmadi.taskmanager.data.model.about.AboutResponse
 import ir.hoseinahmadi.taskmanager.data.remote.AboutApiInterFace
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
+import javax.inject.Named
 
 class AboutRepository @Inject constructor(
+    @Named("About")
     private val apiInterFace: AboutApiInterFace
 ) {
     private val _allData = MutableStateFlow(AboutResponse())
