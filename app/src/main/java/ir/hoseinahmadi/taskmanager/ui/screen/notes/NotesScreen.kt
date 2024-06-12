@@ -241,7 +241,7 @@ fun NotesScreen(
                                                 Box(
                                                     Modifier
                                                         .clip(CircleShape)
-                                                        .background(MaterialTheme.colorScheme.onPrimary),
+                                                        .background(Color(0xFF4CAF50)),
                                                     contentAlignment = Alignment.Center
                                                 ) {
                                                     Icon(
@@ -270,7 +270,7 @@ fun NotesScreen(
                                                 Box(
                                                     Modifier
                                                         .clip(CircleShape)
-                                                        .background(MaterialTheme.colorScheme.error),
+                                                        .background(Color.Red),
                                                     contentAlignment = Alignment.Center
                                                 ) {
                                                     Icon(
@@ -350,7 +350,7 @@ fun NotesScreen(
                                                     .fillMaxSize()
                                                     .padding(5.dp)
                                                     .clip(RoundedCornerShape(11.dp))
-                                                    .background(MaterialTheme.colorScheme.onPrimary),
+                                                    .background(Color(0xFF4CAF50)),
                                                 contentAlignment = Alignment.CenterStart
                                             )
                                             {
@@ -370,7 +370,7 @@ fun NotesScreen(
                                                     .fillMaxSize()
                                                     .padding(5.dp)
                                                     .clip(RoundedCornerShape(11.dp))
-                                                    .background(MaterialTheme.colorScheme.error),
+                                                    .background(Color.Red),
                                                 contentAlignment = Alignment.CenterEnd
                                             )
                                             {

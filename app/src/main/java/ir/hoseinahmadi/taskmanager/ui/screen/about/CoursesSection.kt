@@ -24,7 +24,7 @@ import ir.hoseinahmadi.taskmanager.data.model.about.Course
 
 @OptIn( ExperimentalLayoutApi::class)
 @Composable
-fun CoursesSection(items: List<Course>) {
+fun CoursesSection(goldCourses: List<Course>, nonGoldCourses: List<Course>) {
 
     val utiHandle = LocalUriHandler.current
     val context = LocalContext.current
@@ -38,7 +38,7 @@ fun CoursesSection(items: List<Course>) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "دوره های آموزشی",
+            text = "دوره های طلایی",
             style = MaterialTheme.typography.labelLarge.copy(fontSize = 24.sp),
             color = MaterialTheme.colorScheme.scrim,
             fontWeight = FontWeight.Bold
@@ -63,12 +63,54 @@ fun CoursesSection(items: List<Course>) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 3.dp),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        for (it in items) {
-            CourseItemCard(it)
+        horizontalArrangement = Arrangement.Start,
+        verticalArrangement = Arrangement.Center
 
+    ) {
+        for (it in goldCourses) {
+            CourseItemCard(it)
         }
     }
 
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 9.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "سایر دوره ها",
+            style = MaterialTheme.typography.labelLarge.copy(fontSize = 24.sp),
+            color = MaterialTheme.colorScheme.scrim,
+            fontWeight = FontWeight.Bold
+        )
+
+        TextButton(onClick = {
+            try {
+                utiHandle.openUri("https://www.daneshjooyar.com/teacher/alireza-ahmadi/")
+            }catch (e:Exception){
+                Toast.makeText(context, "خطا", Toast.LENGTH_SHORT).show()
+            }
+        }) {
+            Text(text = "مشاهده همه",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+
+
+    FlowRow(
+        maxItemsInEachRow = 2,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 3.dp),
+        horizontalArrangement = Arrangement.Start,
+        verticalArrangement = Arrangement.Center
+    ) {
+        for (it in nonGoldCourses) {
+            CourseItemCard(it)
+        }
+    }
 }

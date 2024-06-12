@@ -57,7 +57,7 @@ fun AlertDialogSendMessage(
         LaunchedEffect(true) {
             notifeViewModel.notifeResponse.collectLatest {
                 if (it.success == 1) {
-                    Toast.makeText(context, "پیا با موفقیت ارسال شد", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "پیام با موفقیت ارسال شد", Toast.LENGTH_SHORT).show()
                     loading = false
                     onDismissRequest()
                     notifeViewModel.resetResponse()

@@ -23,9 +23,17 @@ import ir.hoseinahmadi.taskmanager.util.TaskHelper
 @Composable
 fun NotesItemCard(navHostController: NavHostController, item: NotesItem) {
     val taskColor = when (item.taskColor) {
-        2 -> { MaterialTheme.colorScheme.onSecondary }
-        3 -> { MaterialTheme.colorScheme.error }
-        else -> { MaterialTheme.colorScheme.onPrimary }
+        2 -> {
+            MaterialTheme.colorScheme.onSecondary
+        }
+
+        3 -> {
+            MaterialTheme.colorScheme.error
+        }
+
+        else -> {
+            MaterialTheme.colorScheme.onPrimary
+        }
     }
 
     Card(
@@ -41,7 +49,9 @@ fun NotesItemCard(navHostController: NavHostController, item: NotesItem) {
                 .padding(horizontal = 10.dp)
         ) {
             Text(
-                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
                 text = item.title,
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.scrim,
@@ -52,10 +62,12 @@ fun NotesItemCard(navHostController: NavHostController, item: NotesItem) {
             Text(
                 text = item.body,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.scrim.copy(0.7f),
+                color  =  MaterialTheme.colorScheme.scrim.copy(0.6f)
             )
             Text(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 3.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 3.dp),
                 text = TaskHelper.taskByLocate("${item.createTime} | ${item.createDate}"),
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.End,

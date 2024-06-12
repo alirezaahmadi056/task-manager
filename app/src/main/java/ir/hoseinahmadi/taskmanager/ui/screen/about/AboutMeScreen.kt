@@ -30,11 +30,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import ir.hoseinahmadi.taskmanager.R
 import ir.hoseinahmadi.taskmanager.data.model.about.AboutResponse
 import ir.hoseinahmadi.taskmanager.util.TaskHelper
 import ir.hoseinahmadi.taskmanager.viewModel.AboutViewModel
@@ -57,6 +59,8 @@ fun AboutMeScreen(
             item = response
         }
     }
+
+    val (goldCourses, nonGoldCourses) = item.data.courses.partition { it.is_gold }
 
     if (loading){
         Column(
@@ -88,16 +92,27 @@ fun AboutMeScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     InfoTeacherItem("${TaskHelper.taskByLocateAndSeparator(item.data.student_count.toString())} نفر",
-                        "تعداد دانشجو")
+                        "تعداد دانشجو",
+                        icon = painterResource(id = R.drawable.users_class)
+                        )
                     InfoTeacherItem("${TaskHelper.taskByLocate(item.data.rate.toString())} از ۵",
-                        "امتیاز دانشجویان")
+                        "امتیاز دانشجویان",
+                        icon = painterResource(id = R.drawable.feedback_review)
+
+                    )
                     InfoTeacherItem("${TaskHelper.taskByLocateAndSeparator(item.data.course_count.toString())} عدد",
-                        "تعداد دوره ها")
-                    InfoTeacherItem("${TaskHelper.taskByLocateAndSeparator("714")} ساعت",
-                        "ساعت آموزش")
+                        "تعداد دوره ها",
+                        icon = painterResource(id = R.drawable.lesson)
+
+                    )
+                    InfoTeacherItem("${TaskHelper.taskByLocateAndSeparator((item.data.total_teach_duration /3600).toString())} ساعت",
+                        "ساعت آموزش",
+                        icon = painterResource(id = R.drawable.clock_five)
+                    )
 
                 }
-                CoursesSection(item.data.courses)
+                CoursesSection(goldCourses,nonGoldCourses)
+
             }
         }
     }

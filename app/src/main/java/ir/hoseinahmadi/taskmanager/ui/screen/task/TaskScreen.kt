@@ -191,7 +191,6 @@ fun TaskScreen(
                                     SwipeToDismissBoxValue.StartToEnd -> {
                                         navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}")
                                     }
-
                                     SwipeToDismissBoxValue.EndToStart -> {
                                         singleDeleteTask = taskItem
                                         showDialogDelete = true
@@ -215,7 +214,7 @@ fun TaskScreen(
                                                 .fillMaxSize()
                                                 .padding(5.dp)
                                                 .clip(RoundedCornerShape(11.dp))
-                                                .background(MaterialTheme.colorScheme.onPrimary),
+                                                .background(Color(0xFF4CAF50)),
                                             contentAlignment = Alignment.CenterStart
                                         )
                                         {
@@ -235,7 +234,7 @@ fun TaskScreen(
                                                 .fillMaxSize()
                                                 .padding(5.dp)
                                                 .clip(RoundedCornerShape(11.dp))
-                                                .background(MaterialTheme.colorScheme.error),
+                                                .background(Color.Red),
                                             contentAlignment = Alignment.CenterEnd
                                         )
                                         {

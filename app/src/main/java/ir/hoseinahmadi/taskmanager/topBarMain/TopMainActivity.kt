@@ -399,6 +399,7 @@ private fun NoInterNet(
                         modifier = Modifier.padding(horizontal = 4.dp),
                         onClick = {
                             if (isOnline(context)) {
+                                onFinish()
                                 navHostController.navigate(Screen.AboutMeScreen.route)
                             } else {
                                 Toast.makeText(context, "عدم اتصال به اینترنت", Toast.LENGTH_SHORT)

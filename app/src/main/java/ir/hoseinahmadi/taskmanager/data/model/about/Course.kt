@@ -5,6 +5,7 @@ data class Course(
     val duration: Int,
     val is_gold: Boolean,
     val price: Int,
+    val url:String,
     val rate: Rate,
     val sale_price: Int,
     val thumbnail: String,

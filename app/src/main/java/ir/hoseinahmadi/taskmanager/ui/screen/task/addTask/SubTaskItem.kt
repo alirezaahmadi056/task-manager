@@ -47,7 +47,7 @@ fun SubTaskItem(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 5.dp, vertical = 2.dp),
+            .padding(horizontal = 6.dp, vertical = 2.dp),
         onClick = { onClick() }) {
         Row(
             modifier = Modifier
@@ -56,7 +56,9 @@ fun SubTaskItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(
+                horizontalAlignment = Alignment.Start
+            ) {
                 Text(
                     textDecoration =
                     if (item.isCompleted) TextDecoration.LineThrough else TextDecoration.None,
