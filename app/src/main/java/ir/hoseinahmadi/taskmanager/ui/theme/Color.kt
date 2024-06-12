@@ -22,13 +22,13 @@ val LightBlue = Color(0xFFE6F5FB)
 val Orange = Color(0xFFF69A0E)
 val LightGray = Color(0xFFADADAD)
 
-val LightRed =Color(0xffFF8080)
+val LightRed =Color(0xFFdd474c)
 val DarkRed =Color(0xFF8D2633)
 
 val DarkOrange =Color(0xFFFF5722)
-val LightOrange =Color(0xFFFEBE8C)
+val LightOrange =Color(0xFFfebd19)
 
-val LightGreen =Color(0xff95D2B3)
+val LightGreen =Color(0xff2eb774)
 val DarkGreen =Color(0xFF004225)
 
 

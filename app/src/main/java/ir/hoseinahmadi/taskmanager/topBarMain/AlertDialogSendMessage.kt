@@ -91,7 +91,7 @@ fun AlertDialogSendMessage(
                     OutlinedTextField(
                         isError = (checkedInput && title.isEmpty()),
                         maxLines = 1,
-                        textStyle = MaterialTheme.typography.bodyMedium,
+                        textStyle = MaterialTheme.typography.bodyLarge,
                         shape = RoundedCornerShape(9.dp),
                         value = title, onValueChange = { title = it },
                         label = {

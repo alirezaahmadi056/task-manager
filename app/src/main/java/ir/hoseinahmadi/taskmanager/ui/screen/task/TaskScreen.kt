@@ -153,7 +153,7 @@ fun TaskScreen(
                 expanded = extanded,
                 text = {
                     Text(
-                        text = "وظیقه",
+                        text = "وظیفه",
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.White
                     )
@@ -265,7 +265,6 @@ fun TaskScreen(
                     }
                 }
             }
-
 
         }
 

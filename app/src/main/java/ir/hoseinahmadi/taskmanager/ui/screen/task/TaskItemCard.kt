@@ -82,11 +82,11 @@ fun TaskItemCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
-        border = BorderStroke(0.8.dp, Color.LightGray),
+        border = BorderStroke(1.dp, Color.LightGray.copy(0.6f)),
         modifier = Modifier
             .padding(horizontal = 6.dp, vertical = 4.dp)
             .fillMaxWidth()
-            .height(100.dp),
+            .height(105.dp),
         onClick = { navHostController.navigate(Screen.AddTaskScreen.route + "?id=${item.id}") }
     ) {
         Row(
