@@ -187,7 +187,7 @@ fun NotesScreen(
             enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
             exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
         ) {
-
+            var hasNavigated by remember { mutableStateOf(false) }
             extanded =
                 (lazyStateStagger.firstVisibleItemScrollOffset == 0 || lazyStateStagger.canScrollForward)
             if (sortedNotesItem.isNotEmpty()) {
@@ -208,7 +208,10 @@ fun NotesScreen(
                                 confirmValueChange = { swip ->
                                     when (swip) {
                                         SwipeToDismissBoxValue.StartToEnd -> {
-                                            navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
+                                            if (!hasNavigated) {
+                                                hasNavigated = true
+                                                navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
+                                            }
                                         }
 
                                         SwipeToDismissBoxValue.EndToStart -> {
@@ -309,6 +312,7 @@ fun NotesScreen(
             enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
             exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
         ) {
+            var hasNavigated by remember { mutableStateOf(false) }
             extanded =
                 (lazyListState.firstVisibleItemScrollOffset == 0 || lazyListState.canScrollForward)
             if (sortedNotesItem.isNotEmpty()) {
@@ -324,7 +328,10 @@ fun NotesScreen(
                                 confirmValueChange = { swip ->
                                     when (swip) {
                                         SwipeToDismissBoxValue.StartToEnd -> {
-                                            navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
+                                            if (!hasNavigated) {
+                                                hasNavigated = true
+                                                navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
+                                            }
                                         }
 
                                         SwipeToDismissBoxValue.EndToStart -> {
