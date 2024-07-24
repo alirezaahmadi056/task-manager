@@ -1,5 +1,7 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.about
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,10 +11,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowForward
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,8 +34,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -60,24 +67,25 @@ fun AboutMeScreen(
         }
     }
 
-    val (goldCourses, nonGoldCourses) = item.data.courses.partition { it.is_gold }
 
-    if (loading){
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-        }
-    }else{
+
         Scaffold(
             topBar = {
                 TopBar { navHostController.popBackStack() }
             }
         ) {
+            if (loading){
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                }
+            }
+            else{
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -111,8 +119,52 @@ fun AboutMeScreen(
                     )
 
                 }
-                CoursesSection(goldCourses,nonGoldCourses)
+                Text(
+                    modifier = Modifier.padding(12.dp),
+                    text = item.data.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.scrim
+                )
 
+                Card(
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White
+                    ),
+                    border = BorderStroke(
+                        1.dp,
+                        brush = Brush.linearGradient(
+                            listOf(
+                                Color.Blue,
+                                Color.DarkGray,
+                                Color.Blue,
+                            )
+                        ),
+                    ),
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+
+                        Text(
+                            text = "alirezaahmadi_info",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.Black
+                        )
+
+                        Image(
+                            painter = painterResource(id = R.drawable.telegram),
+                            contentDescription = "",
+                            Modifier
+                                .padding(horizontal = 4.dp)
+                                .size(40.dp)
+                        )
+                    }
+                }
             }
         }
     }
@@ -147,7 +199,7 @@ private fun TopBar(onBack: () -> Unit) {
         }
         HorizontalDivider(
             modifier = Modifier.padding(bottom = 15.dp),
-            thickness = 2.dp,
+            thickness = 1.dp,
             color = Color.LightGray.copy(0.5f)
         )
 
