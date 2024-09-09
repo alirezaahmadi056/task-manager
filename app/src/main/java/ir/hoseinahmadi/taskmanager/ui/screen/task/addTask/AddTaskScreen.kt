@@ -1,8 +1,8 @@
 package ir.hoseinahmadi.taskmanager.ui.screen.task.addTask
 
 import PersianDate
-import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,10 +19,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.Notes
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.Button
@@ -35,7 +33,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -53,10 +50,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -66,10 +60,10 @@ import androidx.navigation.NavHostController
 import ir.hoseinahmadi.taskmanager.data.db.task.Task
 import ir.hoseinahmadi.taskmanager.data.db.task.TaskItem
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.BottomSheetSelectedColor
+import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.SheetSaveDiscard
 import ir.hoseinahmadi.taskmanager.ui.screen.notes.addNotes.showBottomSheetSelectedColor
 import ir.hoseinahmadi.taskmanager.util.TaskHelper
 import ir.hoseinahmadi.taskmanager.viewModel.TaskViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -79,10 +73,14 @@ fun AddTaskScreen(
     id: Int,
     taskViewModel: TaskViewModel = hiltViewModel()
 ) {
+    var showSheetDiscard by remember {
+        mutableStateOf(false)
+    }
 
     var taskTitle by remember { mutableStateOf("") }
     var selectedColor by remember { mutableIntStateOf(1) }
     var subTask by remember { mutableStateOf<List<Task>>(mutableListOf()) }
+
     var taskBody by remember {
         mutableStateOf("")
     }
@@ -95,6 +93,12 @@ fun AddTaskScreen(
 
     var subTaskItem by remember { mutableStateOf(Task()) }
     var subTaskId by remember { mutableIntStateOf(0) }
+
+    var oldSubTask by remember { mutableStateOf<List<Task>>(mutableListOf()) }
+    var oldTaskTitle by remember { mutableStateOf("") }
+    var oldTaskBody by remember {
+        mutableStateOf("")
+    }
 
     val context = LocalContext.current
 
@@ -129,9 +133,12 @@ fun AddTaskScreen(
         LaunchedEffect(key1 = id) {
             taskViewModel.getSingleTaskById(id).collectLatest { taskItem ->
                 taskTitle = taskItem.title
+                oldTaskTitle = taskItem.title
                 selectedColor = taskItem.taskColor
                 subTask = taskItem.subTask
+                oldSubTask = taskItem.subTask
                 taskBody = taskItem.body
+                oldTaskBody = taskItem.body
                 date = taskItem.date
                 time = taskItem.time
             }
@@ -139,6 +146,31 @@ fun AddTaskScreen(
     }
 
 
+    BackHandler(enabled = oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask != oldSubTask) {
+        showSheetDiscard = true
+    }
+    SheetSaveDiscard(
+        show = showSheetDiscard,
+        text = "در وظیفه شما تغییراتی ایجاد شده است.آیا مایل به ذخیره کردن هستید؟",
+        onDismissRequest = { showSheetDiscard = false },
+        save = {
+            val dates = PersianDate()
+            val taskItem = TaskItem(
+                id = id,
+                title = taskTitle,
+                subTask = subTask,
+                body = taskBody,
+                taskColor = selectedColor,
+                date = "${dates.year}/${dates.month}/${dates.day}",
+                time = "${dates.hour}:${dates.min}",
+            )
+            taskViewModel.upsertTask(taskItem)
+        },
+        exit = {
+            showSheetDiscard = false
+            navHostController.navigateUp()
+        }
+    )
 
     BottomUpdateSheetTask(
         title = subTaskItem.title,
@@ -193,8 +225,12 @@ fun AddTaskScreen(
             }
         },
         topBar = {
-            Top(date,time, title = if (id == 0) "افزودن وظیفه گروهی" else "ویرایش وظیفه گروهی") {
-                navHostController.popBackStack()
+            Top(date, time, title = if (id == 0) "افزودن وظیفه گروهی" else "ویرایش وظیفه گروهی") {
+                if (oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask != oldSubTask) {
+                    showSheetDiscard = true
+                } else {
+                    navHostController.navigateUp()
+                }
             }
         },
         bottomBar = {
@@ -227,7 +263,13 @@ fun AddTaskScreen(
                     taskViewModel.upsertTask(taskItem)
                     navHostController.popBackStack()
                 }
-            }, onBack = { navHostController.popBackStack() }
+            }, onBack = {
+                if (oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask != oldSubTask) {
+                    showSheetDiscard = true
+                } else {
+                    navHostController.navigateUp()
+                }
+            }
             )
         }
     ) {
@@ -435,7 +477,7 @@ fun AddTaskScreen(
 }
 
 @Composable
- fun Top(date: String,time:String, title: String, onBack: () -> Unit) {
+fun Top(date: String, time: String, title: String, onBack: () -> Unit) {
     Column {
         Row(
             Modifier
