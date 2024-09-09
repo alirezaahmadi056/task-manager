@@ -37,10 +37,13 @@ fun BottomSheetAddTask(
 
     if (show) {
         var taskTitle by remember { mutableStateOf("") }
-        ModalBottomSheet(onDismissRequest = { showBottomSheetAddTask.value = false }) {
+        ModalBottomSheet(
+            shape = RoundedCornerShape(12.dp),
+            containerColor = MaterialTheme.colorScheme.background,
+            onDismissRequest = { showBottomSheetAddTask.value = false }) {
             Column(
                 modifier = Modifier
-                    .padding( 10.dp)
+                    .padding(10.dp)
                     .fillMaxWidth()
                     .padding(bottom = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -78,7 +81,7 @@ fun BottomSheetAddTask(
                         .fillMaxWidth()
                         .padding(vertical = 10.dp, horizontal = 4.dp),
                     onClick = {
-                            obClick(taskTitle)
+                        obClick(taskTitle)
                     }
                 ) {
                     Text(
@@ -104,7 +107,10 @@ fun BottomUpdateSheetTask(
     if (show) {
         var taskTitle by remember { mutableStateOf(title) }
 
-        ModalBottomSheet(onDismissRequest = { showBottomUpdateSheetTask.value = false }) {
+        ModalBottomSheet(
+            shape = RoundedCornerShape(12.dp),
+            containerColor = MaterialTheme.colorScheme.background,
+            onDismissRequest = { showBottomUpdateSheetTask.value = false }) {
             Column(
                 modifier = Modifier
                     .padding(10.dp)
