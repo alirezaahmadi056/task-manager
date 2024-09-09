@@ -4,6 +4,8 @@ import PersianDate
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -58,6 +60,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -93,6 +96,9 @@ fun AddNotesScreen(
     id: Int,
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
+    var showSheetDiscard by remember {
+        mutableStateOf(false)
+    }
 
 
     var title by remember {
@@ -100,6 +106,14 @@ fun AddNotesScreen(
     }
 
     var body by remember {
+        mutableStateOf("")
+    }
+
+    var oldTitle by remember {
+        mutableStateOf("")
+    }
+
+    var oldBody by remember {
         mutableStateOf("")
     }
 
@@ -112,12 +126,11 @@ fun AddNotesScreen(
         mutableStateOf("")
     }
 
+
     val selectedImageUriList = remember { mutableStateListOf<Uri>() }
 
 
-
     val context = LocalContext.current
-
 
 
     val multipleImagePickerLauncher = rememberLauncherForActivityResult(
@@ -195,11 +208,41 @@ fun AddNotesScreen(
                 }
                 createTime = item.createTime
                 createDate = item.createDate
+                oldTitle = item.title
+                oldBody = item.body
             }
         }
     }
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    BackHandler(enabled = title != oldTitle || body != oldBody) {
+        showSheetDiscard = true
+    }
+    SheetSaveDiscard(
+        show = showSheetDiscard,
+        text = "در یادداشت شما تغییراتی ایجاد شده است.آیا مایل به ذخیره کردن هستید؟",
+        onDismissRequest = { showSheetDiscard = false },
+        save = {
+            val dates = PersianDate()
+            notesViewModel.upsertNotesItem(
+                NotesItem(
+                    id = id,
+                    title = title,
+                    body = body,
+                    taskColor = selectedColor,
+                    phone = contactPhone,
+                    address = address,
+                    uri = selectedImageUriList,
+                    createDate = "${dates.year}/${dates.month}/${dates.day}",
+                    createTime = "${dates.hour}:${dates.min}"
+                )
+            )
+        },
+        exit = {
+            showSheetDiscard = false
+            navHostController.navigateUp()
+        }
+    )
 
     BottomSheetSelectedColor(
         title = "لطفا اولویت یادداشت رو انتخاب کنید",
@@ -267,11 +310,21 @@ fun AddNotesScreen(
 
                     }
                 },
-                onBack = { navHostController.popBackStack() })
+                onBack = {
+                    if (title != oldTitle || body != oldBody) {
+                        showSheetDiscard = true
+                    } else {
+                        navHostController.navigateUp()
+                    }
+                })
         },
         topBar = {
             Top(createDate, createTime, title = header) {
-                navHostController.popBackStack()
+                if (title != oldTitle || body != oldBody) {
+                    showSheetDiscard = true
+                } else {
+                    navHostController.navigateUp()
+                }
             }
         }
     ) {
@@ -294,7 +347,7 @@ fun AddNotesScreen(
 
             TextField(
                 colors = textFieldColor,
-                        maxLines = 2,
+                maxLines = 2,
                 placeholder = {
                     Text(
                         modifier = Modifier
@@ -545,13 +598,13 @@ fun AddNotesScreen(
 
                     }
 
-                        Icon(
-                            imageVector = Icons.Rounded.KeyboardArrowDown, contentDescription = "",
-                            modifier = Modifier
-                                .padding(start = 2.dp, end = 4.dp)
-                                .rotate(rotateState),
-                            tint = MaterialTheme.colorScheme.scrim.copy()
-                        )
+                    Icon(
+                        imageVector = Icons.Rounded.KeyboardArrowDown, contentDescription = "",
+                        modifier = Modifier
+                            .padding(start = 2.dp, end = 4.dp)
+                            .rotate(rotateState),
+                        tint = MaterialTheme.colorScheme.scrim.copy()
+                    )
 
                 }
             }
