@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -208,6 +209,7 @@ fun TopBar(
 @Composable
 fun DrawerContent(
     navHostController: NavHostController,
+    isOpen: Boolean,
     changeThem: (Boolean) -> Unit,
     onFinish: () -> Unit,
     datStoreViewModel: DatStoreViewModel = hiltViewModel(),
@@ -226,7 +228,9 @@ fun DrawerContent(
     var showAlertNoInternet by remember {
         mutableStateOf(false)
     }
-
+    BackHandler(enabled = isOpen) {
+        onFinish()
+    }
     AlertDialogSendMessage(
         show = showAlertSendMessage,
         onDismissRequest = {
@@ -242,7 +246,6 @@ fun DrawerContent(
         modifier = Modifier
             .fillMaxWidth(0.8f)
             .fillMaxHeight()
-            .clip(RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp))
             .background(MaterialTheme.colorScheme.background)
     ) {
         Image(
@@ -254,14 +257,22 @@ fun DrawerContent(
         )
         DrawerItem(text = "درباره من", icon = Icons.Outlined.Person,
             onClick = {
-                if (isOnline(context)){
+                if (isOnline(context)) {
                     navHostController.navigate(Screen.AboutMeScreen.route)
-                }else{
-                    showAlertNoInternet =true
+                } else {
+                    showAlertNoInternet = true
                 }
                 onFinish()
             })
-        DrawerItem(text = "سایر برنامه ها", icon = Icons.Outlined.Apps, onClick = {})
+        DrawerItem(text = "سایر برنامه ها", icon = Icons.Outlined.Apps,
+            onClick = {
+                try {
+                    uriHandler.openUri("https://cafebazaar.ir/developer/877223876871")
+                } catch (e: Exception) {
+                    Toast.makeText(context, "خطا", Toast.LENGTH_SHORT).show()
+                }
+                onFinish()
+            })
         DrawerItem(text = "پیشنهادات", icon = Icons.Outlined.QuestionAnswer,
             onClick = {
                 showAlertSendMessage = true
@@ -395,23 +406,23 @@ private fun NoInterNet(
                 )
             },
             confirmButton = {
-                    Button(
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        onClick = {
-                            if (isOnline(context)) {
-                                onFinish()
-                                navHostController.navigate(Screen.AboutMeScreen.route)
-                            } else {
-                                Toast.makeText(context, "عدم اتصال به اینترنت", Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                        }) {
-                        Text(
-                            text = "تلاش مجدد",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
-                        )
-                    }
+                Button(
+                    modifier = Modifier.padding(horizontal = 4.dp),
+                    onClick = {
+                        if (isOnline(context)) {
+                            onFinish()
+                            navHostController.navigate(Screen.AboutMeScreen.route)
+                        } else {
+                            Toast.makeText(context, "عدم اتصال به اینترنت", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }) {
+                    Text(
+                        text = "تلاش مجدد",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White
+                    )
+                }
 
             },
             dismissButton = {
@@ -423,7 +434,7 @@ private fun NoInterNet(
                     )
                 }
             }
-            )
+        )
     }
 
 }

@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                         gesturesEnabled = drawerState.isOpen,
                         drawerState = drawerState,
                         drawerContent = {
-                            DrawerContent(navHostController, changeThem = { darkThem = it },
+                            DrawerContent(navHostController, isOpen = drawerState.isOpen, changeThem = { darkThem = it },
                                 onFinish ={
                                     scope.launch {
                                         drawerState.close()

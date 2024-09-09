@@ -75,9 +75,11 @@ fun BottomNavigation(
                     val selected = navItem.route == backStackEntry.value?.destination?.route
                     NavigationBarItem(selected = selected,
                         onClick = {
-                            navHostController.navigate(navItem.route) {
-                                popUpTo(0) {
-                                    inclusive = true
+                            if(!selected){
+                                navHostController.navigate(navItem.route) {
+                                    popUpTo(0) {
+                                        inclusive = true
+                                    }
                                 }
                             }
                         },
