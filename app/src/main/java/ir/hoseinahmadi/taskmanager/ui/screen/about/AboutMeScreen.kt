@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -36,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -69,23 +71,22 @@ fun AboutMeScreen(
 
 
 
-        Scaffold(
-            topBar = {
-                TopBar { navHostController.popBackStack() }
+    Scaffold(
+        topBar = {
+            TopBar { navHostController.popBackStack() }
+        }
+    ) {
+        if (loading) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
-        ) {
-            if (loading){
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                }
-            }
-            else{
+        } else {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -99,21 +100,25 @@ fun AboutMeScreen(
                     maxItemsInEachRow = 2,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    InfoTeacherItem("${TaskHelper.taskByLocateAndSeparator(item.data.student_count.toString())} نفر",
+                    InfoTeacherItem(
+                        "${TaskHelper.taskByLocateAndSeparator(item.data.student_count.toString())} نفر",
                         "تعداد دانشجو",
                         icon = painterResource(id = R.drawable.users_class)
-                        )
-                    InfoTeacherItem("${TaskHelper.taskByLocate(item.data.rate.toString())} از ۵",
+                    )
+                    InfoTeacherItem(
+                        "${TaskHelper.taskByLocate(item.data.rate.toString())} از ۵",
                         "امتیاز دانشجویان",
                         icon = painterResource(id = R.drawable.feedback_review)
 
                     )
-                    InfoTeacherItem("${TaskHelper.taskByLocateAndSeparator(item.data.course_count.toString())} عدد",
+                    InfoTeacherItem(
+                        "${TaskHelper.taskByLocateAndSeparator(item.data.course_count.toString())} عدد",
                         "تعداد دوره ها",
                         icon = painterResource(id = R.drawable.lesson)
 
                     )
-                    InfoTeacherItem("${TaskHelper.taskByLocateAndSeparator((item.data.total_teach_duration /3600).toString())} ساعت",
+                    InfoTeacherItem(
+                        "${TaskHelper.taskByLocateAndSeparator((item.data.total_teach_duration / 3600).toString())} ساعت",
                         "ساعت آموزش",
                         icon = painterResource(id = R.drawable.clock_five)
                     )
@@ -126,45 +131,43 @@ fun AboutMeScreen(
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.scrim
                 )
+                Text(
+                    modifier = Modifier.padding(start = 12.dp, top = 8.dp),
+                    text = "شبکه های اجتماعی",
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontSize = 25.sp
+                    ),
+                    color = MaterialTheme.colorScheme.scrim
+                )
 
-                Card(
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
-                    ),
-                    border = BorderStroke(
-                        1.dp,
-                        brush = Brush.linearGradient(
-                            listOf(
-                                Color.Blue,
-                                Color.DarkGray,
-                                Color.Blue,
-                            )
-                        ),
-                    ),
+                Row(
+                    modifier = Modifier
+                        .padding(vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
 
-                        Text(
-                            text = "alirezaahmadi_info",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = Color.Black
-                        )
+                    Image(
+                        painter = painterResource(id = R.drawable.telegram),
+                        contentDescription = "",
+                        Modifier
+                            .weight(0.45f)
+                            .padding(horizontal = 5.dp),
+                        contentScale = ContentScale.FillBounds
+                    )
 
-                        Image(
-                            painter = painterResource(id = R.drawable.telegram),
-                            contentDescription = "",
-                            Modifier
-                                .padding(horizontal = 4.dp)
-                                .size(40.dp)
-                        )
-                    }
+                    Image(
+                        painter = painterResource(id = R.drawable.instagram),
+                        contentDescription = "",
+                        Modifier
+                            .weight(0.45f)
+                            .padding(horizontal = 5.dp),
+                        contentScale = ContentScale.FillBounds
+
+                    )
+
                 }
+
             }
         }
     }

@@ -308,16 +308,7 @@ fun DrawerContent(
                 changeThem(darkThem)
                 datStoreViewModel.saveDarkThem(darkThem)
             })
-        DrawerItem(
-            text = "ارتباط با تیم توسعه دهنده",
-            icon = Icons.AutoMirrored.Outlined.Message,
-            onClick = {
-                try {
-                    uriHandler.openUri("tg://resolve?domain=alirezaahmadi_info")
-                } catch (e: Exception) {
-                    Toast.makeText(context, "تلگرام یافت نشد", Toast.LENGTH_SHORT).show()
-                }
-            })
+
 
     }
 }
