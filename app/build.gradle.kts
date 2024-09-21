@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "ir.hoseinahmadi.taskmanager"
+    namespace = "info.alirezaahmadi.taskmanager"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "ir.hoseinahmadi.taskmanager"
+        applicationId = "info.alirezaahmadi.taskmanager"
         minSdk = 23
         targetSdk = 34
         versionCode = 2

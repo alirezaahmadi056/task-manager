@@ -1,0 +1,38 @@
+package info.alirezaahmadi.taskmanager.di
+
+import android.content.Context
+import androidx.room.Room
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import info.alirezaahmadi.taskmanager.data.db.DataBase
+import info.alirezaahmadi.taskmanager.data.db.notes.NotesDao
+import info.alirezaahmadi.taskmanager.data.db.task.TaskDao
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object ModuleDataBse {
+
+    @Provides
+    @Singleton
+    fun provideDataBse(
+        @ApplicationContext context: Context
+    ) = Room.databaseBuilder(
+        context = context,
+        klass = DataBase::class.java,
+        name = "بیحبیتنخ"
+    ).build()
+
+
+    @Provides
+    @Singleton
+    fun provideNotesDao(dataBase: DataBase):NotesDao =dataBase.NotesDao()
+
+    @Provides
+    @Singleton
+    fun provideTaskDao(dataBase: DataBase):TaskDao =dataBase.TaskDao()
+
+}
