@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,14 +39,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.model.about.AboutResponse
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 import info.alirezaahmadi.taskmanager.viewModel.AboutViewModel
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalGlideComposeApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AboutMeScreen(
     navHostController: NavHostController,
@@ -67,7 +67,7 @@ fun AboutMeScreen(
 
     Scaffold(
         topBar = {
-            TopBar { navHostController.popBackStack() }
+            TopBar { navHostController.navigateUp() }
         }
     ) {
         if (loading) {
@@ -136,26 +136,23 @@ fun AboutMeScreen(
 
                 Row(
                     modifier = Modifier
-                        .padding(vertical = 14.dp),
+                        .padding(vertical = 14.dp, horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
                     Image(
                         painter = painterResource(id = R.drawable.telegram),
                         contentDescription = "",
                         Modifier
-                            .weight(0.45f)
-                            .padding(horizontal = 5.dp),
+                            .weight(0.475f),
                         contentScale = ContentScale.FillBounds
                     )
-
+                    Spacer(modifier = Modifier.weight(0.05f))
                     Image(
                         painter = painterResource(id = R.drawable.instagram),
                         contentDescription = "",
                         Modifier
-                            .weight(0.45f)
-                            .padding(horizontal = 5.dp),
+                            .weight(0.475f),
                         contentScale = ContentScale.FillBounds
 
                     )
