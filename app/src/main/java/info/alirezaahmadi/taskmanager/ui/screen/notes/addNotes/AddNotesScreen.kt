@@ -80,7 +80,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
-import info.alirezaahmadi.taskmanager.ui.screen.task.addTask.Top
+import info.alirezaahmadi.taskmanager.ui.component.TopBar
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -133,7 +133,7 @@ fun AddNotesScreen(
         contract = ActivityResultContracts.OpenMultipleDocuments(),
         onResult = { uriList: List<Uri> ->
             if (uriList.isNotEmpty()) {
-                selectedImageUriList.addAll(uriList.filterNotNull())
+                selectedImageUriList.addAll(uriList)
                 uriList.forEach { uri ->
                     context.contentResolver.takePersistableUriPermission(
                         uri,
@@ -151,10 +151,6 @@ fun AddNotesScreen(
     }
 
     var createTime by remember {
-        mutableStateOf("")
-    }
-
-    var createDate by remember {
         mutableStateOf("")
     }
 
@@ -203,7 +199,6 @@ fun AddNotesScreen(
                     selectedImageUriList.addAll(validUris)
                 }
                 createTime = item.createTime
-                createDate = item.createDate
                 oldTitle = item.title
                 oldBody = item.body
             }
@@ -229,8 +224,8 @@ fun AddNotesScreen(
                     phone = contactPhone,
                     address = address,
                     uri = selectedImageUriList,
-                    createDate = "${dates.year}/${dates.month}/${dates.day}",
-                    createTime = "${dates.hour}:${dates.min}"
+                    createTime = "${dates.hour}:${dates.min}",
+                    createDate = "${dates.year}/${dates.month}/${dates.day}"
                 )
             )
         },
@@ -298,8 +293,8 @@ fun AddNotesScreen(
                                 phone = contactPhone,
                                 address = address,
                                 uri = selectedImageUriList,
-                                createDate = "${dates.year}/${dates.month}/${dates.day}",
-                                createTime = "${dates.hour}:${dates.min}"
+                                createTime = "${dates.hour}:${dates.min}",
+                                createDate = "${dates.year}/${dates.month}/${dates.day}"
                             )
                         )
                         navHostController.popBackStack()
@@ -315,7 +310,7 @@ fun AddNotesScreen(
                 })
         },
         topBar = {
-            Top(createDate, createTime, title = header) {
+            TopBar(title = header) {
                 if (title != oldTitle || body != oldBody) {
                     showSheetDiscard = true
                 } else {

@@ -11,8 +11,8 @@ data class TaskItem(
     val subTask :List<Task> = emptyList(),
     val body :String ="",
     val taskColor :Int=1,
-    val date: String="",
-    val time:String=""
+    val createTime:String="",
+    val completedTime:String="",
 )
 
 data class Task(

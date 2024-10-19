@@ -100,7 +100,7 @@ fun NotesListItem(navHostController: NavHostController, item: NotesItem) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 3.dp, bottom = 2.dp),
-                        text = TaskHelper.taskByLocate("${item.createTime} | ${item.createDate}"),
+                        text = TaskHelper.taskByLocate(item.createTime),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.scrim,
                         textAlign = TextAlign.End,

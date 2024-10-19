@@ -94,9 +94,7 @@ fun TaskScreen(
     DialogDeleteItemTask(
         title ="حذف وظیفه",
         body = "آیا از حذف این وظیفه اطمینان دارید؟",
-        onBack = {
-            showDialogDelete = false
-        },
+        onBack = { showDialogDelete = false },
         onDeleteItem = {
             taskViewModel.deleteTask(singleDeleteTask)
             showDialogDelete = false
@@ -178,8 +176,7 @@ fun TaskScreen(
                     EmptyList()
                 }
             }else{
-                items(incompleteTasks, key = { task -> task.id })
-                { taskItem ->
+                items(incompleteTasks, key = { task -> task.id }) { taskItem ->
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                         val swipeToDismiss = rememberSwipeToDismissBoxState(
                             confirmValueChange = { swip ->

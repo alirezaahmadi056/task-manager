@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,10 +58,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.data.db.task.Task
 import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
+import info.alirezaahmadi.taskmanager.ui.component.TopBar
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.BottomSheetSelectedColor
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.SheetSaveDiscard
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.showBottomSheetSelectedColor
-import info.alirezaahmadi.taskmanager.util.TaskHelper
 import info.alirezaahmadi.taskmanager.viewModel.TaskViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -81,24 +80,16 @@ fun AddTaskScreen(
     var selectedColor by remember { mutableIntStateOf(1) }
     var subTask by remember { mutableStateOf<List<Task>>(mutableListOf()) }
 
-    var taskBody by remember {
-        mutableStateOf("")
-    }
-    var date by remember {
-        mutableStateOf("")
-    }
-    var time by remember {
-        mutableStateOf("")
-    }
+    var taskBody by remember { mutableStateOf("") }
+    var createTime by remember { mutableStateOf("") }
+    var completedTime by remember { mutableStateOf("") }
 
     var subTaskItem by remember { mutableStateOf(Task()) }
     var subTaskId by remember { mutableIntStateOf(0) }
 
     var oldSubTask by remember { mutableStateOf<List<Task>>(mutableListOf()) }
     var oldTaskTitle by remember { mutableStateOf("") }
-    var oldTaskBody by remember {
-        mutableStateOf("")
-    }
+    var oldTaskBody by remember { mutableStateOf("") }
 
     val context = LocalContext.current
 
@@ -139,16 +130,14 @@ fun AddTaskScreen(
                 oldSubTask = taskItem.subTask
                 taskBody = taskItem.body
                 oldTaskBody = taskItem.body
-                date = taskItem.date
-                time = taskItem.time
+                createTime = taskItem.createTime
+                completedTime = taskItem.completedTime
             }
         }
     }
 
 
-    BackHandler(enabled = oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask != oldSubTask) {
-        showSheetDiscard = true
-    }
+    BackHandler(enabled = oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask != oldSubTask) { showSheetDiscard = true }
     SheetSaveDiscard(
         show = showSheetDiscard,
         text = "در وظیفه شما تغییراتی ایجاد شده است.آیا مایل به ذخیره کردن هستید؟",
@@ -161,8 +150,8 @@ fun AddTaskScreen(
                 subTask = subTask,
                 body = taskBody,
                 taskColor = selectedColor,
-                date = "${dates.year}/${dates.month}/${dates.day}",
-                time = "${dates.hour}:${dates.min}",
+                createTime = "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}:${dates.second}",
+                completedTime = if (subTask.all { it.isCompleted }) "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}:${dates.second}" else "",
             )
             taskViewModel.upsertTask(taskItem)
         },
@@ -225,7 +214,7 @@ fun AddTaskScreen(
             }
         },
         topBar = {
-            Top(date, time, title = if (id == 0) "افزودن وظیفه گروهی" else "ویرایش وظیفه گروهی") {
+            TopBar(title = if (id == 0) "افزودن وظیفه گروهی" else "ویرایش وظیفه گروهی") {
                 if (oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask != oldSubTask) {
                     showSheetDiscard = true
                 } else {
@@ -257,11 +246,10 @@ fun AddTaskScreen(
                         subTask = subTask,
                         body = taskBody,
                         taskColor = selectedColor,
-                        date = "${dates.year}/${dates.month}/${dates.day}",
-                        time = "${dates.hour}:${dates.min}",
-                    )
+                        createTime = "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}:${dates.second}",
+                        completedTime = if (subTask.all { it.isCompleted }) "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}:${dates.second}" else "",)
                     taskViewModel.upsertTask(taskItem)
-                    navHostController.popBackStack()
+                    navHostController.navigateUp()
                 }
             }, onBack = {
                 if (oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask != oldSubTask) {
@@ -476,54 +464,7 @@ fun AddTaskScreen(
     }
 }
 
-@Composable
-fun Top(date: String, time: String, title: String, onBack: () -> Unit) {
-    Column {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 5.dp, horizontal = 2.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        )
-        {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = { onBack() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.scrim
-                    )
-                }
-                Text(
-                    text = title,
-                    color = MaterialTheme.colorScheme.scrim,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-            if (date.isNotEmpty()) {
-                Text(
-                    modifier = Modifier
-                        .padding(end = 5.dp)
-                        .border(1.dp, Color.LightGray, RoundedCornerShape(9.dp))
-                        .padding(horizontal = 9.dp, vertical = 4.dp),
-                    text = TaskHelper.taskByLocate("$time - $date"),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.scrim
-                )
-            }
 
-        }
-        HorizontalDivider(
-            thickness = 2.dp,
-            color = Color.LightGray.copy(0.3f),
-        )
-    }
-
-}
 
 @Composable
 private fun Bottom(

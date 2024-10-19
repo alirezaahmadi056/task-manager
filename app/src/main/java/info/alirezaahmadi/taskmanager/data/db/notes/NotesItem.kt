@@ -1,5 +1,6 @@
 package info.alirezaahmadi.taskmanager.data.db.notes
 
+import PersianDate
 import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -16,8 +17,8 @@ data class NotesItem(
     val phone: String = "",
     val address: String = "",
     val uri: List<Uri>? = null,
-    val createDate: String = "",
-    val createTime: String = "",
+    val createTime:String="",
+    val createDate: String=""
 )
 
 

@@ -197,12 +197,12 @@ fun TaskItemCard(
 
                 }
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd) {
-                    Text(
+                  /*  Text(
                         modifier = Modifier.padding(horizontal = 5.dp),
                         text = TaskHelper.taskByLocate("${item.time} | ${item.date}"),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.scrim.copy(0.8f)
-                    )
+                    )*/
                 }
 
             }
