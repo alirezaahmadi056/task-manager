@@ -73,7 +73,7 @@ dependencies {
 
     //navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
-//lottie
+    //lottie
     implementation("com.airbnb.android:lottie-compose:6.3.0")
 
 
@@ -91,7 +91,7 @@ dependencies {
 
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
 
-// retrofit
+    // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.google.code.gson:gson:2.10.1")
@@ -112,5 +112,7 @@ dependencies {
     //icon
     implementation("androidx.compose.material:material-icons-extended:1.7.0-beta02")
 
+    implementation("com.github.hamooo90:jalali-datepicker-compose:1.1.1")
+    implementation("ir.huri:JalaliCalendar:1.3.3")
 
 }

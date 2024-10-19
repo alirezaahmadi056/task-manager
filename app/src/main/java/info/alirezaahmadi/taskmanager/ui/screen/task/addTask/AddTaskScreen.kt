@@ -1,13 +1,13 @@
 package info.alirezaahmadi.taskmanager.ui.screen.task.addTask
 
 import PersianDate
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.Notes
 import androidx.compose.material.icons.rounded.Close
@@ -26,6 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,6 +46,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,16 +57,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.gmail.hamedvakhide.compose_jalali_datepicker.JalaliDatePickerDialog
 import info.alirezaahmadi.taskmanager.data.db.task.Task
 import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
+import info.alirezaahmadi.taskmanager.ui.component.CustomDataPickerDialog
 import info.alirezaahmadi.taskmanager.ui.component.TopBar
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.BottomSheetSelectedColor
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.SheetSaveDiscard
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.showBottomSheetSelectedColor
+import info.alirezaahmadi.taskmanager.ui.theme.font_standard
+import info.alirezaahmadi.taskmanager.util.TaskHelper
+import info.alirezaahmadi.taskmanager.util.TaskHelper.splitWholeDate
 import info.alirezaahmadi.taskmanager.viewModel.TaskViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskScreen(
     navHostController: NavHostController,
@@ -90,6 +97,11 @@ fun AddTaskScreen(
     var oldSubTask by remember { mutableStateOf<List<Task>>(mutableListOf()) }
     var oldTaskTitle by remember { mutableStateOf("") }
     var oldTaskBody by remember { mutableStateOf("") }
+
+    var selectedAlarmDataList by rememberSaveable { mutableStateOf<List<Int>>(emptyList()) }
+    var selectedTime by rememberSaveable { mutableStateOf("") }
+    val openDialogDate = remember { mutableStateOf(false) }
+    val openDialogTime = remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
@@ -137,7 +149,9 @@ fun AddTaskScreen(
     }
 
 
-    BackHandler(enabled = oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask != oldSubTask) { showSheetDiscard = true }
+    BackHandler(enabled = oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask != oldSubTask) {
+        showSheetDiscard = true
+    }
     SheetSaveDiscard(
         show = showSheetDiscard,
         text = "در وظیفه شما تغییراتی ایجاد شده است.آیا مایل به ذخیره کردن هستید؟",
@@ -183,11 +197,31 @@ fun AddTaskScreen(
 
     }
 
+
     BottomSheetSelectedColor(
         title = "لطفا اولویت وظیفه را انتخاب کنید",
         onClick = { colorIndex -> selectedColor = colorIndex })
+    CustomDataPickerDialog(
+        isShow = openDialogTime.value,
+        onSelected = {
+            selectedTime ="${it.hour}:${it.minute}:00"
+        },
+        onDismissRequest = {
+            openDialogTime.value = false
+        }
+    )
+    JalaliDatePickerDialog(
+        openDialog = openDialogDate,
+        onSelectDay = { //it:JalaliCalendar
 
-
+        },
+        onConfirm = {
+            val date = TaskHelper.jalaliToGregorian(it.year, it.month, it.day)
+            selectedAlarmDataList = splitWholeDate(date)
+            Log.e("2222", selectedAlarmDataList.toString())
+        },
+        fontFamily = font_standard
+    )
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackBarHostState) { data ->
@@ -240,6 +274,19 @@ fun AddTaskScreen(
                     }
                 } else {
                     val dates = PersianDate()
+                    val calendarTime = TaskHelper.createCalendarWithDateTime(
+                        year = selectedAlarmDataList[0],
+                        month = selectedAlarmDataList[1],
+                        day = selectedAlarmDataList[2],
+                        timeString = selectedTime
+                    )
+
+                    taskViewModel.scheduleNotification(
+                        context = context,
+                        triggerTime = calendarTime,
+                        id = 8,
+                        title = taskTitle
+                    )
                     val taskItem = TaskItem(
                         id = id,
                         title = taskTitle,
@@ -247,7 +294,8 @@ fun AddTaskScreen(
                         body = taskBody,
                         taskColor = selectedColor,
                         createTime = "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}:${dates.second}",
-                        completedTime = if (subTask.all { it.isCompleted }) "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}:${dates.second}" else "",)
+                        completedTime = if (subTask.all { it.isCompleted }) "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}:${dates.second}" else "",
+                    )
                     taskViewModel.upsertTask(taskItem)
                     navHostController.navigateUp()
                 }
@@ -266,6 +314,15 @@ fun AddTaskScreen(
                 .fillMaxSize()
                 .padding(it)
         ) {
+            item {
+                Button(onClick = { openDialogDate.value = true }) {
+
+                }
+                Button(onClick = { openDialogTime.value = true }) {
+
+                }
+
+            }
             item {
                 TextField(
                     colors = TextFieldDefaults.colors(
@@ -305,7 +362,6 @@ fun AddTaskScreen(
             }
 
             item {
-
                 TextField(
                     leadingIcon = {
                         Icon(
@@ -463,7 +519,6 @@ fun AddTaskScreen(
 
     }
 }
-
 
 
 @Composable

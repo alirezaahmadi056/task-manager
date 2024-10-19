@@ -8,9 +8,9 @@ object Constants {
     var SORT_TASK = 0
     var isThemDark = false
 
-    const val ABOUT_BASE_URL="https://daneshjooyar.com/wp-json/wp/v2/"
-    const val NOTIFE_BASE_URL="https://notificator.ir/api/v1/"
-
-    const val TOKEN ="H5tzuvIGHfes3LZxAGscCfX6qfAuG6VWqSxntJLc"
+    const val ABOUT_BASE_URL = "https://daneshjooyar.com/wp-json/wp/v2/"
+    const val NOTIFE_BASE_URL = "https://notificator.ir/api/v1/"
+    const val CHANNEL_ID = "CHANNEL_ID_notification"
+    const val TOKEN = "H5tzuvIGHfes3LZxAGscCfX6qfAuG6VWqSxntJLc"
 
 }
