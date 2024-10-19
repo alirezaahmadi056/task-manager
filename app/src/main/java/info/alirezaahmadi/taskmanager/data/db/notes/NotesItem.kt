@@ -3,20 +3,8 @@ package info.alirezaahmadi.taskmanager.data.db.notes
 import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
 
 
-class UriTypeConverter {
-    @TypeConverter
-    fun fromUri(uriList: List<Uri>?): String? {
-        return uriList?.joinToString(separator = ",") { it.toString() }
-    }
-
-    @TypeConverter
-    fun toUri(uriString: String?): List<Uri>? {
-        return uriString?.split(",")?.map { Uri.parse(it) }
-    }
-}
 
 @Entity
 data class NotesItem(
