@@ -1,8 +1,6 @@
 package info.alirezaahmadi.taskmanager.ui.screen.task.addTask
 
 import PersianDate
-import android.annotation.SuppressLint
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
@@ -41,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -55,8 +54,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.gmail.hamedvakhide.compose_jalali_datepicker.JalaliDatePickerDialog
@@ -68,7 +70,7 @@ import info.alirezaahmadi.taskmanager.ui.component.TopBar
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.BottomSheetSelectedColor
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.SheetSaveDiscard
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.showBottomSheetSelectedColor
-import info.alirezaahmadi.taskmanager.ui.theme.font_standard
+import info.alirezaahmadi.taskmanager.ui.theme.font_bold
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 import info.alirezaahmadi.taskmanager.util.TaskHelper.splitWholeDate
 import info.alirezaahmadi.taskmanager.viewModel.AlarmViewModel
@@ -79,7 +81,6 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlin.random.Random
 
-@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskScreen(
@@ -88,9 +89,9 @@ fun AddTaskScreen(
     taskViewModel: TaskViewModel = hiltViewModel(),
     alarmViewModel: AlarmViewModel = hiltViewModel()
 ) {
-    var showSheetDiscard by remember {
-        mutableStateOf(false)
-    }
+    val dates = PersianDate()
+    var showSheetDiscard by remember { mutableStateOf(false) }
+    var enableAlarm by remember { mutableStateOf(false) }
     var taskTitle by remember { mutableStateOf("") }
     var selectedColor by remember { mutableIntStateOf(1) }
     val subTask = remember { mutableStateListOf<Task>() }
@@ -106,7 +107,7 @@ fun AddTaskScreen(
     var oldTaskTitle by remember { mutableStateOf("") }
     var oldTaskBody by remember { mutableStateOf("") }
 
-    var selectedAlarmDataList by rememberSaveable { mutableStateOf(listOf(0,0,0)) }
+    var selectedAlarmDataList by rememberSaveable { mutableStateOf(listOf(0, 0, 0)) }
     var selectedTimeHour by rememberSaveable { mutableIntStateOf(0) }
     var selectedTimeMinute by rememberSaveable { mutableIntStateOf(0) }
     val openDialogDate = remember { mutableStateOf(false) }
@@ -153,8 +154,16 @@ fun AddTaskScreen(
                 oldTaskBody = taskItem.body
                 createTime = taskItem.createTime
                 completedTime = taskItem.completedTime
+                enableAlarm = System.currentTimeMillis() < taskItem.triggerAlarmTime
+                selectedAlarmDataList =
+                    TaskHelper.convertMillisToDateList(taskItem.triggerAlarmTime)
+
+                val time = TaskHelper.convertMillisToTimeList(taskItem.triggerAlarmTime)
+                selectedTimeHour = time[0]
+                selectedTimeMinute = time[1]
             }
         }
+
     }
 
 
@@ -166,16 +175,16 @@ fun AddTaskScreen(
         text = "در وظیفه شما تغییراتی ایجاد شده است.آیا مایل به ذخیره کردن هستید؟",
         onDismissRequest = { showSheetDiscard = false },
         save = {
-            val dates = PersianDate()
             val taskItem = TaskItem(
                 id = id,
                 title = taskTitle,
                 subTask = subTask,
                 body = taskBody,
                 taskColor = selectedColor,
-                createTime = "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}:${dates.second}",
-                completedTime = if (subTask.all { it.isCompleted }) "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}:${dates.second}" else "",
-            )
+                createTime = "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}",
+                completedTime = if (subTask.all { it.isCompleted }) "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}" else "",
+
+                )
             taskViewModel.upsertTask(taskItem)
         },
         exit = {
@@ -219,17 +228,30 @@ fun AddTaskScreen(
             openDialogTime.value = false
         }
     )
-    JalaliDatePickerDialog(
-        openDialog = openDialogDate,
-        onSelectDay = { //it:JalaliCalendar
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        JalaliDatePickerDialog(
+            textColor = MaterialTheme.colorScheme.scrim,
+            selectedIconColor = MaterialTheme.colorScheme.primary,
+            dropDownColor = MaterialTheme.colorScheme.scrim,
+            backgroundColor = MaterialTheme.colorScheme.background,
+            textColorHighlight = MaterialTheme.colorScheme.onSecondary,
+            todayBtnColor = MaterialTheme.colorScheme.scrim,
+            dayOfWeekLabelColor = MaterialTheme.colorScheme.scrim,
+            confirmBtnColor = MaterialTheme.colorScheme.scrim,
+            cancelBtnColor = MaterialTheme.colorScheme.error,
+            disableBeforeDate = JalaliCalendar(dates.year, dates.month, dates.day - 1),
+            fontSize = 16.sp,
+            openDialog = openDialogDate,
+            onSelectDay = { //it:JalaliCalendar
 
-        },
-        onConfirm = {
-            val date = TaskHelper.jalaliToGregorian(it.year, it.month, it.day)
-            selectedAlarmDataList = splitWholeDate(date)
-        },
-        fontFamily = font_standard
-    )
+            },
+            onConfirm = {
+                val date = TaskHelper.jalaliToGregorian(it.year, it.month, it.day)
+                selectedAlarmDataList = splitWholeDate(date)
+            },
+            fontFamily = font_bold
+        )
+    }
 
     Scaffold(
         snackbarHost = {
@@ -281,45 +303,74 @@ fun AddTaskScreen(
                             duration = SnackbarDuration.Short
                         )
                     }
-                } else if (selectedAlarmDataList.isEmpty()) {
-                    scope.launch {
-                        snackBarHostState.showSnackbar(
-                            "تاریخ و ساعت یادآور را تنظیم کنید",
-                            duration = SnackbarDuration.Short
-                        )
-                    }
                 } else {
-                    Log.i(
-                        "hosein",
-                        "selectedTimeHour:$selectedTimeHour\nselectedTimeMinute:$selectedTimeMinute"
-                    )
-                    val dates = PersianDate()
-                    val triggerTime = TaskHelper.getTimeInMillis(
-                        calendar = calendar,
-                        year = selectedAlarmDataList[0],
-                        month = selectedAlarmDataList[1],
-                        day = selectedAlarmDataList[2],
-                        hour = selectedTimeHour,
-                        minute = selectedTimeMinute,
-                    )
+                    if (enableAlarm) {
+                        if (selectedAlarmDataList == listOf(0, 0, 0)) {
+                            scope.launch {
+                                snackBarHostState.showSnackbar(
+                                    message = "تاریخ یادآور انتخاب نشده است",
+                                    withDismissAction = true
+                                )
+                            }
+                        } else if (selectedTimeHour == 0) {
+                            scope.launch {
+                                snackBarHostState.showSnackbar(
+                                    message = "زمان یادآور انتخاب نشده است",
+                                    withDismissAction = true
+                                )
+                            }
+                        } else {
+                            val triggerTime = TaskHelper.getTimeInMillis(
+                                calendar = calendar,
+                                year = selectedAlarmDataList[0],
+                                month = selectedAlarmDataList[1],
+                                day = selectedAlarmDataList[2],
+                                hour = selectedTimeHour,
+                                minute = selectedTimeMinute,
+                            )
+                            if (triggerTime < System.currentTimeMillis()){
+                                scope.launch {
+                                    snackBarHostState.showSnackbar(
+                                        message = "زمان یادآور باید از آینده باشد!",
+                                        withDismissAction = true
+                                    )
+                                }
+                            }else{
+                                alarmViewModel.setNotificationAlarm(
+                                    triggerTime = triggerTime,
+                                    id = Random.nextInt(1, 200),
+                                    title = taskTitle,
+                                    context = context
+                                )
+                                val taskItem = TaskItem(
+                                    id = id,
+                                    title = taskTitle,
+                                    subTask = subTask,
+                                    body = taskBody,
+                                    taskColor = selectedColor,
+                                    createTime = "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}",
+                                    completedTime = if (subTask.all { it.isCompleted }) "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}" else "",
+                                    triggerAlarmTime = triggerTime
+                                )
+                                taskViewModel.upsertTask(taskItem)
+                                navHostController.navigateUp()
+                            }
+                        }
 
-                    alarmViewModel.setNotificationAlarm(
-                        triggerTime = triggerTime,
-                        id = Random.nextInt(1, 200),
-                        title = taskTitle,
-                        context = context
-                    )
-                    val taskItem = TaskItem(
-                        id = id,
-                        title = taskTitle,
-                        subTask = subTask,
-                        body = taskBody,
-                        taskColor = selectedColor,
-                        createTime = "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}:${dates.second}",
-                        completedTime = if (subTask.all { it.isCompleted }) "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}:${dates.second}" else "",
-                    )
-                    taskViewModel.upsertTask(taskItem)
-                    navHostController.navigateUp()
+                    } else {
+                        val taskItem = TaskItem(
+                            id = id,
+                            title = taskTitle,
+                            subTask = subTask,
+                            body = taskBody,
+                            taskColor = selectedColor,
+                            createTime = "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}",
+                            completedTime = if (subTask.all { it.isCompleted }) "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}" else "",
+                        )
+                        taskViewModel.upsertTask(taskItem)
+                        navHostController.navigateUp()
+                    }
+
                 }
             }, onBack = {
                 if (oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask != oldSubTask) {
@@ -476,10 +527,16 @@ fun AddTaskScreen(
             }
             item {
                 SetAlarmSection(
-                    onSelectedDate = {openDialogDate.value =true},
-                    onSelectedTime = {openDialogTime.value =true},
-                    times =if (selectedTimeHour ==0)"انتخاب نشده" else "${selectedTimeHour}:${selectedTimeMinute}",
-                    dates =TaskHelper.gregorianToJalali(selectedAlarmDataList[0],selectedAlarmDataList[1],selectedAlarmDataList[2])
+                    enableAlarm = enableAlarm,
+                    onSelectedDate = { openDialogDate.value = true },
+                    onSelectedTime = { openDialogTime.value = true },
+                    onEnable = { enb -> enableAlarm = enb },
+                    times = if (selectedTimeHour == 0) "انتخاب نشده" else "${selectedTimeHour}:${selectedTimeMinute}",
+                    dates = TaskHelper.gregorianToJalali(
+                        selectedAlarmDataList[0],
+                        selectedAlarmDataList[1],
+                        selectedAlarmDataList[2]
+                    )
                 )
             }
             item { DetailTaskSection(subTask.size) }
@@ -499,7 +556,7 @@ fun AddTaskScreen(
             itemsIndexed(subTask) { index, item ->
                 SubTaskItem(item,
                     onCompeted = { competed ->
-                        subTask[index].isCompleted = competed
+                        subTask[index] = item.copy(isCompleted = competed)
                     },
                     onClick = {
                         subTaskId = index
