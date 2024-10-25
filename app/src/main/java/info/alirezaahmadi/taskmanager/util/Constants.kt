@@ -10,7 +10,9 @@ object Constants {
 
     const val ABOUT_BASE_URL = "https://daneshjooyar.com/wp-json/wp/v2/"
     const val NOTIFE_BASE_URL = "https://notificator.ir/api/v1/"
-    const val CHANNEL_ID = "CHANNEL_ID_notification"
+    const val CHANNEL_ID = "Task"
+    const val CHANNEL_NAME = "channel_main"
     const val TOKEN = "H5tzuvIGHfes3LZxAGscCfX6qfAuG6VWqSxntJLc"
+    const val ACTION_ALARM_RECEIVER = "info.alirezaahmadi.ACTION_ALARM_RECEIVER"
 
 }
