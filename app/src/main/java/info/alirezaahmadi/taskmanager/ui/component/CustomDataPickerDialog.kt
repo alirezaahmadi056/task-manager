@@ -21,15 +21,15 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDataPickerDialog(
+    calendar: Calendar,
     isShow: Boolean,
     onDismissRequest: () -> Unit,
     onSelected: (TimePickerState) -> Unit
 ) {
     if (!isShow) return
-    val currentTime = Calendar.getInstance()
     val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
-        initialMinute = currentTime.get(Calendar.MINUTE),
+        initialHour = calendar.get(Calendar.HOUR_OF_DAY),
+        initialMinute = calendar.get(Calendar.MINUTE),
         is24Hour = true,
     )
     CompositionLocalProvider(value = LocalLayoutDirection provides LayoutDirection.Ltr) {
