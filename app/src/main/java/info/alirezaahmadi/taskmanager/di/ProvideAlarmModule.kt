@@ -7,7 +7,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import info.alirezaahmadi.taskmanager.data.alarm.AlarmManagement
 import javax.inject.Singleton
 
 @Module
@@ -19,12 +18,4 @@ object ProvideAlarmModule {
     fun provideAlarmManager(@ApplicationContext context: Context): AlarmManager =
         context.getSystemService(AlarmManager::class.java)
 
-
-    @Provides
-    @Singleton
-    fun provideAlarmManagement(
-        alarmManager: AlarmManager
-    ): AlarmManagement {
-        return AlarmManagement(alarmManager)
-    }
 }
