@@ -2,28 +2,29 @@ package info.alirezaahmadi.taskmanager.di
 
 import android.app.AlarmManager
 import android.content.Context
-import android.content.Intent
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import info.alirezaahmadi.taskmanager.data.alarm.AlarmReceiver
+import info.alirezaahmadi.taskmanager.data.alarm.AlarmManagement
 import javax.inject.Singleton
-
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AlarmModule {
+object ProvideAlarmModule {
 
     @Provides
     @Singleton
-    fun provideAlarmManager(@ApplicationContext context:Context) =
-        context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    fun provideAlarmManager(@ApplicationContext context: Context): AlarmManager =
+        context.getSystemService(AlarmManager::class.java)
+
 
     @Provides
     @Singleton
-    fun provideAlarmIntent(@ApplicationContext context: Context) =
-        Intent(context, AlarmReceiver::class.java)
-
+    fun provideAlarmManagement(
+        alarmManager: AlarmManager
+    ): AlarmManagement {
+        return AlarmManagement(alarmManager)
+    }
 }
