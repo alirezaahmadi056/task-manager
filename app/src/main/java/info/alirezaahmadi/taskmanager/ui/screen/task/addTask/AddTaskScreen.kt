@@ -1,6 +1,7 @@
 package info.alirezaahmadi.taskmanager.ui.screen.task.addTask
 
 import PersianDate
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
@@ -79,17 +80,19 @@ import ir.huri.jcal.JalaliCalendar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Calendar
-import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskScreen(
     navHostController: NavHostController,
     id: Int,
+    lastId: Int,
     taskViewModel: TaskViewModel = hiltViewModel(),
     alarmViewModel: AlarmViewModel = hiltViewModel()
 ) {
-    val dates = PersianDate()
+
+    val dates by remember { mutableStateOf(PersianDate()) }
+
     var showSheetDiscard by remember { mutableStateOf(false) }
     var enableAlarm by remember { mutableStateOf(false) }
     var taskTitle by remember { mutableStateOf("") }
@@ -108,7 +111,7 @@ fun AddTaskScreen(
     var oldTaskBody by remember { mutableStateOf("") }
 
     var selectedAlarmDataList by rememberSaveable { mutableStateOf(listOf(0, 0, 0)) }
-    var selectedTimeHour by rememberSaveable { mutableIntStateOf(0) }
+    var selectedTimeHour by rememberSaveable { mutableIntStateOf(7) }
     var selectedTimeMinute by rememberSaveable { mutableIntStateOf(0) }
     val openDialogDate = remember { mutableStateOf(false) }
     val openDialogTime = remember { mutableStateOf(false) }
@@ -172,21 +175,7 @@ fun AddTaskScreen(
     }
     SheetSaveDiscard(
         show = showSheetDiscard,
-        text = "در وظیفه شما تغییراتی ایجاد شده است.آیا مایل به ذخیره کردن هستید؟",
         onDismissRequest = { showSheetDiscard = false },
-        save = {
-            val taskItem = TaskItem(
-                id = id,
-                title = taskTitle,
-                subTask = subTask,
-                body = taskBody,
-                taskColor = selectedColor,
-                createTime = "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}",
-                completedTime = if (subTask.all { it.isCompleted }) "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}" else "",
-
-                )
-            taskViewModel.upsertTask(taskItem)
-        },
         exit = {
             showSheetDiscard = false
             navHostController.navigateUp()
@@ -201,7 +190,6 @@ fun AddTaskScreen(
     )
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    val calendar by remember { mutableStateOf(Calendar.getInstance()) }
 
     BottomSheetAddTask { title ->
         if (title.isEmpty()) {
@@ -218,7 +206,8 @@ fun AddTaskScreen(
         title = "لطفا اولویت وظیفه را انتخاب کنید",
         onClick = { colorIndex -> selectedColor = colorIndex })
     CustomDataPickerDialog(
-        calendar = calendar,
+        initialMinute = selectedTimeMinute,
+        initialHour = selectedTimeHour,
         isShow = openDialogTime.value,
         onSelected = {
             selectedTimeHour = it.hour
@@ -239,7 +228,7 @@ fun AddTaskScreen(
             dayOfWeekLabelColor = MaterialTheme.colorScheme.scrim,
             confirmBtnColor = MaterialTheme.colorScheme.scrim,
             cancelBtnColor = MaterialTheme.colorScheme.error,
-            disableBeforeDate = JalaliCalendar(dates.year, dates.month, dates.day - 1),
+            disableBeforeDate = JalaliCalendar(dates.year, dates.month - 1, dates.day - 1),
             fontSize = 16.sp,
             openDialog = openDialogDate,
             onSelectDay = { //it:JalaliCalendar
@@ -271,9 +260,9 @@ fun AddTaskScreen(
                     modifier = Modifier.padding(4.dp)
                 ) {
                     Text(
-                        data.visuals.message,
+                        text = data.visuals.message,
                         color = MaterialTheme.colorScheme.background,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
             }
@@ -304,7 +293,7 @@ fun AddTaskScreen(
                         )
                     }
                 } else {
-                    if (enableAlarm) {
+                    if (enableAlarm && !subTask.all { it.isCompleted }) {
                         if (selectedAlarmDataList == listOf(0, 0, 0)) {
                             scope.launch {
                                 snackBarHostState.showSnackbar(
@@ -312,14 +301,8 @@ fun AddTaskScreen(
                                     withDismissAction = true
                                 )
                             }
-                        } else if (selectedTimeHour == 0) {
-                            scope.launch {
-                                snackBarHostState.showSnackbar(
-                                    message = "زمان یادآور انتخاب نشده است",
-                                    withDismissAction = true
-                                )
-                            }
                         } else {
+                            val calendar = Calendar.getInstance()
                             val triggerTime = TaskHelper.getTimeInMillis(
                                 calendar = calendar,
                                 year = selectedAlarmDataList[0],
@@ -328,22 +311,38 @@ fun AddTaskScreen(
                                 hour = selectedTimeHour,
                                 minute = selectedTimeMinute,
                             )
-                            if (triggerTime < System.currentTimeMillis()){
+                            if (triggerTime < System.currentTimeMillis()) {
                                 scope.launch {
                                     snackBarHostState.showSnackbar(
                                         message = "زمان یادآور باید از آینده باشد!",
                                         withDismissAction = true
                                     )
                                 }
-                            }else{
-                                alarmViewModel.setNotificationAlarm(
-                                    triggerTime = triggerTime,
-                                    id = Random.nextInt(1, 200),
-                                    title = taskTitle,
-                                    context = context
-                                )
+                            } else {
+                                if (id != 0) {
+                                    Log.i("1515", "update alarm")
+                                    alarmViewModel.canselNotificationAlarm(
+                                        context = context,
+                                        id = id
+                                    )
+                                    alarmViewModel.setNotificationAlarm(
+                                        triggerTime = triggerTime,
+                                        id = id,
+                                        title = taskTitle,
+                                        context = context
+                                    )
+                                } else {
+                                    Log.i("1515", "set alarm")
+                                    alarmViewModel.setNotificationAlarm(
+                                        triggerTime = triggerTime,
+                                        id = lastId + 1,
+                                        title = taskTitle,
+                                        context = context
+                                    )
+                                }
+
                                 val taskItem = TaskItem(
-                                    id = id,
+                                    id = if (id != 0) id else lastId + 1,
                                     title = taskTitle,
                                     subTask = subTask,
                                     body = taskBody,
@@ -358,8 +357,14 @@ fun AddTaskScreen(
                         }
 
                     } else {
+                        if (id!=0){
+                            alarmViewModel.canselNotificationAlarm(
+                                context = context,
+                                id =0
+                            )
+                        }
                         val taskItem = TaskItem(
-                            id = id,
+                            id = if (id != 0) id else lastId + 1,
                             title = taskTitle,
                             subTask = subTask,
                             body = taskBody,
@@ -370,10 +375,9 @@ fun AddTaskScreen(
                         taskViewModel.upsertTask(taskItem)
                         navHostController.navigateUp()
                     }
-
                 }
             }, onBack = {
-                if (oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask != oldSubTask) {
+                if (oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask.toList() != oldSubTask.toList()) {
                     showSheetDiscard = true
                 } else {
                     navHostController.navigateUp()
@@ -531,7 +535,7 @@ fun AddTaskScreen(
                     onSelectedDate = { openDialogDate.value = true },
                     onSelectedTime = { openDialogTime.value = true },
                     onEnable = { enb -> enableAlarm = enb },
-                    times = if (selectedTimeHour == 0) "انتخاب نشده" else "${selectedTimeHour}:${selectedTimeMinute}",
+                    times = "${selectedTimeHour}:${selectedTimeMinute}",
                     dates = TaskHelper.gregorianToJalali(
                         selectedAlarmDataList[0],
                         selectedAlarmDataList[1],
