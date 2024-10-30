@@ -12,24 +12,23 @@ import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
-import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDataPickerDialog(
-    calendar: Calendar,
+    initialHour:Int,
+    initialMinute:Int,
     isShow: Boolean,
     onDismissRequest: () -> Unit,
     onSelected: (TimePickerState) -> Unit
 ) {
     if (!isShow) return
     val timePickerState = rememberTimePickerState(
-        initialHour = calendar.get(Calendar.HOUR_OF_DAY),
-        initialMinute = calendar.get(Calendar.MINUTE),
+        initialHour = initialHour,
+        initialMinute = initialMinute,
         is24Hour = true,
     )
     CompositionLocalProvider(value = LocalLayoutDirection provides LayoutDirection.Ltr) {
