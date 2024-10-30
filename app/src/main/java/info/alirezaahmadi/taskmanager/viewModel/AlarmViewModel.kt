@@ -1,10 +1,10 @@
 package info.alirezaahmadi.taskmanager.viewModel
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import info.alirezaahmadi.taskmanager.data.alarm.AlarmReceiver
@@ -17,9 +17,9 @@ class AlarmViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    @SuppressLint("NewApi")
     fun setNotificationAlarm(context: Context, triggerTime: Long, id: Int, title: String) {
-//        if (triggerTime < System.currentTimeMillis()) return
+        Log.i("1515", "id setNotificationAlarm $id")
+       if (triggerTime < System.currentTimeMillis()) return
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             action = Constants.ACTION_ALARM_RECEIVER
             putExtra("TASK_ID", id)
@@ -38,5 +38,22 @@ class AlarmViewModel @Inject constructor(
             pendingIntent,
         )
     }
+    fun canselNotificationAlarm(context: Context, id: Int) {
+        Log.i("1515", "id canselNotificationAlarm $id")
+
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            action = Constants.ACTION_ALARM_RECEIVER
+            putExtra("TASK_ID", id)
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            id,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        alarmManager.cancel(pendingIntent)
+    }
+
 
 }
