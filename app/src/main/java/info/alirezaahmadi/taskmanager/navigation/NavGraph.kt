@@ -57,11 +57,15 @@ fun NavGraph(navHostController: NavHostController) {
             )
         }
 
-        composable(Screen.AddTaskScreen.route +"?id={id}",
+        composable(Screen.AddTaskScreen.route +"?id={id}&lastId={lastId}",
             arguments = listOf(
-                navArgument("id"){
+                navArgument("id") {
                     type = NavType.IntType
-                    defaultValue =0
+                    defaultValue = 0
+                },
+                navArgument("lastId") {
+                    type = NavType.IntType
+                    defaultValue = 0
                 }
             ),
             enterTransition = {
@@ -78,15 +82,17 @@ fun NavGraph(navHostController: NavHostController) {
                 )
             },
             popExitTransition = { fadeOut(animationSpec = tween(700)) }
-            ) {
-            AddTaskScreen(navHostController = navHostController,
-                id =it.arguments?.getInt("id")?:0
+        ) {
+            AddTaskScreen(
+                navHostController = navHostController,
+                id = it.arguments?.getInt("id") ?: 0,
+                lastId = it.arguments?.getInt("lastId") ?: 10
             )
         }
-        composable(Screen.AboutMeScreen.route){
+        composable(Screen.AboutMeScreen.route) {
             AboutMeScreen(navHostController)
         }
-        composable(Screen.SearchScreen.route){
+        composable(Screen.SearchScreen.route) {
             SearchScreen(navHostController)
         }
     }

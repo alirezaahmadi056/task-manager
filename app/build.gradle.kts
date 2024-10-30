@@ -112,7 +112,10 @@ dependencies {
     //icon
     implementation("androidx.compose.material:material-icons-extended:1.7.0-beta02")
 
-    implementation("com.github.hamooo90:jalali-datepicker-compose:1.1.1")
+    implementation("com.github.hamooo90:jalali-datepicker-compose:1.2.0")
     implementation("ir.huri:JalaliCalendar:1.3.3")
+
+    //accompanist-permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.36.0")
 
 }
