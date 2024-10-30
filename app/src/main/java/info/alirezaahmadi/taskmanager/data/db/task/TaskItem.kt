@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class TaskItem(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id :Int=0,
     val title :String="",
     val subTask :List<Task> = emptyList(),
@@ -13,6 +13,7 @@ data class TaskItem(
     val taskColor :Int=1,
     val createTime:String="",
     val completedTime:String="",
+    val triggerAlarmTime:Long=0L,
 )
 
 data class Task(
