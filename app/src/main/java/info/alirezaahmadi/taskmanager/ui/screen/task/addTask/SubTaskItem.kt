@@ -71,9 +71,7 @@ fun SubTaskItem(
                     uncheckedColor = MaterialTheme.colorScheme.scrim
                 ),
                 checked = item.isCompleted,
-                onCheckedChange = {
-                    onCompeted(it)
-                })
+                onCheckedChange = { onCompeted(it) })
         }
     }
 
