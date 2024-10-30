@@ -1,4 +1,4 @@
-package info.alirezaahmadi.frenchpastry.data.dataStore
+package info.alirezaahmadi.taskmanager.data.dataStore
 
 import android.content.Context
 import androidx.datastore.core.DataStore

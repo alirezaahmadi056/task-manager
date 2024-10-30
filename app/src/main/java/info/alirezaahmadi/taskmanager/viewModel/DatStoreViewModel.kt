@@ -3,7 +3,7 @@ package info.alirezaahmadi.taskmanager.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import info.alirezaahmadi.frenchpastry.data.dataStore.DataStoreRepositoryImpl
+import info.alirezaahmadi.taskmanager.data.dataStore.DataStoreRepositoryImpl
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject

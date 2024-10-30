@@ -6,7 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import info.alirezaahmadi.frenchpastry.data.dataStore.DataStoreRepositoryImpl
+import info.alirezaahmadi.taskmanager.data.dataStore.DataStoreRepositoryImpl
 import javax.inject.Singleton
 
 @Module
