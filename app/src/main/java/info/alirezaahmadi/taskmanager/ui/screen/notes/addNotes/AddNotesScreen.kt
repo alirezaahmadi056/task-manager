@@ -54,6 +54,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -80,6 +81,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
+import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.TopBar
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
@@ -211,24 +213,7 @@ fun AddNotesScreen(
     }
     SheetSaveDiscard(
         show = showSheetDiscard,
-        text = "در یادداشت شما تغییراتی ایجاد شده است.آیا مایل به ذخیره کردن هستید؟",
         onDismissRequest = { showSheetDiscard = false },
-        save = {
-            val dates = PersianDate()
-            notesViewModel.upsertNotesItem(
-                NotesItem(
-                    id = id,
-                    title = title,
-                    body = body,
-                    taskColor = selectedColor,
-                    phone = contactPhone,
-                    address = address,
-                    uri = selectedImageUriList,
-                    createTime = "${dates.hour}:${dates.min}",
-                    createDate = "${dates.year}/${dates.month}/${dates.day}"
-                )
-            )
-        },
         exit = {
             showSheetDiscard = false
             navHostController.navigateUp()
@@ -241,28 +226,18 @@ fun AddNotesScreen(
 
     Scaffold(
         snackbarHost = {
-            SnackbarHost(snackBarHostState) { data ->
-                Snackbar(
-                    dismissAction = {
-                        IconButton(onClick = { data.dismiss() }) {
-                            Icon(
-                                imageVector = Icons.Rounded.Close,
-                                contentDescription = "",
-                                tint = MaterialTheme.colorScheme.background,
-                            )
-                        }
-                    },
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
-                ) {
-                    Text(
-                        data.visuals.message,
-                        color = MaterialTheme.colorScheme.background,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+            MySnackbarHost(
+                snackBarHostState,
+                action = {data->
+                    IconButton(onClick = { data.dismiss() }) {
+                        Icon(
+                            imageVector = Icons.Rounded.Close,
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.background,
+                        )
+                    }
                 }
-            }
+            )
         },
         bottomBar = {
             Bottom(
@@ -272,14 +247,16 @@ fun AddNotesScreen(
                         scope.launch {
                             snackBarHostState.showSnackbar(
                                 "عنوان یادداشت را مشخص کنید",
-                                duration = SnackbarDuration.Short
+                                duration = SnackbarDuration.Short,
+                                withDismissAction = true
                             )
                         }
                     } else if (body.isEmpty()) {
                         scope.launch {
                             snackBarHostState.showSnackbar(
                                 "توضیحات یادداشت را مشخص کنید",
-                                duration = SnackbarDuration.Short
+                                duration = SnackbarDuration.Short,
+                                withDismissAction = true
                             )
                         }
                     } else {
@@ -559,9 +536,7 @@ fun AddNotesScreen(
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
                 modifier = Modifier
                     .fillMaxWidth(),
-                onClick = {
-                    expanded = !expanded
-                })
+                onClick = { expanded = !expanded })
             {
                 Row(
                     modifier = Modifier
@@ -607,7 +582,7 @@ fun AddNotesScreen(
             ) {
                 Column {
                     if (selectedImageUriList.isNotEmpty()) {
-                        selectedImageUriList.forEachIndexed { index, uri ->
+                        selectedImageUriList.forEach { uri ->
                             SaveImageCard(uri, context) {
                                 IconButton(
                                     modifier = Modifier.padding(bottom = 8.dp),
