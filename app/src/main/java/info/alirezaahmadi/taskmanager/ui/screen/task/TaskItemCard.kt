@@ -15,6 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AlarmOn
+import androidx.compose.material.icons.rounded.CheckCircleOutline
+import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material.icons.rounded.PendingActions
 import androidx.compose.material.icons.rounded.TaskAlt
 import androidx.compose.material3.Card
@@ -86,66 +89,70 @@ fun TaskItemCard(
         modifier = Modifier
             .padding(horizontal = 6.dp, vertical = 4.dp)
             .fillMaxWidth()
-            .height(105.dp),
+            .height(110.dp),
         onClick = { navHostController.navigate(Screen.AddTaskScreen.route + "?id=${item.id}") }
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Box(
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ){
+            Row(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .width(10.dp)
-                    .background(taskColor)
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Box(contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(
-                    progress = { progress },
-                    modifier = Modifier.size(65.dp),
-                    color = taskColor,
-                    strokeWidth = 4.dp,
-                    strokeCap = StrokeCap.Butt,
-                    trackColor = taskColor.copy(alpha = 0.2f),
-                )
-                Text(
-                    text = "${
-                        TaskHelper.taskByLocate(
-                            (progress * 100).roundToInt().toString()
-                        )
-                    }${"%"}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.scrim,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            Column(
-                modifier = Modifier
-                    .padding(bottom = 4.dp)
-                    .fillMaxSize()
-                    .padding(start = 8.dp, end = 4.dp),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
             ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    textDecoration = if (progress == 1f) TextDecoration.LineThrough else TextDecoration.None,
-                    text = item.title,
-                    style = MaterialTheme.typography.bodyLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Row(
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
+                        .fillMaxHeight()
+                        .width(10.dp)
+                        .background(taskColor)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Box(contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(
+                        progress = { progress },
+                        modifier = Modifier.size(65.dp),
+                        color = taskColor,
+                        strokeWidth = 4.dp,
+                        strokeCap = StrokeCap.Butt,
+                        trackColor = taskColor.copy(alpha = 0.2f),
+                    )
+                    Text(
+                        text = "${
+                            TaskHelper.taskByLocate(
+                                (progress * 100).roundToInt().toString()
+                            )
+                        }${"%"}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.scrim,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .padding(bottom = 4.dp)
+                        .fillMaxSize()
+                        .padding(start = 8.dp, end = 4.dp),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        textDecoration = if (progress == 1f) TextDecoration.LineThrough else TextDecoration.None,
+                        text = item.title,
+                        style = MaterialTheme.typography.bodyLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Row(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
@@ -194,19 +201,92 @@ fun TaskItemCard(
                         }
 
 
+                    }
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd) {
+                        if (progress == 1f) {
+                            Row(
+                                modifier = Modifier.padding(4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = TaskHelper.taskByLocate(item.completedTime),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.scrim.copy(0.8f)
+                                    )
+                                    Spacer(Modifier.width(4.dp))
+                                    Icon(
+                                        imageVector = Icons.Rounded.CheckCircleOutline,
+                                        contentDescription = "",
+                                        tint = MaterialTheme.colorScheme.scrim.copy(0.8f),
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
+                                VerticalDivider(
+                                    thickness = 1.dp,
+                                    modifier = Modifier.height(17.dp)
+                                        .padding(horizontal = 5.dp),
+                                    color =MaterialTheme.colorScheme.scrim
+                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = TaskHelper.taskByLocate(item.createTime),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.scrim.copy(0.8f)
+                                    )
+                                    Spacer(Modifier.width(4.dp))
+                                    Icon(
+                                        imageVector = Icons.Rounded.Create,
+                                        contentDescription = "",
+                                        tint = MaterialTheme.colorScheme.scrim.copy(0.8f),
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
 
-                }
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd) {
-                  /*  Text(
-                        modifier = Modifier.padding(horizontal = 5.dp),
-                        text = TaskHelper.taskByLocate("${item.time} | ${item.date}"),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.scrim.copy(0.8f)
-                    )*/
+                            }
+                        } else {
+                            Row(
+                                modifier = Modifier.padding(4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(
+                                    text = TaskHelper.taskByLocate(item.createTime),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.scrim.copy(0.8f)
+                                )
+                                Spacer(Modifier.width(4.dp))
+                                Icon(
+                                    imageVector = Icons.Rounded.Create,
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colorScheme.scrim.copy(0.8f),
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+
+                        }
+
+                    }
+
                 }
 
             }
-
+            if (item.triggerAlarmTime>System.currentTimeMillis()){
+                Box(
+                    modifier = Modifier.align(Alignment.TopEnd)
+                        .padding(8.dp),
+                    contentAlignment = Alignment.Center
+                ){
+                    Icon(
+                        imageVector = Icons.Rounded.AlarmOn,
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
         }
 
     }
