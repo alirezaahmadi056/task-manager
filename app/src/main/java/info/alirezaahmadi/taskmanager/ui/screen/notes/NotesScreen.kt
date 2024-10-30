@@ -63,6 +63,7 @@ import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.ui.component.EmptyList
+import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
@@ -122,7 +123,8 @@ fun NotesScreen(
             scope.launch {
                 snackBarHostState.showSnackbar(
                     "یادداشت با موفقیت حذف شد",
-                    duration = SnackbarDuration.Short
+                    duration = SnackbarDuration.Short,
+                    withDismissAction = true
                 )
             }
         },
@@ -133,26 +135,13 @@ fun NotesScreen(
     })
     Scaffold(
         snackbarHost = {
-            SnackbarHost(snackBarHostState) { data ->
-                Snackbar(
-                    action = {
-                        TextButton(onClick = {
-                            notesViewModel.upsertNotesItem(singleDeleteNotes)
-                            data.dismiss()
-                        }) {
-                            Text(
-                                "بازگردانی",
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    },
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
-                ) {
+            MySnackbarHost(snackBarHostState){data->
+                TextButton(onClick = {
+                    notesViewModel.upsertNotesItem(singleDeleteNotes)
+                    data.dismiss()
+                }) {
                     Text(
-                        data.visuals.message,
+                        "بازگردانی",
                         color = MaterialTheme.colorScheme.background,
                         style = MaterialTheme.typography.bodyMedium
                     )
