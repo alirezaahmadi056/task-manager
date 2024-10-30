@@ -66,6 +66,7 @@ import com.gmail.hamedvakhide.compose_jalali_datepicker.JalaliDatePickerDialog
 import info.alirezaahmadi.taskmanager.data.db.task.Task
 import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
 import info.alirezaahmadi.taskmanager.ui.component.CustomDataPickerDialog
+import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.SetAlarmSection
 import info.alirezaahmadi.taskmanager.ui.component.TopBar
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.BottomSheetSelectedColor
@@ -244,25 +245,12 @@ fun AddTaskScreen(
 
     Scaffold(
         snackbarHost = {
-            SnackbarHost(snackBarHostState) { data ->
-                Snackbar(
-                    dismissAction = {
-                        IconButton(onClick = { data.dismiss() }) {
-                            Icon(
-                                imageVector = Icons.Rounded.Close,
-                                contentDescription = "",
-                                tint = MaterialTheme.colorScheme.background,
-                            )
-                        }
-                    },
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.padding(4.dp)
-                ) {
-                    Text(
-                        text = data.visuals.message,
-                        color = MaterialTheme.colorScheme.background,
-                        style = MaterialTheme.typography.bodyLarge
+            MySnackbarHost(snackBarHostState) { data ->
+                IconButton(onClick = { data.dismiss() }) {
+                    Icon(
+                        imageVector = Icons.Rounded.Close,
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.background,
                     )
                 }
             }
@@ -347,8 +335,8 @@ fun AddTaskScreen(
                                     subTask = subTask,
                                     body = taskBody,
                                     taskColor = selectedColor,
-                                    createTime = "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}",
-                                    completedTime = if (subTask.all { it.isCompleted }) "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}" else "",
+                                    createTime = if (id == 0) "${dates.hour}:${dates.min} -- ${dates.year}/${dates.month}/${dates.day}" else createTime,
+                                    completedTime = if (subTask.all { it.isCompleted }) "${dates.hour}:${dates.min} -- ${dates.year}/${dates.month}/${dates.day}" else "",
                                     triggerAlarmTime = triggerTime
                                 )
                                 taskViewModel.upsertTask(taskItem)
@@ -357,10 +345,10 @@ fun AddTaskScreen(
                         }
 
                     } else {
-                        if (id!=0){
+                        if (id != 0) {
                             alarmViewModel.canselNotificationAlarm(
                                 context = context,
-                                id =0
+                                id = id
                             )
                         }
                         val taskItem = TaskItem(
@@ -369,8 +357,8 @@ fun AddTaskScreen(
                             subTask = subTask,
                             body = taskBody,
                             taskColor = selectedColor,
-                            createTime = "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}",
-                            completedTime = if (subTask.all { it.isCompleted }) "${dates.year}/${dates.month}/${dates.day} -- ${dates.hour}:${dates.min}" else "",
+                            createTime = if (id == 0) "${dates.hour}:${dates.min} -- ${dates.year}/${dates.month}/${dates.day}" else createTime,
+                            completedTime = if (subTask.all { it.isCompleted }) "${dates.hour}:${dates.min} -- ${dates.year}/${dates.month}/${dates.day}" else "",
                         )
                         taskViewModel.upsertTask(taskItem)
                         navHostController.navigateUp()
