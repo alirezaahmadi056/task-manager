@@ -3,12 +3,15 @@ package info.alirezaahmadi.taskmanager.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import info.alirezaahmadi.taskmanager.ui.screen.MainScreen
 import info.alirezaahmadi.taskmanager.ui.screen.SearchScreen
 import info.alirezaahmadi.taskmanager.ui.screen.about.AboutMeScreen
 import info.alirezaahmadi.taskmanager.ui.screen.notes.NotesScreen
@@ -17,12 +20,17 @@ import info.alirezaahmadi.taskmanager.ui.screen.task.TaskScreen
 import info.alirezaahmadi.taskmanager.ui.screen.task.addTask.AddTaskScreen
 
 @Composable
-fun NavGraph(navHostController: NavHostController) {
+fun NavGraph(modifier:Modifier, navHostController: NavHostController,pagerState: PagerState) {
 
     NavHost(
+        modifier = modifier,
         navController = navHostController,
-        startDestination = Screen.NotesScreen.route,
+        startDestination = Screen.MainScreen.route,
     ) {
+
+        composable(Screen.MainScreen.route){
+            MainScreen(navHostController=navHostController, pagerState = pagerState)
+        }
         composable(Screen.NotesScreen.route) {
             NotesScreen(navHostController)
         }

@@ -522,6 +522,7 @@ fun AddTaskScreen(
                     enableAlarm = enableAlarm,
                     onSelectedDate = { openDialogDate.value = true },
                     onSelectedTime = { openDialogTime.value = true },
+                    //todo add permissions request
                     onEnable = { enb -> enableAlarm = enb },
                     times = "${selectedTimeHour}:${selectedTimeMinute}",
                     dates = TaskHelper.gregorianToJalali(

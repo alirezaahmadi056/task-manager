@@ -8,4 +8,5 @@ sealed class Screen(val route: String) {
     data object AddTaskScreen : Screen("AddTaskScreen")
     data object AboutMeScreen : Screen("AboutMeScreen")
     data object SearchScreen :Screen("SearchScreen")
+    data object MainScreen:Screen("MainScreen")
 }

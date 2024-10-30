@@ -1,9 +1,11 @@
 package info.alirezaahmadi.taskmanager.navigation
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.NoteAlt
 import androidx.compose.material.icons.outlined.Task
@@ -24,6 +26,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 private data class NavItem(
     val route: String,
@@ -34,9 +38,9 @@ private data class NavItem(
 
 @Composable
 fun BottomNavigation(
-    navHostController: NavHostController,
     isShow: Boolean,
-    backStackEntry: State<NavBackStackEntry?>
+    pagerState: PagerState,
+    coroutineScope: CoroutineScope,
 ) {
     if (isShow) {
 
@@ -67,16 +71,12 @@ fun BottomNavigation(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 item.forEachIndexed { index, navItem ->
-                    val selected = navItem.route == backStackEntry.value?.destination?.route
+                    val selected = pagerState.currentPage == index
                     NavigationBarItem(selected = selected,
                         onClick = {
-                            if(!selected){
-                                navHostController.navigate(navItem.route) {
-                                    popUpTo(0) {
-                                        inclusive = true
-                                    }
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index, animationSpec = tween(600))
                                 }
-                            }
                         },
                         icon = {
                             Icon(
@@ -104,7 +104,5 @@ fun BottomNavigation(
             }
 
         }
-
-
     }
 }

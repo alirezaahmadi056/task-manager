@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
@@ -45,7 +46,6 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,7 +59,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.navigation.Screen
@@ -71,13 +70,13 @@ import info.alirezaahmadi.taskmanager.viewModel.DatStoreViewModel
 @Composable
 fun TopBar(
     navHostController: NavHostController,
-    backStackEntry: State<NavBackStackEntry?>,
     isShow: Boolean,
     openDrawer: () -> Unit,
+    pagerState: PagerState,
 ) {
 
     if (isShow) {
-        val isNote = backStackEntry.value?.destination?.route == Screen.NotesScreen.route
+        val isNote = pagerState.currentPage == 0
         Column {
             Row(
                 modifier = Modifier

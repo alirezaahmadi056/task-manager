@@ -13,10 +13,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -53,6 +52,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var navHostController: NavHostController
+
     @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
             AppConfig()
             navHostController = rememberNavController()
             TaskApp(navHostController)
-
+            TskApp(navHostController)
         }
     }
 }
@@ -68,19 +68,42 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun TaskApp(navHostController: NavHostController) {
+
+    val notificationPermissionState =
+        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+    LaunchedEffect(notificationPermissionState.status.isGranted) {
+        if (!notificationPermissionState.status.isGranted) {
+            notificationPermissionState.launchPermissionRequest()
+        }
+    }
+
+    /* requestPermissionNotification(
+         notificationPermission = notificationPermissionState,
+         isGranted = {
+             Log.i("1212",it.toString())
+         },
+         permissionState = {
+             it.launchPermissionRequest()
+         },
+     )*/
+}
+
+@Composable
+private fun TskApp(navHostController: NavHostController) {
     var darkThem by rememberSaveable {
         mutableStateOf(Constants.isThemDark)
     }
 
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val backStackEntry = navHostController.currentBackStackEntryAsState()
-    val item = listOf(Screen.NotesScreen.route, Screen.TaskScreen.route)
-    val showBottomBar = backStackEntry.value?.destination?.route in item.map { it }
+    val showBottomBar = backStackEntry.value?.destination?.route == Screen.MainScreen.route
+
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val pagerState = rememberPagerState { 2 }
+
     TaskManagerTheme(darkTheme = darkThem) {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-            ModalNavigationDrawer(
-                gesturesEnabled = drawerState.isOpen,
+            MainDrawer(
                 drawerState = drawerState,
                 drawerContent = {
                     DrawerContent(
@@ -93,53 +116,38 @@ private fun TaskApp(navHostController: NavHostController) {
                             }
                         },
                     )
-                }) {
-                Scaffold(
-                    topBar = {
-                        TopBar(
-                            navHostController,
-                            backStackEntry,
-                            showBottomBar,
-                            openDrawer = { scope.launch { drawerState.open() } },
-                        )
-                    },
-                    bottomBar = {
-                        BottomNavigation(
-                            navHostController = navHostController,
-                            isShow = showBottomBar,
-                            backStackEntry = backStackEntry
-                        )
-                    },
-                    containerColor = MaterialTheme.colorScheme.background
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it)
+                },
+                content = {
+                    Scaffold(
+                        topBar = {
+                            TopBar(
+                                navHostController = navHostController,
+                                isShow = showBottomBar,
+                                openDrawer = { scope.launch { drawerState.open() } },
+                                pagerState = pagerState,
+                            )
+                        },
+                        bottomBar = {
+                            BottomNavigation(
+                                pagerState = pagerState,
+                                isShow = showBottomBar,
+                                coroutineScope = scope
+                            )
+                        },
+                        containerColor = MaterialTheme.colorScheme.background
                     ) {
-                        NavGraph(navHostController)
+                        NavGraph(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(it),
+                            navHostController = navHostController, pagerState = pagerState
+                        )
                     }
                 }
-            }
-        }
-    }
-    val notificationPermissionState =
-        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
-    LaunchedEffect(notificationPermissionState.status.isGranted) {
-        if (!notificationPermissionState.status.isGranted) {
-            notificationPermissionState.launchPermissionRequest()
+            )
         }
     }
 
-   /* requestPermissionNotification(
-        notificationPermission = notificationPermissionState,
-        isGranted = {
-            Log.i("1212",it.toString())
-        },
-        permissionState = {
-            it.launchPermissionRequest()
-        },
-    )*/
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
