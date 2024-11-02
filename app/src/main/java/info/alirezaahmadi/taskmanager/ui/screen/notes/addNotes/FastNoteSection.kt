@@ -25,11 +25,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
 import info.alirezaahmadi.taskmanager.ui.theme.LightGray
+import info.alirezaahmadi.taskmanager.util.PersianDate
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
 
 @Composable
 fun FastNoteSection(notesViewModel: NotesViewModel) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val dates = PersianDate()
     var body by remember { mutableStateOf("") }
 
     val textFieldColor = TextFieldDefaults.colors(
@@ -68,7 +70,9 @@ fun FastNoteSection(notesViewModel: NotesViewModel) {
                         NotesItem(
                             body = body,
                             title = "یادداشت مهم!",
-                            taskColor = 3
+                            taskColor = 3,
+                            createTime = "${dates.hour}:${dates.min}",
+                            createDate = "${dates.year}/${dates.month}/${dates.day}"
                         )
                     )
                     body = ""
