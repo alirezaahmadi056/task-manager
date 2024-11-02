@@ -116,10 +116,10 @@ fun TaskScreen(
         onBack = { showDialogDelete = false },
         onDeleteItem = {
             taskViewModel.deleteTask(singleDeleteTask)
-              alarmViewModel.canselNotificationAlarm(
-                  context = context,
-                  id = singleDeleteTask.id
-              )
+            alarmViewModel.canselNotificationAlarm(
+                context = context,
+                id = singleDeleteTask.id
+            )
             showDialogDelete = false
             scope.launch {
                 snackBarHostState.showSnackbar(
@@ -147,7 +147,7 @@ fun TaskScreen(
         snackbarHost = {
             MySnackbarHost(
                 snackBarHostState,
-                action = {data->
+                action = { data ->
                     TextButton(onClick = {
                         taskViewModel.upsertTask(singleDeleteTask)
                         alarmViewModel.setNotificationAlarm(
@@ -273,7 +273,15 @@ fun TaskScreen(
                             }
                         ) {
                             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                                TaskItemCard(navHostController = navHostController, item = taskItem)
+                                TaskItemCard(
+                                    item =
+                                    taskItem,
+                                    onClick = { navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}") },
+                                    onLogClick = {
+                                        singleDeleteTask = taskItem
+                                        showDialogDelete = true
+                                    }
+                                )
                             }
                         }
                     }
@@ -310,7 +318,8 @@ fun TaskScreen(
 
                         IconButton(onClick = { expandedList = !expandedList }) {
                             Icon(
-                                imageVector = Icons.Rounded.KeyboardArrowDown, contentDescription = "",
+                                imageVector = Icons.Rounded.KeyboardArrowDown,
+                                contentDescription = "",
                                 modifier = Modifier
                                     .rotate(rotateState),
                                 tint = MaterialTheme.colorScheme.scrim.copy(0.8f)
@@ -318,7 +327,7 @@ fun TaskScreen(
                         }
                     }
                 }
-                items(completedTasks, key = { task -> task.id }){ taskItem ->
+                items(completedTasks, key = { task -> task.id }) { taskItem ->
                     AnimatedVisibility(
                         visible = expandedList,
                         enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
@@ -382,7 +391,8 @@ fun TaskScreen(
                                                 Icon(
                                                     Icons.Rounded.DeleteSweep,
                                                     contentDescription = "",
-                                                    tint = Color.White, modifier = Modifier.size(50.dp)
+                                                    tint = Color.White,
+                                                    modifier = Modifier.size(50.dp)
                                                 )
                                             }
                                         }
@@ -393,7 +403,15 @@ fun TaskScreen(
                                 }
                             ) {
                                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                                    TaskItemCard(navHostController = navHostController, item = taskItem)
+                                    TaskItemCard(
+                                        item =
+                                        taskItem,
+                                        onClick = { navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}") },
+                                        onLogClick = {
+                                            singleDeleteTask = taskItem
+                                            showDialogDelete = true
+                                        }
+                                    )
                                 }
                             }
                         }

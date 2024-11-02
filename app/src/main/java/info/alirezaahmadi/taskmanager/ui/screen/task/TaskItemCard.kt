@@ -1,7 +1,9 @@
 package info.alirezaahmadi.taskmanager.ui.screen.task
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,9 +49,11 @@ import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 import kotlin.math.roundToInt
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TaskItemCard(
-    navHostController: NavHostController,
+    onClick: () -> Unit,
+    onLogClick: (() -> Unit)?=null,
     item: TaskItem
 ) {
 
@@ -89,13 +93,16 @@ fun TaskItemCard(
         modifier = Modifier
             .padding(horizontal = 6.dp, vertical = 4.dp)
             .fillMaxWidth()
-            .height(110.dp),
-        onClick = { navHostController.navigate(Screen.AddTaskScreen.route + "?id=${item.id}") }
+            .height(110.dp)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLogClick,
+                ),
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
-        ){
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -202,7 +209,10 @@ fun TaskItemCard(
 
 
                     }
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.BottomEnd
+                    ) {
                         if (progress == 1f) {
                             Row(
                                 modifier = Modifier.padding(4.dp),
@@ -226,9 +236,10 @@ fun TaskItemCard(
                                 }
                                 VerticalDivider(
                                     thickness = 1.dp,
-                                    modifier = Modifier.height(17.dp)
+                                    modifier = Modifier
+                                        .height(17.dp)
                                         .padding(horizontal = 5.dp),
-                                    color =MaterialTheme.colorScheme.scrim
+                                    color = MaterialTheme.colorScheme.scrim
                                 )
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically
@@ -274,12 +285,13 @@ fun TaskItemCard(
                 }
 
             }
-            if (item.triggerAlarmTime>System.currentTimeMillis()){
+            if (item.triggerAlarmTime > System.currentTimeMillis()) {
                 Box(
-                    modifier = Modifier.align(Alignment.TopEnd)
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
                         .padding(8.dp),
                     contentAlignment = Alignment.Center
-                ){
+                ) {
                     Icon(
                         imageVector = Icons.Rounded.AlarmOn,
                         contentDescription = "",

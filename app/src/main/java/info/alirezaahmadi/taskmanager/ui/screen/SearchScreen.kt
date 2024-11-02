@@ -39,6 +39,7 @@ import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
 import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
+import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.screen.notes.NotesListItem
 import info.alirezaahmadi.taskmanager.ui.screen.task.TaskItemCard
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
@@ -183,7 +184,10 @@ fun SearchScreenContent(
                                 )
                             }
                             items(filteredTasks) { task ->
-                                TaskItemCard(navHostController = navHostController, item = task)
+                                TaskItemCard(item = task,
+                                    onClick = { navHostController.navigate(
+                                    Screen.AddTaskScreen.route + "?id=${task.id}") },
+                                )
                             }
                         }
                         if (filteredNotes.isNotEmpty()) {
