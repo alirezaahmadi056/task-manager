@@ -10,19 +10,13 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -39,15 +33,11 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import dagger.hilt.android.AndroidEntryPoint
-import info.alirezaahmadi.taskmanager.navigation.BottomNavigation
 import info.alirezaahmadi.taskmanager.navigation.NavGraph
 import info.alirezaahmadi.taskmanager.navigation.Screen
-import info.alirezaahmadi.taskmanager.topBarMain.DrawerContent
-import info.alirezaahmadi.taskmanager.topBarMain.TopBar
 import info.alirezaahmadi.taskmanager.ui.component.AppConfig
 import info.alirezaahmadi.taskmanager.ui.theme.TaskManagerTheme
 import info.alirezaahmadi.taskmanager.util.Constants
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -90,65 +80,22 @@ private fun TaskApp(navHostController: NavHostController) {
 
 @Composable
 private fun TskApp(navHostController: NavHostController) {
-    var darkThem by rememberSaveable {
-        mutableStateOf(Constants.isThemDark)
-    }
 
-    val scope = rememberCoroutineScope()
-    val backStackEntry = navHostController.currentBackStackEntryAsState()
-    val showBottomBar = backStackEntry.value?.destination?.route == Screen.MainScreen.route
-
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val pagerState = rememberPagerState { 2 }
-
-    TaskManagerTheme(darkTheme = darkThem) {
+    var darkThem by rememberSaveable { mutableStateOf(Constants.isThemDark) }
+    TaskManagerTheme(darkThem) {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-            MainDrawer(
-                drawerState = drawerState,
-                drawerContent = {
-                    DrawerContent(
-                        navHostController,
-                        isOpen = drawerState.isOpen,
-                        changeThem = { darkThem = it },
-                        onFinish = {
-                            scope.launch {
-                                drawerState.close()
-                            }
-                        },
-                    )
-                },
-                content = {
-                    Scaffold(
-                        topBar = {
-                            TopBar(
-                                navHostController = navHostController,
-                                isShow = showBottomBar,
-                                openDrawer = { scope.launch { drawerState.open() } },
-                                pagerState = pagerState,
-                            )
-                        },
-                        bottomBar = {
-                            BottomNavigation(
-                                pagerState = pagerState,
-                                isShow = showBottomBar,
-                                coroutineScope = scope
-                            )
-                        },
-                        containerColor = MaterialTheme.colorScheme.background
-                    ) {
-                        NavGraph(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(it),
-                            navHostController = navHostController, pagerState = pagerState
-                        )
-                    }
-                }
+            NavGraph(
+                modifier = Modifier
+                    .fillMaxSize(),
+                navHostController = navHostController,
+                darkThem = { darkThem = it }
             )
         }
     }
 
+
 }
+
 
 @OptIn(ExperimentalPermissionsApi::class)
 fun requestPermissionNotification(

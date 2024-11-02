@@ -70,12 +70,10 @@ import info.alirezaahmadi.taskmanager.viewModel.DatStoreViewModel
 @Composable
 fun TopBar(
     navHostController: NavHostController,
-    isShow: Boolean,
     openDrawer: () -> Unit,
     pagerState: PagerState,
 ) {
 
-    if (isShow) {
         val isNote = pagerState.currentPage == 0
         Column {
             Row(
@@ -197,7 +195,6 @@ fun TopBar(
     }
 
 
-}
 
 @Composable
 fun DrawerContent(

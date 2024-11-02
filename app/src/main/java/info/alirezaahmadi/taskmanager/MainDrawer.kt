@@ -11,7 +11,7 @@ fun MainDrawer(
     content: @Composable () -> Unit
 ) {
     ModalNavigationDrawer(
-        gesturesEnabled = drawerState.isOpen,
+        gesturesEnabled = true,
         drawerState = drawerState,
         drawerContent = drawerContent,
         content = content

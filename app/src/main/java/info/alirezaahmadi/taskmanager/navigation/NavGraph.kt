@@ -3,7 +3,6 @@ package info.alirezaahmadi.taskmanager.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -20,7 +19,11 @@ import info.alirezaahmadi.taskmanager.ui.screen.task.TaskScreen
 import info.alirezaahmadi.taskmanager.ui.screen.task.addTask.AddTaskScreen
 
 @Composable
-fun NavGraph(modifier:Modifier, navHostController: NavHostController,pagerState: PagerState) {
+fun NavGraph(
+    modifier: Modifier,
+    navHostController: NavHostController,
+    darkThem: (Boolean) -> Unit
+) {
 
     NavHost(
         modifier = modifier,
@@ -28,8 +31,8 @@ fun NavGraph(modifier:Modifier, navHostController: NavHostController,pagerState:
         startDestination = Screen.MainScreen.route,
     ) {
 
-        composable(Screen.MainScreen.route){
-            MainScreen(navHostController=navHostController, pagerState = pagerState)
+        composable(Screen.MainScreen.route) {
+            MainScreen(navHostController = navHostController, darkTheme = darkThem)
         }
         composable(Screen.NotesScreen.route) {
             NotesScreen(navHostController)
@@ -65,7 +68,7 @@ fun NavGraph(modifier:Modifier, navHostController: NavHostController,pagerState:
             )
         }
 
-        composable(Screen.AddTaskScreen.route +"?id={id}&lastId={lastId}",
+        composable(Screen.AddTaskScreen.route + "?id={id}&lastId={lastId}",
             arguments = listOf(
                 navArgument("id") {
                     type = NavType.IntType

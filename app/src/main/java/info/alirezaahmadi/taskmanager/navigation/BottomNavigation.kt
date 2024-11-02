@@ -38,71 +38,68 @@ private data class NavItem(
 
 @Composable
 fun BottomNavigation(
-    isShow: Boolean,
     pagerState: PagerState,
     coroutineScope: CoroutineScope,
 ) {
-    if (isShow) {
 
-        val item = listOf(
-            NavItem(
-                route = Screen.NotesScreen.route,
-                selectedIcon = Icons.Rounded.NoteAlt,
-                unSelectedIcon = Icons.Outlined.NoteAlt,
-                text = "یادداشت",
-            ),
-            NavItem(
-                route = Screen.TaskScreen.route,
-                selectedIcon = Icons.Rounded.Task,
-                unSelectedIcon = Icons.Outlined.Task,
-                text = "وظیفه",
-            ),
+    val item = listOf(
+        NavItem(
+            route = Screen.NotesScreen.route,
+            selectedIcon = Icons.Rounded.NoteAlt,
+            unSelectedIcon = Icons.Outlined.NoteAlt,
+            text = "یادداشت",
+        ),
+        NavItem(
+            route = Screen.TaskScreen.route,
+            selectedIcon = Icons.Rounded.Task,
+            unSelectedIcon = Icons.Outlined.Task,
+            text = "وظیفه",
+        ),
 
-            )
-        Column {
-            HorizontalDivider(
-                thickness = 1.dp,
-                color = Color.LightGray.copy(alpha = 0.4f)
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                item.forEachIndexed { index, navItem ->
-                    val selected = pagerState.currentPage == index
-                    NavigationBarItem(selected = selected,
-                        onClick = {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(index, animationSpec = tween(600))
-                                }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = if (selected) navItem.selectedIcon else navItem.unSelectedIcon,
-                                contentDescription = ""
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color.White,
-                            unselectedIconColor = MaterialTheme.colorScheme.scrim.copy(0.7f),
-                            selectedTextColor = MaterialTheme.colorScheme.scrim,
-                            unselectedTextColor = MaterialTheme.colorScheme.scrim.copy(0.7f),
-                            indicatorColor = MaterialTheme.colorScheme.primary
-                        ),
-                        label = {
-                            Text(
-                                text = navItem.text,
-                                style = MaterialTheme.typography.bodyLarge,
-                            )
+        )
+    Column {
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = Color.LightGray.copy(alpha = 0.4f)
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            item.forEachIndexed { index, navItem ->
+                val selected = pagerState.currentPage == index
+                NavigationBarItem(selected = selected,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index, animationSpec = tween(600))
                         }
-                    )
-                }
-
-
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = if (selected) navItem.selectedIcon else navItem.unSelectedIcon,
+                            contentDescription = ""
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = Color.White,
+                        unselectedIconColor = MaterialTheme.colorScheme.scrim.copy(0.7f),
+                        selectedTextColor = MaterialTheme.colorScheme.scrim,
+                        unselectedTextColor = MaterialTheme.colorScheme.scrim.copy(0.7f),
+                        indicatorColor = MaterialTheme.colorScheme.primary
+                    ),
+                    label = {
+                        Text(
+                            text = navItem.text,
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                    }
+                )
             }
 
+
         }
+
     }
 }
