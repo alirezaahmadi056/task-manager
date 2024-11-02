@@ -1,7 +1,9 @@
 package info.alirezaahmadi.taskmanager.ui.screen.notes
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -29,8 +31,12 @@ import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NotesListItem(navHostController: NavHostController, item: NotesItem) {
+fun NotesListItem(
+    onClick: () -> Unit,
+    onLogClick: (() -> Unit)? = null,
+    item: NotesItem) {
 
     val taskColor = when (item.taskColor) {
         2 -> {
@@ -55,13 +61,16 @@ fun NotesListItem(navHostController: NavHostController, item: NotesItem) {
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
-            .padding(horizontal = 8.dp, vertical = 5.dp),
-        onClick = {
-            if (!hasNavigated) {
-                hasNavigated = true
-                navHostController.navigate(Screen.AddNotesScreen.route + "?id=${item.id}")
-            }
-        }) {
+            .padding(horizontal = 8.dp, vertical = 5.dp)
+            .combinedClickable(
+                enabled = !hasNavigated,
+                onClick = {
+                    hasNavigated = true
+                    onClick()
+                },
+                onLongClick = onLogClick,
+            ),
+        ) {
         Box(
             modifier = Modifier
         ) {
@@ -77,7 +86,9 @@ fun NotesListItem(navHostController: NavHostController, item: NotesItem) {
                     .padding(start = 18.dp)
             ) {
                 Text(
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
                     text = item.title,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.scrim,

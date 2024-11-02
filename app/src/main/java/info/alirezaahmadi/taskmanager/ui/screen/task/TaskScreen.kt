@@ -99,8 +99,7 @@ fun TaskScreen(
     }
     SelectedSortNotList(false, noteSort = {}, taskSort = { selectedSort ->
         sortOrder = selectedSort
-    }
-    )
+    })
 
 
     var singleDeleteTask by remember { mutableStateOf(TaskItem()) }
@@ -143,6 +142,8 @@ fun TaskScreen(
         targetValue = if (expandedList) 180f else 0f,
         label = ""
     )
+    var hasNavigated by remember { mutableStateOf(false) }
+
     Scaffold(
         snackbarHost = {
             MySnackbarHost(
@@ -208,7 +209,10 @@ fun TaskScreen(
                             confirmValueChange = { swip ->
                                 when (swip) {
                                     SwipeToDismissBoxValue.StartToEnd -> {
-                                        navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}")
+                                        if(!hasNavigated){
+                                            hasNavigated =true
+                                            navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}")
+                                        }
                                     }
 
                                     SwipeToDismissBoxValue.EndToStart -> {

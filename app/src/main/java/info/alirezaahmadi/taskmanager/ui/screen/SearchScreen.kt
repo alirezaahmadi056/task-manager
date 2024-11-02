@@ -112,7 +112,7 @@ fun SearchScreenContent(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    IconButton(onClick = {navHostController.popBackStack() }) {
+                    IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowForward,
                             contentDescription = "",
@@ -143,15 +143,19 @@ fun SearchScreenContent(
             SearchBar(
                 query = searchText,
                 onQueryChange = onSearchTextChange,
-                onSearch = {  },
+                onSearch = { },
                 active = searchActive,
                 onActiveChange = onSearchActiveChange,
-                placeholder = { Text("لطفاً یک عبارت جستجو وارد کنید",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.scrim,) },
+                placeholder = {
+                    Text(
+                        "لطفاً یک عبارت جستجو وارد کنید",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.scrim,
+                    )
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                if (filteredTasks.isEmpty() && filteredNotes.isEmpty()&&searchText.isNotEmpty()) {
+                if (filteredTasks.isEmpty() && filteredNotes.isEmpty() && searchText.isNotEmpty()) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -160,8 +164,10 @@ fun SearchScreenContent(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-                        Image(painter = painterResource(id = R.drawable.emptylist),
-                            contentDescription ="" )
+                        Image(
+                            painter = painterResource(id = R.drawable.emptylist),
+                            contentDescription = ""
+                        )
                         Text(
                             text = "آیتمی یافت نشد",
                             style = MaterialTheme.typography.bodyLarge,
@@ -169,8 +175,7 @@ fun SearchScreenContent(
                         )
                     }
 
-                } else
-                {
+                } else {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
                     ) {
@@ -179,14 +184,18 @@ fun SearchScreenContent(
                                 Text(
                                     text = "وظایف",
                                     style = MaterialTheme.typography.bodyLarge,
-                                    modifier = Modifier.padding( 8.dp,),
+                                    modifier = Modifier.padding(8.dp),
                                     color = MaterialTheme.colorScheme.scrim
                                 )
                             }
                             items(filteredTasks) { task ->
-                                TaskItemCard(item = task,
-                                    onClick = { navHostController.navigate(
-                                    Screen.AddTaskScreen.route + "?id=${task.id}") },
+                                TaskItemCard(
+                                    item = task,
+                                    onClick = {
+                                        navHostController.navigate(
+                                            Screen.AddTaskScreen.route + "?id=${task.id}"
+                                        )
+                                    },
                                 )
                             }
                         }
@@ -200,7 +209,9 @@ fun SearchScreenContent(
                                 )
                             }
                             items(filteredNotes) { note ->
-                                NotesListItem(navHostController = navHostController, item = note)
+                                NotesListItem(item = note, onClick = {
+                                    navHostController.navigate(Screen.AddNotesScreen.route + "?id=${note.id}")
+                                })
                             }
                         }
                     }

@@ -32,9 +32,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -96,7 +94,7 @@ fun NotesScreen(
         }
     }
 
-    var extanded by remember {
+    var expanded by remember {
         mutableStateOf(false)
     }
 
@@ -135,7 +133,7 @@ fun NotesScreen(
     })
     Scaffold(
         snackbarHost = {
-            MySnackbarHost(snackBarHostState){data->
+            MySnackbarHost(snackBarHostState) { data ->
                 TextButton(onClick = {
                     notesViewModel.upsertNotesItem(singleDeleteNotes)
                     data.dismiss()
@@ -151,7 +149,7 @@ fun NotesScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,
-                expanded = extanded,
+                expanded = expanded,
                 text = {
                     Text(
                         text = "یادداشت",
@@ -177,7 +175,7 @@ fun NotesScreen(
             exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
         ) {
             var hasNavigated by remember { mutableStateOf(false) }
-            extanded =
+            expanded =
                 (lazyStateStagger.firstVisibleItemScrollOffset == 0 || lazyStateStagger.canScrollForward)
             if (sortedNotesItem.isNotEmpty()) {
                 LazyVerticalStaggeredGrid(
@@ -285,7 +283,12 @@ fun NotesScreen(
                                 }
                             ) {
                                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                                    NotesItemCard(navHostController, item = notesItem)
+                                    NotesItemCard(item = notesItem, onLogClick = {
+                                        singleDeleteNotes = notesItem
+                                        showDialogDelete = true
+                                    }, onClick = {
+                                        navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
+                                    })
                                 }
                             }
                         }
@@ -302,7 +305,7 @@ fun NotesScreen(
             exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
         ) {
             var hasNavigated by remember { mutableStateOf(false) }
-            extanded =
+            expanded =
                 (lazyListState.firstVisibleItemScrollOffset == 0 || lazyListState.canScrollForward)
             if (sortedNotesItem.isNotEmpty()) {
                 LazyColumn(
@@ -386,7 +389,14 @@ fun NotesScreen(
                                 }
                             ) {
                                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                                    NotesListItem(navHostController, notesItem)
+                                    NotesListItem(
+                                        item = notesItem,
+                                        onClick = { navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}") },
+                                        onLogClick = {
+                                            singleDeleteNotes = notesItem
+                                            showDialogDelete = true
+                                        }
+                                    )
                                 }
                             }
                         }

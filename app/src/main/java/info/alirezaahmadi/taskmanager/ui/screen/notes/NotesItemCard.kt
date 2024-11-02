@@ -1,5 +1,7 @@
 package info.alirezaahmadi.taskmanager.ui.screen.notes
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,8 +25,13 @@ import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NotesItemCard(navHostController: NavHostController, item: NotesItem) {
+fun NotesItemCard(
+    item: NotesItem,
+    onClick: () -> Unit,
+    onLogClick: (() -> Unit)? = null,
+) {
     val taskColor = when (item.taskColor) {
         2 -> {
             MaterialTheme.colorScheme.onSecondary
@@ -41,14 +48,16 @@ fun NotesItemCard(navHostController: NavHostController, item: NotesItem) {
     var hasNavigated by remember { mutableStateOf(false) }
 
     Card(
+        modifier = Modifier.combinedClickable(
+            enabled = !hasNavigated,
+            onClick = {
+                hasNavigated = true
+                onClick()
+            },
+            onLongClick = onLogClick,
+        ),
         colors = CardDefaults.cardColors(containerColor = taskColor),
         elevation = CardDefaults.cardElevation(1.dp),
-        onClick = {
-            if (!hasNavigated) {
-                hasNavigated = true
-                navHostController.navigate(Screen.AddNotesScreen.route + "?id=${item.id}")
-            }
-        },
     ) {
         Column(
             modifier = Modifier
@@ -69,7 +78,7 @@ fun NotesItemCard(navHostController: NavHostController, item: NotesItem) {
             Text(
                 text = item.body,
                 style = MaterialTheme.typography.bodyMedium,
-                color  =  MaterialTheme.colorScheme.scrim.copy(0.6f)
+                color = MaterialTheme.colorScheme.scrim.copy(0.6f)
             )
             Text(
                 modifier = Modifier

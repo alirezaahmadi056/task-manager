@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -53,7 +54,7 @@ import kotlin.math.roundToInt
 @Composable
 fun TaskItemCard(
     onClick: () -> Unit,
-    onLogClick: (() -> Unit)?=null,
+    onLogClick: (() -> Unit)? = null,
     item: TaskItem
 ) {
 
@@ -75,6 +76,7 @@ fun TaskItemCard(
     val completedSubtasks = item.subTask.count { it.isCompleted }
     val totalSubtasks = item.subTask.size
     val pendingSubtasks = totalSubtasks - completedSubtasks
+    var hasNavigated by remember { mutableStateOf(false) }
 
     LaunchedEffect(item.subTask) {
         progress = if (totalSubtasks > 0) {
@@ -95,9 +97,13 @@ fun TaskItemCard(
             .fillMaxWidth()
             .height(110.dp)
             .combinedClickable(
-                onClick = onClick,
+                enabled = !hasNavigated,
+                onClick = {
+                    hasNavigated = true
+                    onClick()
+                },
                 onLongClick = onLogClick,
-                ),
+            ),
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
