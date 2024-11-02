@@ -74,9 +74,8 @@ fun SetAlarmSection(
                 colors = SwitchDefaults.colors(
                     checkedIconColor = MaterialTheme.colorScheme.primary.copy(),
                     checkedThumbColor = Color.White,
-                    uncheckedIconColor = MaterialTheme.colorScheme.scrim.copy(0.8f),
-                    uncheckedBorderColor = MaterialTheme.colorScheme.scrim.copy(0.8f),
-                    uncheckedThumbColor = MaterialTheme.colorScheme.scrim,
+                    uncheckedBorderColor = Color.DarkGray,
+                    uncheckedThumbColor = Color.DarkGray,
                     uncheckedTrackColor = Color.White,
                 )
             )
