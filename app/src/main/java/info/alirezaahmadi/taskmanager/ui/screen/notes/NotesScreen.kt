@@ -63,6 +63,7 @@ import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.ui.component.EmptyList
 import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
+import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.FastNoteSection
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -145,6 +146,9 @@ fun NotesScreen(
                     )
                 }
             }
+        },
+        bottomBar = {
+            FastNoteSection(notesViewModel)
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
