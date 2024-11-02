@@ -1,6 +1,6 @@
 package info.alirezaahmadi.taskmanager.ui.screen.task.addTask
 
-import PersianDate
+import info.alirezaahmadi.taskmanager.util.PersianDate
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -32,9 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -522,14 +520,14 @@ fun AddTaskScreen(
                     enableAlarm = enableAlarm,
                     onSelectedDate = { openDialogDate.value = true },
                     onSelectedTime = { openDialogTime.value = true },
-                    //todo add permissions request
                     onEnable = { enb -> enableAlarm = enb },
                     times = "${selectedTimeHour}:${selectedTimeMinute}",
                     dates = TaskHelper.gregorianToJalali(
                         selectedAlarmDataList[0],
                         selectedAlarmDataList[1],
                         selectedAlarmDataList[2]
-                    )
+                    ),
+                    snackbarHostState = snackBarHostState
                 )
             }
             item { DetailTaskSection(subTask.size) }

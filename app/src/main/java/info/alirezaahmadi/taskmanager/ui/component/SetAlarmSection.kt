@@ -1,5 +1,7 @@
 package info.alirezaahmadi.taskmanager.ui.component
 
+import android.Manifest
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
@@ -25,6 +27,7 @@ import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -32,14 +35,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
+import info.alirezaahmadi.taskmanager.util.requestPermissionNotification
+import kotlinx.coroutines.launch
 
+@SuppressLint("InlinedApi")
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SetAlarmSection(
     enableAlarm:Boolean,
@@ -48,8 +57,13 @@ fun SetAlarmSection(
     onSelectedTime: () -> Unit,
     times: String,
     dates: String,
+    snackbarHostState: SnackbarHostState,
 ) {
+    val scope= rememberCoroutineScope()
     var showSection by remember(key1 = enableAlarm) { mutableStateOf(enableAlarm) }
+
+    val notificationPermissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+
     Column(
         modifier = Modifier.fillMaxWidth()
             .animateContentSize(),
@@ -67,9 +81,24 @@ fun SetAlarmSection(
         ) {
             Switch(
                 checked = showSection,
-                onCheckedChange = {
-                    showSection = it
-                    onEnable(it)
+                onCheckedChange = {enable->
+                    requestPermissionNotification(
+                        notificationPermission = notificationPermissionState,
+                        isGranted = {granted->
+                            if (granted){
+                                showSection = enable
+                                onEnable(enable)
+                            }else{
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("دسترسی نوتیفیکیشن اعطا نشده!", withDismissAction = true)
+                                }
+                            }
+                        },
+                        permissionState = {per->
+                            per.launchPermissionRequest()
+                        }
+                    )
+
                 },
                 colors = SwitchDefaults.colors(
                     checkedIconColor = MaterialTheme.colorScheme.primary.copy(),
