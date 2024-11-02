@@ -69,6 +69,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -94,6 +95,7 @@ fun AddNotesScreen(
     var showSheetDiscard by remember {
         mutableStateOf(false)
     }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
 
     var title by remember {
@@ -213,6 +215,7 @@ fun AddNotesScreen(
         onDismissRequest = { showSheetDiscard = false },
         exit = {
             showSheetDiscard = false
+            keyboardController?.hide()
             navHostController.navigateUp()
         }
     )
@@ -240,6 +243,8 @@ fun AddNotesScreen(
             Bottom(
                 title = bottom,
                 onUpsertItem = {
+                    keyboardController?.hide()
+
                     if (title.isEmpty()) {
                         scope.launch {
                             snackBarHostState.showSnackbar(
@@ -279,6 +284,7 @@ fun AddNotesScreen(
                     if (title != oldTitle || body != oldBody) {
                         showSheetDiscard = true
                     } else {
+                        keyboardController?.hide()
                         navHostController.navigateUp()
                     }
                 })
@@ -288,6 +294,7 @@ fun AddNotesScreen(
                 if (title != oldTitle || body != oldBody) {
                     showSheetDiscard = true
                 } else {
+                    keyboardController?.hide()
                     navHostController.navigateUp()
                 }
             }
