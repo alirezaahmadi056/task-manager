@@ -289,6 +289,7 @@ fun DrawerContent(
                     onCheckedChange = {
                         darkThem = it
                         changeThem(it)
+                        Constants.isThemDark =it
                         datStoreViewModel.saveDarkThem(it)
                     }
                 )
@@ -296,6 +297,7 @@ fun DrawerContent(
             onClick = {
                 darkThem = !darkThem
                 changeThem(darkThem)
+                Constants.isThemDark =darkThem
                 datStoreViewModel.saveDarkThem(darkThem)
             })
 
