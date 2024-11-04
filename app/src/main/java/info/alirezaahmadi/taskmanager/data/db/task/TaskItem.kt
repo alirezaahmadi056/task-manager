@@ -14,9 +14,15 @@ data class TaskItem(
     val createTime:String="",
     val completedTime:String="",
     val triggerAlarmTime:Long=0L,
+    val type:String=TaskItemType.NORMAL.name,
 )
 
 data class Task(
     var title: String="",
     var isCompleted :Boolean=false,
 )
+enum class TaskItemType{
+    NORMAL,
+    FAST
+}
+

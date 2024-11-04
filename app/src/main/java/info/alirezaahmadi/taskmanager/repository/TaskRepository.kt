@@ -13,7 +13,7 @@ class TaskRepository @Inject constructor(
         dao.upsertTaskDao(item)
     }
 
-    fun getAllTaskItem(): Flow<List<TaskItem>> = dao.getAllTaskItem()
+    fun getAllTaskItem(type:String): Flow<List<TaskItem>> = dao.getAllTaskItem(type)
 
     fun getSingleTaskById(id: Int): Flow<TaskItem> = dao.getSingleTaskById(id)
 

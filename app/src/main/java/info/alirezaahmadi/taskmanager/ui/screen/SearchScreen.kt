@@ -42,6 +42,7 @@ import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.screen.notes.NotesListItem
 import info.alirezaahmadi.taskmanager.ui.screen.task.TaskItemCard
+import info.alirezaahmadi.taskmanager.ui.screen.task.TaskScreen
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
 import info.alirezaahmadi.taskmanager.viewModel.TaskViewModel
 
@@ -51,7 +52,10 @@ fun SearchScreen(
     taskViewModel: TaskViewModel = hiltViewModel(),
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
-    val taskItems by taskViewModel.allItem.collectAsState(initial = emptyList())
+    LaunchedEffect(Unit) {
+        taskViewModel.getTasks()
+    }
+    val taskItems by taskViewModel.allNormalTask.collectAsState(initial = emptyList())
     val noteItems by notesViewModel.allNotesItem.collectAsState(initial = emptyList())
 
     var searchText by remember { mutableStateOf("") }
