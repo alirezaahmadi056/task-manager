@@ -1,12 +1,14 @@
 package info.alirezaahmadi.taskmanager
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,6 +20,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import info.alirezaahmadi.taskmanager.navigation.NavGraph
+import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.AppConfig
 import info.alirezaahmadi.taskmanager.ui.theme.TaskManagerTheme
 import info.alirezaahmadi.taskmanager.util.Constants
@@ -33,27 +36,50 @@ class MainActivity : ComponentActivity() {
             AppConfig()
             navHostController = rememberNavController()
             TskApp(navHostController)
-        }
-    }
-}
 
-@Composable
-private fun TskApp(navHostController: NavHostController) {
-
-    var darkThem by rememberSaveable { mutableStateOf(Constants.isThemDark) }
-    TaskManagerTheme(darkThem) {
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-            NavGraph(
-                modifier = Modifier
-                    .fillMaxSize(),
-                navHostController = navHostController,
-                darkThem = { darkThem = it }
-            )
+            LaunchedEffect(Unit) {
+                handleNavigationIntent(navHostController, intent)
+            }
         }
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleNavigationIntent(navHostController, intent)
+    }
 
+    @Composable
+    private fun TskApp(navHostController: NavHostController) {
+
+        var darkThem by rememberSaveable { mutableStateOf(Constants.isThemDark) }
+        TaskManagerTheme(darkThem) {
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                NavGraph(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    navHostController = navHostController,
+                    darkThem = { darkThem = it }
+                )
+            }
+        }
+
+
+    }
+
+
+    private fun handleNavigationIntent(navHostController: NavHostController, intent: Intent) {
+        if (intent.action == "NNN") {
+            intent.extras?.let {
+                val id = it.getInt("TASK_ID", 0)
+                navHostController.navigate(Screen.AddTaskScreen.route + "?id=$id") {
+                    popUpTo(Screen.TaskScreen.route) {
+                        inclusive = false
+                        saveState = true
+                    }
+                }
+            }
+        }
+
+    }
 }
-
-
 
