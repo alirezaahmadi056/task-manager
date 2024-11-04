@@ -239,7 +239,7 @@ fun TaskScreen(
                         )
                         SwipeToDismissBox(
                             enableDismissFromEndToStart = true,
-                            enableDismissFromStartToEnd = true,
+                            enableDismissFromStartToEnd = false,
                             state = swipeToDismiss,
                             backgroundContent = {
                                 when (swipeToDismiss.dismissDirection) {
@@ -404,7 +404,7 @@ fun TaskScreen(
                         modifier = Modifier
                             .background(MaterialTheme.colorScheme.background)
                             .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                            .padding(12.dp),
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -447,25 +447,26 @@ fun TaskScreen(
                         exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
                     ) {
                         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                            val swipeToDismiss = rememberSwipeToDismissBoxState(confirmValueChange = { swip ->
-                                when (swip) {
-                                    SwipeToDismissBoxValue.StartToEnd -> {
-                                        if (!hasNavigated) {
-                                            hasNavigated = true
-                                            navHostController.navigate(Screen.AddTaskScreen.route + "?id=${task.id}")
+                            val swipeToDismiss =
+                                rememberSwipeToDismissBoxState(confirmValueChange = { swip ->
+                                    when (swip) {
+                                        SwipeToDismissBoxValue.StartToEnd -> {
+                                            if (!hasNavigated) {
+                                                hasNavigated = true
+                                                navHostController.navigate(Screen.AddTaskScreen.route + "?id=${task.id}")
+                                            }
+                                        }
+
+                                        SwipeToDismissBoxValue.EndToStart -> {
+                                            singleDeleteTask = task
+                                            showDialogDelete = true
+                                        }
+
+                                        SwipeToDismissBoxValue.Settled -> {
                                         }
                                     }
-
-                                    SwipeToDismissBoxValue.EndToStart -> {
-                                        singleDeleteTask = task
-                                        showDialogDelete = true
-                                    }
-
-                                    SwipeToDismissBoxValue.Settled -> {
-                                    }
-                                }
-                                return@rememberSwipeToDismissBoxState false
-                            })
+                                    return@rememberSwipeToDismissBoxState false
+                                })
                             SwipeToDismissBox(
                                 enableDismissFromEndToStart = true,
                                 enableDismissFromStartToEnd = true,
@@ -505,7 +506,8 @@ fun TaskScreen(
                                                 Icon(
                                                     Icons.Rounded.DeleteSweep,
                                                     contentDescription = "",
-                                                    tint = Color.White, modifier = Modifier.size(50.dp)
+                                                    tint = Color.White,
+                                                    modifier = Modifier.size(50.dp)
                                                 )
 
                                             }
