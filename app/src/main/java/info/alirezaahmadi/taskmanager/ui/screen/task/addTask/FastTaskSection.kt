@@ -66,7 +66,6 @@ fun FastNoteSection(taskViewModel: TaskViewModel, id: Int) {
                     contentColor = MaterialTheme.colorScheme.primary
                 ),
                 onClick = {
-                    keyboardController?.hide()
                     taskViewModel.upsertTask(
                         TaskItem(
                             id = id + 1,
@@ -81,6 +80,8 @@ fun FastNoteSection(taskViewModel: TaskViewModel, id: Int) {
                         )
                     )
                     body = ""
+                    keyboardController?.hide()
+
                 }
             ) {
                 Icon(
@@ -91,8 +92,6 @@ fun FastNoteSection(taskViewModel: TaskViewModel, id: Int) {
             }
         },
         onValueChange = { body = it },
-        textStyle = MaterialTheme.typography.labelMedium.copy(
-            textAlign = TextAlign.Center
-        )
+        textStyle = MaterialTheme.typography.labelMedium
     )
 }

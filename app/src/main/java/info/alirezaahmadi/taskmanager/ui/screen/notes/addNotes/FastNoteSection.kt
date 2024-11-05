@@ -65,7 +65,6 @@ fun FastNoteSection(notesViewModel: NotesViewModel) {
                     contentColor = MaterialTheme.colorScheme.primary
                 ),
                 onClick = {
-                    keyboardController?.hide()
                     notesViewModel.upsertNotesItem(
                         NotesItem(
                             body = body,
@@ -76,6 +75,8 @@ fun FastNoteSection(notesViewModel: NotesViewModel) {
                         )
                     )
                     body = ""
+                    keyboardController?.hide()
+
                 }
             ) {
                 Icon(
@@ -86,8 +87,6 @@ fun FastNoteSection(notesViewModel: NotesViewModel) {
             }
         },
         onValueChange = { body = it },
-        textStyle = MaterialTheme.typography.labelMedium.copy(
-            textAlign = TextAlign.Center
-        )
+        textStyle = MaterialTheme.typography.labelMedium
     )
 }

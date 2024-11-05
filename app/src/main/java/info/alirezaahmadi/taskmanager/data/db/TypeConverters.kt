@@ -14,15 +14,15 @@ class SubTaskTypeConverter {
         val json = Gson().toJson(subtaskList)
         return json
     }
-
     @TypeConverter
-    fun toSubtaskList(jsonString: String): List<Task> {
-        val subtaskList =
-            Gson().fromJson<List<Task>>(
-                jsonString,
-                object : TypeToken<List<Task>>() {}.type)
-        return subtaskList
+    fun toSubtaskList(jsonString: String?): List<Task> {
+        return try {
+            Gson().fromJson(jsonString, object : TypeToken<List<Task>>() {}.type) ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
+
 }
 class UriTypeConverter {
     @TypeConverter

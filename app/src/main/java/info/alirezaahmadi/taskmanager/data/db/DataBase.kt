@@ -17,40 +17,27 @@ abstract class DataBase : RoomDatabase() {
     abstract fun NotesDao(): NotesDao
     abstract fun TaskDao(): TaskDao
 
+
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
-                // بررسی وجود ستون قبل از اضافه کردن آن
-                if (!isColumnExists(db, "TaskItem", "createTime")) {
-                    db.execSQL("ALTER TABLE TaskItem ADD COLUMN createTime TEXT NOT NULL DEFAULT ''")
-                }
-                if (!isColumnExists(db, "TaskItem", "completedTime")) {
-                    db.execSQL("ALTER TABLE TaskItem ADD COLUMN completedTime TEXT NOT NULL DEFAULT ''")
-                }
-                if (!isColumnExists(db, "TaskItem", "triggerAlarmTime")) {
-                    db.execSQL("ALTER TABLE TaskItem ADD COLUMN triggerAlarmTime INTEGER NOT NULL DEFAULT 0")
-                }
-                if (!isColumnExists(db, "TaskItem", "type")) {
-                    db.execSQL("ALTER TABLE TaskItem ADD COLUMN type TEXT NOT NULL DEFAULT 'NORMAL'")
-                }
-            }
+                db.execSQL("DROP TABLE IF EXISTS TaskItem")
 
-            // متدی برای بررسی وجود ستون در جدول
-            private fun isColumnExists(
-                database: SupportSQLiteDatabase,
-                tableName: String,
-                columnName: String
-            ): Boolean {
-                val cursor = database.query("PRAGMA table_info($tableName)")
-                cursor.use {
-                    while (it.moveToNext()) {
-                        val existingColumnName = it.getString(it.getColumnIndexOrThrow("name"))
-                        if (existingColumnName == columnName) {
-                            return true
-                        }
-                    }
-                }
-                return false
+                db.execSQL(
+                    """
+                CREATE TABLE IF NOT EXISTS TaskItem (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    title TEXT NOT NULL,
+                    subTask TEXT NOT NULL DEFAULT '[]',
+                    body TEXT NOT NULL DEFAULT '',
+                    taskColor INTEGER NOT NULL DEFAULT 1,
+                    createTime TEXT NOT NULL DEFAULT '',
+                    completedTime TEXT NOT NULL DEFAULT '',
+                    triggerAlarmTime INTEGER NOT NULL DEFAULT 0,
+                    type TEXT NOT NULL DEFAULT 'NORMAL'
+                )
+                """.trimIndent()
+                )
             }
         }
     }
