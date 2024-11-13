@@ -70,6 +70,7 @@ fun MainScreen(
                 containerColor = MaterialTheme.colorScheme.background
             ) { innerPadding ->
                 HorizontalPager(
+                    userScrollEnabled = false,
                     state = pagerState,
                     modifier = Modifier
                         .fillMaxSize()

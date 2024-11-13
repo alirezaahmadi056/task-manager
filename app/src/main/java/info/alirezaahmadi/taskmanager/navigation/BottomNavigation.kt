@@ -7,13 +7,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.LineStyle
 import androidx.compose.material.icons.outlined.NoteAlt
 import androidx.compose.material.icons.outlined.Task
+import androidx.compose.material.icons.rounded.LineStyle
 import androidx.compose.material.icons.rounded.NoteAlt
 import androidx.compose.material.icons.rounded.Task
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
@@ -55,6 +58,12 @@ fun BottomNavigation(
             unSelectedIcon = Icons.Outlined.Task,
             text = "وظیفه",
         ),
+        NavItem(
+            route = "",
+            selectedIcon = Icons.Rounded.LineStyle,
+            unSelectedIcon = Icons.Outlined.LineStyle,
+            text = "روتین",
+        ),
 
         )
     Column {
@@ -62,18 +71,17 @@ fun BottomNavigation(
             thickness = 1.dp,
             color = Color.LightGray.copy(alpha = 0.4f)
         )
-        Row(
+        NavigationBar (
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+          containerColor = MaterialTheme.colorScheme.background
         ) {
             item.forEachIndexed { index, navItem ->
                 val selected = pagerState.currentPage == index
                 NavigationBarItem(selected = selected,
                     onClick = {
                         coroutineScope.launch {
-                            pagerState.animateScrollToPage(index, animationSpec = tween(600))
+                            pagerState.animateScrollToPage(index, animationSpec = tween(500))
                         }
                     },
                     icon = {
