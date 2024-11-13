@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import info.alirezaahmadi.taskmanager.data.db.DataBase
 import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_1_2
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesDao
+import info.alirezaahmadi.taskmanager.data.db.routine.RoutineDao
 import info.alirezaahmadi.taskmanager.data.db.task.TaskDao
 import javax.inject.Singleton
 
@@ -30,10 +31,15 @@ object ModuleDataBse {
 
     @Provides
     @Singleton
-    fun provideNotesDao(dataBase: DataBase):NotesDao =dataBase.NotesDao()
+    fun provideNotesDao(dataBase: DataBase): NotesDao = dataBase.NotesDao()
 
     @Provides
     @Singleton
-    fun provideTaskDao(dataBase: DataBase):TaskDao =dataBase.TaskDao()
+    fun provideTaskDao(dataBase: DataBase): TaskDao = dataBase.TaskDao()
+
+    @Provides
+    @Singleton
+    fun provideRoutineDao(dataBase: DataBase): RoutineDao = dataBase.RoutineDao()
+
 
 }

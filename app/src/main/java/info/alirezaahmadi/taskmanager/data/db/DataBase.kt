@@ -7,15 +7,22 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesDao
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
+import info.alirezaahmadi.taskmanager.data.db.routine.RoutineDao
+import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
 import info.alirezaahmadi.taskmanager.data.db.task.TaskDao
 import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
 
-@Database(entities = [NotesItem::class, TaskItem::class], version = 2, exportSchema = false)
-@TypeConverters(UriTypeConverter::class, SubTaskTypeConverter::class)
+@Database(
+    entities = [NotesItem::class, TaskItem::class, RoutineItem::class],
+    version = 2,
+    exportSchema = false
+)
+@TypeConverters(UriTypeConverter::class, SubTaskTypeConverter::class, DayUriConverter::class)
 abstract class DataBase : RoomDatabase() {
 
     abstract fun NotesDao(): NotesDao
     abstract fun TaskDao(): TaskDao
+    abstract fun RoutineDao(): RoutineDao
 
 
     companion object {
