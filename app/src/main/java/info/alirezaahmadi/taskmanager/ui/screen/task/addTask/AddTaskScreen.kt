@@ -1,6 +1,5 @@
 package info.alirezaahmadi.taskmanager.ui.screen.task.addTask
 
-import info.alirezaahmadi.taskmanager.util.PersianDate
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -72,6 +71,7 @@ import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.BottomSheetSelect
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.SheetSaveDiscard
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.showBottomSheetSelectedColor
 import info.alirezaahmadi.taskmanager.ui.theme.font_bold
+import info.alirezaahmadi.taskmanager.util.PersianDate
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 import info.alirezaahmadi.taskmanager.util.TaskHelper.splitWholeDate
 import info.alirezaahmadi.taskmanager.viewModel.AlarmViewModel
@@ -534,7 +534,6 @@ fun AddTaskScreen(
                         selectedAlarmDataList[1],
                         selectedAlarmDataList[2]
                     ),
-                    snackbarHostState = snackBarHostState
                 )
             }
             item { DetailTaskSection(subTask.size) }

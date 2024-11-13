@@ -32,7 +32,7 @@ import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
 fun RoutineItemCard(
     item: RoutineItem,
     onDeleted: () -> Unit,
-    onClick: () -> Unit,
+    onClick: (RoutineItem) -> Unit,
 ) {
     val routineColor = when (item.taskColor) {
         2 -> {
@@ -57,7 +57,7 @@ fun RoutineItemCard(
             .fillMaxWidth()
             .height(80.dp)
             .combinedClickable(
-                onClick = onClick,
+                onClick ={onClick(item)} ,
                 onLongClick = onDeleted,
             ),
     ) {

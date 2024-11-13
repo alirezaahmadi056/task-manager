@@ -2,6 +2,7 @@ package info.alirezaahmadi.taskmanager.ui.component
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
@@ -41,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
@@ -51,21 +53,22 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SetAlarmSection(
-    enableAlarm:Boolean,
-    onEnable:(Boolean)->Unit,
+    enableAlarm: Boolean,
+    onEnable: (Boolean) -> Unit,
     onSelectedDate: () -> Unit,
     onSelectedTime: () -> Unit,
     times: String,
     dates: String,
-    snackbarHostState: SnackbarHostState,
 ) {
-    val scope= rememberCoroutineScope()
+    val context = LocalContext.current
     var showSection by remember(key1 = enableAlarm) { mutableStateOf(enableAlarm) }
 
-    val notificationPermissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+    val notificationPermissionState =
+        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
 
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .animateContentSize(),
     ) {
         HorizontalDivider(
@@ -81,20 +84,22 @@ fun SetAlarmSection(
         ) {
             Switch(
                 checked = showSection,
-                onCheckedChange = {enable->
+                onCheckedChange = { enable ->
                     requestPermissionNotification(
                         notificationPermission = notificationPermissionState,
-                        isGranted = {granted->
-                            if (granted){
+                        isGranted = { granted ->
+                            if (granted) {
                                 showSection = enable
                                 onEnable(enable)
-                            }else{
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("دسترسی نوتیفیکیشن اعطا نشده!", withDismissAction = true)
-                                }
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "دسترسی نوتیفیکیشن اعطا نشده!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         },
-                        permissionState = {per->
+                        permissionState = { per ->
                             per.launchPermissionRequest()
                         }
                     )
@@ -135,7 +140,7 @@ fun SetAlarmSection(
             ) {
                 Row(
                     modifier = Modifier
-                        .clickable(onClick =onSelectedDate)
+                        .clickable(onClick = onSelectedDate)
                         .fillMaxWidth()
                         .padding(15.dp),
                     verticalAlignment = Alignment.CenterVertically,

@@ -44,7 +44,7 @@ fun createFullNotification(
     )
     val notificationBuilder =
         NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.clock_five)
+            .setSmallIcon(R.drawable.ic_app)
             .setContentTitle("یاد آور")
             .setContentText(title)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
