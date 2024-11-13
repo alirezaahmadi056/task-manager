@@ -2,9 +2,6 @@ package info.alirezaahmadi.taskmanager.data.db.task
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
-import info.alirezaahmadi.taskmanager.data.db.SubTaskTypeConverter
 
 @Entity
 data class TaskItem(
