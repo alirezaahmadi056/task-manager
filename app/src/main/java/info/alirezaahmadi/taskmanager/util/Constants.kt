@@ -15,4 +15,14 @@ object Constants {
     const val TOKEN = "H5tzuvIGHfes3LZxAGscCfX6qfAuG6VWqSxntJLc"
     const val ACTION_ALARM_RECEIVER = "info.alirezaahmadi.ACTION_ALARM_RECEIVER"
 
+
+    val deyWeek = listOf(
+        "شنبه",
+        "یک شنبه",
+        "دو شنبه",
+        "سه شنبه",
+        "چهارشنبه",
+        "پنجشنبه",
+        "جمعه",
+    )
 }
