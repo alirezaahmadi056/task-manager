@@ -14,6 +14,7 @@ class SubTaskTypeConverter {
         val json = Gson().toJson(subtaskList)
         return json
     }
+
     @TypeConverter
     fun toSubtaskList(jsonString: String?): List<Task> {
         return try {
@@ -24,6 +25,7 @@ class SubTaskTypeConverter {
     }
 
 }
+
 class UriTypeConverter {
     @TypeConverter
     fun fromUri(uriList: List<Uri>?): String? {
@@ -33,5 +35,21 @@ class UriTypeConverter {
     @TypeConverter
     fun toUri(uriString: String?): List<Uri>? {
         return uriString?.split(",")?.map { Uri.parse(it) }
+    }
+}
+
+class DayUriConverter {
+    @TypeConverter
+    fun fromDayWeekList(dayList: List<String>): String {
+        return Gson().toJson(dayList)
+    }
+
+    @TypeConverter
+    fun toDayWeekList(json: String): List<String> {
+        return try {
+            Gson().fromJson(json, object : TypeToken<List<String>>() {}.type) ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 }
