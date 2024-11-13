@@ -18,6 +18,7 @@ import info.alirezaahmadi.taskmanager.navigation.BottomNavigation
 import info.alirezaahmadi.taskmanager.topBarMain.DrawerContent
 import info.alirezaahmadi.taskmanager.topBarMain.TopBar
 import info.alirezaahmadi.taskmanager.ui.screen.notes.NotesScreen
+import info.alirezaahmadi.taskmanager.ui.screen.routine.RoutineScreen
 import info.alirezaahmadi.taskmanager.ui.screen.task.TaskScreen
 import info.alirezaahmadi.taskmanager.viewModel.AlarmViewModel
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
@@ -32,7 +33,7 @@ fun MainScreen(
     notesViewModel: NotesViewModel = hiltViewModel(),
     alarmViewModel: AlarmViewModel = hiltViewModel()
 ) {
-    val pagerState = rememberPagerState { 2 }
+    val pagerState = rememberPagerState(initialPage = 2) { 3 }
 
 
     val scope = rememberCoroutineScope()
@@ -74,18 +75,25 @@ fun MainScreen(
                         .fillMaxSize()
                         .padding(innerPadding),
                 ) { page ->
-                    if (page == 1) {
-                        TaskScreen(
-                            navHostController = navHostController,
-                            taskViewModel = taskViewModel,
-                            alarmViewModel = alarmViewModel
-                        )
-                    } else {
-                        NotesScreen(
-                            navHostController = navHostController,
-                            notesViewModel = notesViewModel
-                        )
+                    when(page){
+                        1 ->{
+                            TaskScreen(
+                                navHostController = navHostController,
+                                taskViewModel = taskViewModel,
+                                alarmViewModel = alarmViewModel
+                            )
+                        }
+                        0 ->{
+                            NotesScreen(
+                                navHostController = navHostController,
+                                notesViewModel = notesViewModel
+                            )
+                        }
+                        else -> {
+                            RoutineScreen()
+                        }
                     }
+
                 }
             }
         })
