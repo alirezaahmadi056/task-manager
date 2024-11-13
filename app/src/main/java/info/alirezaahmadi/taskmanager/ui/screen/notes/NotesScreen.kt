@@ -62,6 +62,7 @@ import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.ui.component.EmptyList
 import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
+import info.alirezaahmadi.taskmanager.ui.component.PageType
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.FastNoteSection
 import info.alirezaahmadi.taskmanager.util.Constants
@@ -85,9 +86,10 @@ fun NotesScreen(
         3 -> notesItem.sortedByDescending { it.taskColor } // اولویت زیاد
         else -> notesItem.reversed() //  حالت پیش ‌فرض بر اساس اخرین یادداشت
     }
-    SelectedSortNotList(true, noteSort = { selectedSort ->
-        sortOrder = selectedSort
-    }, taskSort = {})
+    SelectedSortNotList(
+        pageType = PageType.NOTE, noteSort = { selectedSort ->
+            sortOrder = selectedSort
+        }, {}, {})
 
     LaunchedEffect(key1 = true) {
         notesViewModel.allNotesItem.collectLatest {

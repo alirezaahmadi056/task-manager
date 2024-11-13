@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.hilt.navigation.compose.hiltViewModel
+import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.util.Constants.SORT_NOTE
 import info.alirezaahmadi.taskmanager.util.Constants.SORT_TASK
 import info.alirezaahmadi.taskmanager.viewModel.DatStoreViewModel
@@ -27,12 +28,18 @@ import info.alirezaahmadi.taskmanager.viewModel.DatStoreViewModel
 
 val showSelectedSortNotList = mutableStateOf(false)
 
+enum class PageType {
+    TASK,
+    NOTE,
+    ROUTINE
+}
 
 @Composable
 fun SelectedSortNotList(
-    isNoteScreen: Boolean,
+    pageType: PageType,
     noteSort: (sort: Int) -> Unit,
     taskSort: (sort: Int) -> Unit,
+    routineSort:(Int)->Unit,
     datStoreViewModel: DatStoreViewModel = hiltViewModel()
 ) {
 
@@ -50,7 +57,7 @@ fun SelectedSortNotList(
         AlertDialog(
             containerColor = MaterialTheme.colorScheme.background,
             onDismissRequest = { showSelectedSortNotList.value = false },
-            confirmButton = { /*TODO*/ },
+            confirmButton = { },
             title = {
                 Text(
                     text = " ترتیب لیست بر اساس",
@@ -66,18 +73,33 @@ fun SelectedSortNotList(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            RadioButton(selected = if (isNoteScreen) SORT_NOTE == index else SORT_TASK == index,
+                            RadioButton(
+                                selected =index == when(pageType){
+                                     PageType.NOTE -> SORT_NOTE
+                                     PageType.TASK ->Constants.SORT_TASK
+                                    PageType.ROUTINE ->Constants.ROUTINE_SORT
+                                },
+
                                 onClick = {
-                                    if (isNoteScreen) {
-                                        noteSort(index)
-                                        SORT_NOTE = index
-                                        datStoreViewModel.saveNoteSort(index)
-                                        showSelectedSortNotList.value = false
-                                    } else {
-                                        taskSort(index)
-                                        SORT_TASK = index
-                                        datStoreViewModel.saveTaskSort(index)
-                                        showSelectedSortNotList.value = false
+                                    when(pageType){
+                                        PageType.TASK ->  {
+                                            taskSort(index)
+                                            SORT_TASK = index
+                                            datStoreViewModel.saveTaskSort(index)
+                                            showSelectedSortNotList.value = false
+                                        }
+                                        PageType.NOTE -> {
+                                            noteSort(index)
+                                            SORT_NOTE = index
+                                            datStoreViewModel.saveNoteSort(index)
+                                            showSelectedSortNotList.value = false
+                                        }
+                                        PageType.ROUTINE -> {
+                                            routineSort(index)
+                                            Constants.ROUTINE_SORT = index
+                                            datStoreViewModel.saveRoutineSort(index)
+                                            showSelectedSortNotList.value = false
+                                        }
                                     }
 
                                 }

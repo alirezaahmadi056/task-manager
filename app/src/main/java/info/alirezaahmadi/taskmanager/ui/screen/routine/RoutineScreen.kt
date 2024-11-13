@@ -17,6 +17,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
 import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
+import info.alirezaahmadi.taskmanager.ui.component.PageType
+import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.viewModel.RoutineViewModel
 
@@ -37,6 +40,19 @@ fun RoutineScreen(
     var singleRoutine by remember { mutableStateOf<RoutineItem?>(null) }
     var showSheetAddRoutine by remember { mutableStateOf(false) }
     val snackBarHostState = remember { SnackbarHostState() }
+    var sortOrder by remember { mutableIntStateOf(Constants.ROUTINE_SORT) }
+    val sortedNotesItem = when (sortOrder) {
+        1 -> allRoutine.sortedBy { it.taskColor }
+        2 -> allRoutine.sortedByDescending { it.taskColor == 2 }
+        3 -> allRoutine.sortedByDescending { it.taskColor }
+        else -> allRoutine.reversed()
+    }
+
+    SelectedSortNotList(
+        pageType = PageType.ROUTINE, noteSort = {}, taskSort = {},
+        routineSort = { sorted ->
+            sortOrder = sorted
+        })
     SheetAddRoutine(
         show = showSheetAddRoutine,
         onDismissRequest = {
@@ -82,7 +98,8 @@ fun RoutineScreen(
                 .padding(innerPadding),
             state = pagerState
         ) { page ->
-            Routine(filterRoutinesByDay(day = dayWeek[page], routines = allRoutine),
+            Routine(
+                routines = filterRoutinesByDay(day = dayWeek[page], routines = sortedNotesItem),
                 onClick = { data ->
                     singleRoutine = data
                     showSheetAddRoutine = true

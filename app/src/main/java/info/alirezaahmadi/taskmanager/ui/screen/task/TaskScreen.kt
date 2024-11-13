@@ -70,6 +70,7 @@ import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.ui.component.EmptyList
 import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
+import info.alirezaahmadi.taskmanager.ui.component.PageType
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
 import info.alirezaahmadi.taskmanager.ui.screen.task.addTask.FastNoteSection
 import info.alirezaahmadi.taskmanager.util.Constants
@@ -107,9 +108,12 @@ fun TaskScreen(
     val (fastTaskCompleted, fastTaskInCompleted) = fastItem.reversed().partition {
         it.subTask[0].isCompleted
     }
-    SelectedSortNotList(false, noteSort = {}, taskSort = { selectedSort ->
-        sortOrder = selectedSort
-    })
+    SelectedSortNotList(
+        pageType = PageType.TASK,
+        taskSort = { selectedSort ->
+            sortOrder = selectedSort
+        }, noteSort = {}, routineSort = {}
+    )
 
 
     var singleDeleteTask by remember { mutableStateOf(TaskItem()) }
