@@ -31,7 +31,7 @@ import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
 @Composable
 fun RoutineItemCard(
     item: RoutineItem,
-    onDeleted: () -> Unit,
+    onDeleted: (RoutineItem) -> Unit,
     onClick: (RoutineItem) -> Unit,
 ) {
     val routineColor = when (item.taskColor) {
@@ -57,8 +57,8 @@ fun RoutineItemCard(
             .fillMaxWidth()
             .height(80.dp)
             .combinedClickable(
-                onClick ={onClick(item)} ,
-                onLongClick = onDeleted,
+                onClick = { onClick(item) },
+                onLongClick = { onDeleted(item) },
             ),
     ) {
         Row(

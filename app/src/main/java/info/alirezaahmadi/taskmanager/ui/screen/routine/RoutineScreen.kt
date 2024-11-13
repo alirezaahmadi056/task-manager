@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,20 +21,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
+import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.PageType
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.viewModel.RoutineViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun RoutineScreen(
     routineViewModel: RoutineViewModel = hiltViewModel()
 ) {
+    val scope = rememberCoroutineScope()
     val allRoutine by routineViewModel.getAllRoutine().collectAsState(emptyList())
     val dayWeek by remember { mutableStateOf(Constants.deyWeek) }
     val pagerState = rememberPagerState { dayWeek.size }
@@ -41,6 +46,7 @@ fun RoutineScreen(
     var showSheetAddRoutine by remember { mutableStateOf(false) }
     val snackBarHostState = remember { SnackbarHostState() }
     var sortOrder by remember { mutableIntStateOf(Constants.ROUTINE_SORT) }
+    var showDialogDelete by remember { mutableStateOf(false) }
     val sortedNotesItem = when (sortOrder) {
         1 -> allRoutine.sortedBy { it.taskColor }
         2 -> allRoutine.sortedByDescending { it.taskColor == 2 }
@@ -53,6 +59,32 @@ fun RoutineScreen(
         routineSort = { sorted ->
             sortOrder = sorted
         })
+
+    DialogDeleteItemTask(
+        title = "حذف روتین",
+        body = "آیا از حذف این روتین اطمینان دارید؟",
+        onBack = { showDialogDelete = false },
+        onDeleteItem = {
+            singleRoutine?.let { routine ->
+                routineViewModel.deletedById(routine.id)
+                showDialogDelete = false
+                scope.launch {
+                    snackBarHostState.showSnackbar(
+                        "روتین با موفقیت حذف شد",
+                        duration = SnackbarDuration.Short,
+                        withDismissAction = false
+                    )
+                }
+            }
+            /*    alarmViewModel.canselNotificationAlarm(
+                    context = context,
+                    id = singleDeleteTask.id
+                )*/
+
+        },
+        show = showDialogDelete
+    )
+
     SheetAddRoutine(
         show = showSheetAddRoutine,
         onDismissRequest = {
@@ -103,6 +135,10 @@ fun RoutineScreen(
                 onClick = { data ->
                     singleRoutine = data
                     showSheetAddRoutine = true
+                },
+                onDeleted = { data ->
+                    singleRoutine = data
+                    showDialogDelete = true
                 }
             )
         }
@@ -110,12 +146,16 @@ fun RoutineScreen(
 }
 
 @Composable
-private fun Routine(routines: List<RoutineItem>, onClick: (RoutineItem) -> Unit) {
+private fun Routine(
+    routines: List<RoutineItem>,
+    onClick: (RoutineItem) -> Unit,
+    onDeleted: (RoutineItem) -> Unit
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
         items(routines) {
-            RoutineItemCard(it, onClick = onClick, onDeleted = {})
+            RoutineItemCard(it, onClick = onClick, onDeleted = onDeleted)
         }
     }
 }
