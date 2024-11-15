@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
 
 
     private fun handleNavigationIntent(navHostController: NavHostController, intent: Intent) {
-        if (intent.action == "NNN") {
+        if (intent.action == Constants.ACTION_TASK_RECEIVER) {
             intent.extras?.let {
                 val id = it.getInt("TASK_ID", 0)
                 navHostController.navigate(Screen.AddTaskScreen.route + "?id=$id") {
