@@ -154,7 +154,7 @@ fun TaskScreen(
     LaunchedEffect(fastItem) {
         lazyListState.animateScrollToItem(0)
     }
-    val expanded by remember { derivedStateOf { lazyListState.canScrollForward }}
+    val expanded by remember { derivedStateOf { lazyListState.canScrollForward ||lazyListState.firstVisibleItemIndex==0 }}
     Scaffold(
         snackbarHost = {
             MySnackbarHost(
