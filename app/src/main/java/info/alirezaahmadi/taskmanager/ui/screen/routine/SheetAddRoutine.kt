@@ -183,11 +183,17 @@ fun SheetAddRoutine(
                     )
                 },
                 supportingText = {
-                    Text(
-                        "عنوان روتین را مشخص کنید",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    AnimatedVisibility(
+                        checkInput && title.isEmpty()
+                    ) {
+                        Text(
+                            "عنوان روتین را مشخص کنید",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    }
+
                 },
                 isError = checkInput && title.isEmpty(),
                 placeholder = {

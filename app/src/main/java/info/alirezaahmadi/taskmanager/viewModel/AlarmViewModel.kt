@@ -21,7 +21,6 @@ class AlarmViewModel @Inject constructor(
 
 
     fun setNotificationAlarm(context: Context, triggerTime: Long, id: Int, title: String) {
-        Log.i("1515", "id setNotificationAlarm $id")
         if (triggerTime < System.currentTimeMillis()) return
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             action = Constants.ACTION_TASK_RECEIVER

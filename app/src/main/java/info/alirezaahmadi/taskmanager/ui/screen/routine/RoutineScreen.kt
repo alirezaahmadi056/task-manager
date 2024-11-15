@@ -1,21 +1,32 @@
 package info.alirezaahmadi.taskmanager.ui.screen.routine
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.DeleteSweep
+import androidx.compose.material.icons.rounded.EditNote
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -23,11 +34,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
+import info.alirezaahmadi.taskmanager.ui.component.EmptyList
 import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.PageType
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
@@ -39,7 +57,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun RoutineScreen(
     routineViewModel: RoutineViewModel = hiltViewModel(),
-    alarmViewModel:AlarmViewModel = hiltViewModel()
+    alarmViewModel: AlarmViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -84,7 +102,6 @@ fun RoutineScreen(
                     )
                 }
             }
-
         },
         show = showDialogDelete && singleRoutine != null
     )
@@ -132,6 +149,7 @@ fun RoutineScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
+            verticalAlignment = Alignment.Top,
             state = pagerState
         ) { page ->
             Routine(
@@ -143,25 +161,109 @@ fun RoutineScreen(
                 onDeleted = { data ->
                     singleRoutine = data
                     showDialogDelete = true
-                }
+                },
+                currentDay =dayWeek[page]
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Routine(
     routines: List<RoutineItem>,
     onClick: (RoutineItem) -> Unit,
-    onDeleted: (RoutineItem) -> Unit
+    onDeleted: (RoutineItem) -> Unit,
+    currentDay: String
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(routines) {
-            RoutineItemCard(it, onClick = onClick, onDeleted = onDeleted)
+    if (routines.isNotEmpty()){
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(routines) { routine ->
+                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                    val swipeToDismiss = rememberSwipeToDismissBoxState(
+                        confirmValueChange = { swip ->
+                            when (swip) {
+                                SwipeToDismissBoxValue.StartToEnd -> {
+                                    onClick(routine)
+                                }
+
+                                SwipeToDismissBoxValue.EndToStart -> {
+                                    onDeleted(routine)
+                                }
+
+                                SwipeToDismissBoxValue.Settled -> {
+                                }
+                            }
+                            return@rememberSwipeToDismissBoxState false
+                        }
+                    )
+                    SwipeToDismissBox(
+                        enableDismissFromEndToStart = true,
+                        enableDismissFromStartToEnd = true,
+                        state = swipeToDismiss,
+                        backgroundContent = {
+                            when (swipeToDismiss.dismissDirection) {
+                                SwipeToDismissBoxValue.StartToEnd -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(5.dp)
+                                            .clip(RoundedCornerShape(11.dp))
+                                            .background(Color(0xFF4CAF50)),
+                                        contentAlignment = Alignment.CenterStart
+                                    )
+                                    {
+                                        Icon(
+                                            Icons.Rounded.EditNote,
+                                            contentDescription = "",
+                                            tint = Color.White,
+                                            modifier = Modifier.size(50.dp)
+                                        )
+
+                                    }
+                                }
+
+                                SwipeToDismissBoxValue.EndToStart -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(5.dp)
+                                            .clip(RoundedCornerShape(11.dp))
+                                            .background(Color.Red),
+                                        contentAlignment = Alignment.CenterEnd
+                                    )
+                                    {
+                                        Icon(
+                                            Icons.Rounded.DeleteSweep,
+                                            contentDescription = "",
+                                            tint = Color.White, modifier = Modifier.size(50.dp)
+                                        )
+
+                                    }
+                                }
+
+                                SwipeToDismissBoxValue.Settled -> {}
+                            }
+
+                        }
+                    ) {
+                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                            RoutineItemCard(routine, onClick = onClick, onDeleted = onDeleted)
+
+                        }
+
+
+                    }
+                }
+
+            }
         }
+    }else{
+        EmptyList("روتینی برای روز $currentDay ثبت نکرده اید! ")
     }
+
 }
 
 fun filterRoutinesByDay(day: String, routines: List<RoutineItem>): List<RoutineItem> {
