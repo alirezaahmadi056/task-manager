@@ -17,7 +17,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +32,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -75,9 +79,12 @@ fun SheetAddRoutine(
     var selectedTimeMinute by rememberSaveable { mutableIntStateOf(0) }
     val openDialogTime = remember { mutableStateOf(false) }
     var checkInput by remember { mutableStateOf(false) }
+    var currentTaskColor by remember { mutableIntStateOf(1) }
+    val sheetState = rememberModalBottomSheetState(true)
     LaunchedEffect(routineItem) {
         routineItem?.let { routine ->
             title = routine.title
+            currentTaskColor =routine.taskColor
             enableAlarm = routine.enableAlarm
             selectedDayList.apply {
                 clear()
@@ -101,6 +108,7 @@ fun SheetAddRoutine(
         }
     )
     ModalBottomSheet(
+        sheetState = sheetState,
         shape = RoundedCornerShape(topEnd = 14.dp, topStart = 14.dp),
         containerColor = MaterialTheme.colorScheme.background,
         onDismissRequest = onDismissRequest,
@@ -121,11 +129,13 @@ fun SheetAddRoutine(
                                 title = title,
                                 days = selectedDayList,
                                 triggerAlarmTime = triggerTime,
-                                enableAlarm = true
+                                enableAlarm = true,
+                                taskColor = currentTaskColor
                             )
+                            alarmViewModel.cancelWeeklyAlarms(context,routine)
                             alarmViewModel.setWeeklyAlarms(
                                 context = context,
-                                routineItem = routine
+                                routineItem = routine,
                             )
                             routineViewModel.upsertRoutine(routine)
                             onDismissRequest()
@@ -136,6 +146,7 @@ fun SheetAddRoutine(
                                 id = if (routineItem?.id == null) lastId + 1 else routineItem.id,
                                 title = title,
                                 days = selectedDayList,
+                                taskColor = currentTaskColor
                             )
                             alarmViewModel.cancelWeeklyAlarms(context, routine)
                             routineViewModel.upsertRoutine(routine)
@@ -153,7 +164,8 @@ fun SheetAddRoutine(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 14.dp, vertical = 8.dp)
-                .animateContentSize(),
+                .animateContentSize()
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OutlinedTextField(
@@ -249,6 +261,18 @@ fun SheetAddRoutine(
                 )
             }
 
+            Text(
+                "اولویت روتین",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(top = 15.dp, bottom = 8.dp, start = 4.dp)
+            )
+            SectionSelectedColorRoutine(
+                currentColor = currentTaskColor,
+                onColor = { currentTaskColor =it }
+            )
             Spacer(Modifier.height(12.dp))
             SetAlarmRoutine(
                 enableAlarm = enableAlarm,
@@ -257,7 +281,7 @@ fun SheetAddRoutine(
                 times = "${selectedTimeHour}:${selectedTimeMinute}",
             )
             Spacer(Modifier.imePadding())
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(15.dp))
             Spacer(Modifier.navigationBarsPadding())
         }
     }

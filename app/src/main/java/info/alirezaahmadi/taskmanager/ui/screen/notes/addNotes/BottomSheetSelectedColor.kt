@@ -62,6 +62,7 @@ fun BottomSheetSelectedColor(
             )
 
         ModalBottomSheet(
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth(),
             containerColor = MaterialTheme.colorScheme.background,
             onDismissRequest =
