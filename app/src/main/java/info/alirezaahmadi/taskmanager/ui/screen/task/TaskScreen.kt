@@ -45,6 +45,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -143,7 +144,6 @@ fun TaskScreen(
         show = showDialogDelete
     )
 
-    var expanded by remember { mutableStateOf(false) }
     val lazyListState = rememberLazyListState()
     var expandedList by rememberSaveable { mutableStateOf(false) }
     val rotateState by animateFloatAsState(
@@ -154,6 +154,7 @@ fun TaskScreen(
     LaunchedEffect(fastItem) {
         lazyListState.animateScrollToItem(0)
     }
+    val expanded by remember { derivedStateOf { lazyListState.canScrollForward }}
     Scaffold(
         snackbarHost = {
             MySnackbarHost(
@@ -211,8 +212,6 @@ fun TaskScreen(
             )
         }
     ) { innerPadding ->
-        expanded =
-            (lazyListState.firstVisibleItemScrollOffset == 0 || lazyListState.canScrollForward)
         LazyColumn(
             state = lazyListState,
             modifier = Modifier
