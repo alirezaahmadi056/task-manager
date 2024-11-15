@@ -1,5 +1,6 @@
 package info.alirezaahmadi.taskmanager.ui.screen.routine
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,9 +54,11 @@ import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.PageType
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
 import info.alirezaahmadi.taskmanager.util.Constants
+import info.alirezaahmadi.taskmanager.util.PersianDate
 import info.alirezaahmadi.taskmanager.viewModel.AlarmViewModel
 import info.alirezaahmadi.taskmanager.viewModel.RoutineViewModel
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 @Composable
 fun RoutineScreen(
@@ -64,9 +67,10 @@ fun RoutineScreen(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val todayIndex by remember { mutableIntStateOf(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) }
     val allRoutine by routineViewModel.getAllRoutine().collectAsState(emptyList())
     val dayWeek by remember { mutableStateOf(Constants.deyWeek) }
-    val pagerState = rememberPagerState { dayWeek.size }
+    val pagerState = rememberPagerState(initialPage = if (todayIndex > 7) 0 else todayIndex) { dayWeek.size }
     var singleRoutine by remember { mutableStateOf<RoutineItem?>(null) }
     var showSheetAddRoutine by remember { mutableStateOf(false) }
     val snackBarHostState = remember { SnackbarHostState() }
@@ -182,7 +186,7 @@ fun RoutineScreen(
                     singleRoutine = data
                     showDialogDelete = true
                 },
-                currentDay =dayWeek[page]
+                currentDay = dayWeek[page]
             )
         }
     }
@@ -196,7 +200,7 @@ private fun Routine(
     onDeleted: (RoutineItem) -> Unit,
     currentDay: String
 ) {
-    if (routines.isNotEmpty()){
+    if (routines.isNotEmpty()) {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -280,7 +284,7 @@ private fun Routine(
 
             }
         }
-    }else{
+    } else {
         EmptyList("روتینی برای روز $currentDay ثبت نکرده اید! ")
     }
 

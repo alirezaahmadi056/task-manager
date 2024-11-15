@@ -35,11 +35,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppConfig()
             navHostController = rememberNavController()
+            LaunchedEffect(Unit) { handleNavigationIntent(navHostController, intent) }
             TskApp(navHostController)
-
-            LaunchedEffect(Unit) {
-                handleNavigationIntent(navHostController, intent)
-            }
         }
     }
 
@@ -72,7 +69,7 @@ class MainActivity : ComponentActivity() {
             intent.extras?.let {
                 val id = it.getInt("TASK_ID", 0)
                 navHostController.navigate(Screen.AddTaskScreen.route + "?id=$id") {
-                    popUpTo(Screen.TaskScreen.route) {
+                    popUpTo(Screen.MainScreen.route) {
                         inclusive = false
                         saveState = true
                     }

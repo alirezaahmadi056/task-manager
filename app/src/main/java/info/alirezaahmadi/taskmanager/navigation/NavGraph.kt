@@ -22,7 +22,7 @@ import info.alirezaahmadi.taskmanager.ui.screen.task.addTask.AddTaskScreen
 fun NavGraph(
     modifier: Modifier,
     navHostController: NavHostController,
-    darkThem: (Boolean) -> Unit
+    darkThem: (Boolean) -> Unit,
 ) {
 
     NavHost(
