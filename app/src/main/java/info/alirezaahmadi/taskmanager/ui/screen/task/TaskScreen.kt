@@ -151,7 +151,9 @@ fun TaskScreen(
         label = ""
     )
     var hasNavigated by remember { mutableStateOf(false) }
-
+    LaunchedEffect(fastItem) {
+        lazyListState.animateScrollToItem(0)
+    }
     Scaffold(
         snackbarHost = {
             MySnackbarHost(
