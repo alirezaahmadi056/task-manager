@@ -10,7 +10,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import info.alirezaahmadi.taskmanager.data.alarm.AlarmReceiver
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
 import info.alirezaahmadi.taskmanager.util.Constants
-import info.alirezaahmadi.taskmanager.util.Constants.INTERVAL_MILLIS
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 import java.util.Calendar
 import javax.inject.Inject
@@ -137,6 +136,7 @@ class AlarmViewModel @Inject constructor(
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
+            Log.i("1515","cancel alarm title :${routineItem.title} week:${day}")
             alarmManager.cancel(pendingIntent)
         }
     }

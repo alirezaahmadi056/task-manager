@@ -10,6 +10,6 @@ data class RoutineItem(
     val title: String="",
     val taskColor: Int=1,
     val days: List<String> = emptyList(),
-    val timerDay: List<String> = emptyList(),
     val triggerAlarmTime: Long=0L,
+    val enableAlarm:Boolean=false,
 )

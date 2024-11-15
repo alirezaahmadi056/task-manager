@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
@@ -31,14 +32,17 @@ import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.PageType
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
 import info.alirezaahmadi.taskmanager.util.Constants
+import info.alirezaahmadi.taskmanager.viewModel.AlarmViewModel
 import info.alirezaahmadi.taskmanager.viewModel.RoutineViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun RoutineScreen(
-    routineViewModel: RoutineViewModel = hiltViewModel()
+    routineViewModel: RoutineViewModel = hiltViewModel(),
+    alarmViewModel:AlarmViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     val allRoutine by routineViewModel.getAllRoutine().collectAsState(emptyList())
     val dayWeek by remember { mutableStateOf(Constants.deyWeek) }
     val pagerState = rememberPagerState { dayWeek.size }
@@ -67,6 +71,10 @@ fun RoutineScreen(
         onDeleteItem = {
             singleRoutine?.let { routine ->
                 routineViewModel.deletedById(routine.id)
+                alarmViewModel.cancelWeeklyAlarms(
+                    context = context,
+                    routineItem = routine
+                )
                 showDialogDelete = false
                 scope.launch {
                     snackBarHostState.showSnackbar(
@@ -76,13 +84,9 @@ fun RoutineScreen(
                     )
                 }
             }
-            /*    alarmViewModel.canselNotificationAlarm(
-                    context = context,
-                    id = singleDeleteTask.id
-                )*/
 
         },
-        show = showDialogDelete
+        show = showDialogDelete && singleRoutine != null
     )
 
     SheetAddRoutine(
@@ -92,9 +96,9 @@ fun RoutineScreen(
         },
         routineItem = singleRoutine,
         days = dayWeek,
-        snackbarHostState = snackBarHostState,
         lastId = getOldId(allRoutine),
-        routineViewModel = routineViewModel
+        routineViewModel = routineViewModel,
+        alarmViewModel = alarmViewModel
     )
     Scaffold(
         snackbarHost = {
@@ -165,5 +169,5 @@ fun filterRoutinesByDay(day: String, routines: List<RoutineItem>): List<RoutineI
 }
 
 fun getOldId(routines: List<RoutineItem>): Int {
-    return routines.maxOfOrNull { it.id } ?: 0
+    return routines.maxOfOrNull { it.id } ?: 1000
 }
