@@ -1,9 +1,7 @@
 package info.alirezaahmadi.taskmanager.util
 
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 object TaskHelper {
 
@@ -42,34 +40,14 @@ object TaskHelper {
         return priceFormat.format(Integer.valueOf(price))
     }
 
-    fun createCalendarWithDateTime(year: Int, month: Int, day: Int, timeString: String): Calendar {
-
-        // Step 1: Parse the time string
-        val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-        val time = timeFormat.parse(timeString)
-
-        // Step 2: Create a Calendar instance and set the year, month, and day
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.YEAR, year)
-
-        // Note: Month value in Calendar is 0-based (January is 0), so subtract 1 from the month value
-        calendar.set(Calendar.MONTH, month - 1)
-
-        calendar.set(Calendar.DAY_OF_MONTH, day)
-
-        if (time != null) {
-            // Step 3: Set the hour, minute, and second
-            val timeCalendar = Calendar.getInstance()
-            timeCalendar.time = time
-
-            calendar.set(Calendar.HOUR_OF_DAY, timeCalendar.get(Calendar.HOUR_OF_DAY))
-            calendar.set(Calendar.MINUTE, timeCalendar.get(Calendar.MINUTE))
-            calendar.set(Calendar.SECOND, timeCalendar.get(Calendar.SECOND))
-        }
-
-        return calendar
-    }
-    fun getTimeInMillis(calendar: Calendar,year: Int, month: Int, day: Int, hour: Int, minute: Int): Long {
+    fun getTimeInMillis(
+        calendar: Calendar,
+        year: Int,
+        month: Int,
+        day: Int,
+        hour: Int,
+        minute: Int
+    ): Long {
         // ایجاد یک شیء Calendar
 
         // تنظیم سال، ماه، روز
@@ -145,6 +123,7 @@ object TaskHelper {
         while (gm < 13 && gd > sal_a[gm]) gd -= sal_a[gm++]
         return "$gy-$gm-$gd"
     }
+
     fun gregorianToJalali(gy: Int, gm: Int, gd: Int): String {
 
         if (gy == 0 || gm == 0 || gd == 0) {
@@ -198,7 +177,27 @@ object TaskHelper {
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
 
-        return listOf(hour,minute)
+        return listOf(hour, minute)
     }
+
+    //ساعت و دقیقه به تریگر
+    fun getTriggerTimeInMillis(hour: Int, minute: Int): Long {
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+
+            // اگر زمان تنظیم‌شده از زمان فعلی گذشته باشد، تنظیم آلارم برای روز بعد
+            if (timeInMillis < System.currentTimeMillis()) {
+                add(Calendar.DAY_OF_YEAR, 1)
+            }
+        }
+        return calendar.timeInMillis
+    }
+
+
+
 }
 
