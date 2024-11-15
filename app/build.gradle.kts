@@ -118,4 +118,11 @@ dependencies {
     //accompanist-permissions
     implementation("com.google.accompanist:accompanist-permissions:0.36.0")
 
+    val appcompat_version = "1.7.0"
+    implementation("androidx.appcompat:appcompat:$appcompat_version")
+    implementation("androidx.appcompat:appcompat-resources:$appcompat_version")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
+    // To use constraintlayout in compose
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0")
+
 }
