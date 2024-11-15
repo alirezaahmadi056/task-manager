@@ -14,8 +14,10 @@ object Constants {
     const val CHANNEL_ID = "Task"
     const val CHANNEL_NAME = "channel_main"
     const val TOKEN = "H5tzuvIGHfes3LZxAGscCfX6qfAuG6VWqSxntJLc"
-    const val ACTION_ALARM_RECEIVER = "info.alirezaahmadi.ACTION_ALARM_RECEIVER"
+    const val ACTION_TASK_RECEIVER = "info.alirezaahmadi.ACTION_TASK_RECEIVER"
+    const val ACTION_ROUTINE_RECEIVER = "info.alirezaahmadi.ACTION_ALARM_RECEIVER"
 
+    const val INTERVAL_MILLIS = 7L * 24L * 60L * 60L * 1000L // یک هفته به میلی‌ثانیه
 
     val deyWeek = listOf(
         "شنبه",
