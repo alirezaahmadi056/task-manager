@@ -11,11 +11,13 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.NoteAdd
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.DeleteSweep
 import androidx.compose.material.icons.rounded.EditNote
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +26,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -118,6 +121,31 @@ fun RoutineScreen(
         alarmViewModel = alarmViewModel
     )
     Scaffold(
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primary,
+                expanded = true,
+                text = {
+                    Text(
+                        text = "روتین",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White
+                    )
+                },
+                icon = {
+                    Icon(
+                        Icons.AutoMirrored.Rounded.NoteAdd,
+                        contentDescription = "",
+                        tint = Color.White
+                    )
+                },
+                onClick = {
+                    singleRoutine = null
+                    showSheetAddRoutine = true
+                }
+            )
+        },
+        floatingActionButtonPosition = FabPosition.Start,
         snackbarHost = {
             MySnackbarHost(snackBarHostState) { data ->
                 IconButton(onClick = { data.dismiss() }) {
@@ -136,14 +164,6 @@ fun RoutineScreen(
             )
         },
         modifier = Modifier.fillMaxSize(),
-        floatingActionButton = {
-            Button(
-                onClick = {
-                    singleRoutine = null
-                    showSheetAddRoutine = true
-                }
-            ) { }
-        }
     ) { innerPadding ->
         HorizontalPager(
             modifier = Modifier
