@@ -14,7 +14,7 @@ import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
 
 @Database(
     entities = [NotesItem::class, TaskItem::class, RoutineItem::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(UriTypeConverter::class, SubTaskTypeConverter::class, DayUriConverter::class)
@@ -47,6 +47,23 @@ abstract class DataBase : RoomDatabase() {
                 )
             }
         }
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+            CREATE TABLE IF NOT EXISTS RoutineItem (
+                id INTEGER PRIMARY KEY NOT NULL,
+                title TEXT NOT NULL DEFAULT '',
+                taskColor INTEGER NOT NULL DEFAULT 1,
+                days TEXT NOT NULL DEFAULT '[]',
+                triggerAlarmTime INTEGER NOT NULL DEFAULT 0,
+                enableAlarm INTEGER NOT NULL DEFAULT 0
+            )
+            """.trimIndent()
+                )
+            }
+        }
+
     }
 
 

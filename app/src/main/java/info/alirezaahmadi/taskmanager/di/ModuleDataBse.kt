@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import info.alirezaahmadi.taskmanager.data.db.DataBase
 import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_1_2
+import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_2_3
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesDao
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineDao
 import info.alirezaahmadi.taskmanager.data.db.task.TaskDao
@@ -26,7 +27,7 @@ object ModuleDataBse {
         context = context,
         klass = DataBase::class.java,
         name = "بیحبیتنخ"
-    ).addMigrations(MIGRATION_1_2).build()
+    ).addMigrations(MIGRATION_1_2).addMigrations(MIGRATION_2_3).build()
 
 
     @Provides
