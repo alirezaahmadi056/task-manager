@@ -59,19 +59,10 @@ class AlarmViewModel @Inject constructor(
     }
 
     fun setWeeklyAlarms(context: Context, routineItem: RoutineItem) {
-        val daysMap = mapOf(
-            "شنبه" to Calendar.SATURDAY,
-            "یک شنبه" to Calendar.SUNDAY,
-            "دو شنبه" to Calendar.MONDAY,
-            "سه شنبه" to Calendar.TUESDAY,
-            "چهارشنبه" to Calendar.WEDNESDAY,
-            "پنجشنبه" to Calendar.THURSDAY,
-            "جمعه" to Calendar.FRIDAY
-        )
         val time = TaskHelper.convertMillisToTimeList(routineItem.triggerAlarmTime)
 
         routineItem.days.forEach { day ->
-            val dayOfWeek = daysMap[day] ?: return@forEach
+            val dayOfWeek = Constants.daysMap[day] ?: return@forEach
             val uniqueId = routineItem.id * 10 + dayOfWeek
             val calendar = Calendar.getInstance().apply {
                 set(Calendar.DAY_OF_WEEK, dayOfWeek)
@@ -108,20 +99,11 @@ class AlarmViewModel @Inject constructor(
         }
     }
     fun cancelWeeklyAlarms(context: Context, routineItem: RoutineItem) {
-        val daysMap = mapOf(
-            "شنبه" to Calendar.SATURDAY,
-            "یک شنبه" to Calendar.SUNDAY,
-            "دو شنبه" to Calendar.MONDAY,
-            "سه شنبه" to Calendar.TUESDAY,
-            "چهارشنبه" to Calendar.WEDNESDAY,
-            "پنجشنبه" to Calendar.THURSDAY,
-            "جمعه" to Calendar.FRIDAY
-        )
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         routineItem.days.forEach { day ->
-            val dayOfWeek = daysMap[day] ?: return@forEach
+            val dayOfWeek = Constants.daysMap[day] ?: return@forEach
             val uniqueId = routineItem.id * 10 + dayOfWeek
 
             val intent = Intent(context, AlarmReceiver::class.java).apply {

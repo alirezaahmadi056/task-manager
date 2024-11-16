@@ -1,5 +1,7 @@
 package info.alirezaahmadi.taskmanager.util
 
+import java.util.Calendar
+
 object Constants {
 
     const val DATASTORE_NAME = "DATASTORE_NAME"
@@ -26,5 +28,23 @@ object Constants {
         "چهارشنبه",
         "پنجشنبه",
         "جمعه",
+    )
+    val daysMap = mapOf(
+        "شنبه" to Calendar.SATURDAY,
+        "یک شنبه" to Calendar.SUNDAY,
+        "دو شنبه" to Calendar.MONDAY,
+        "سه شنبه" to Calendar.TUESDAY,
+        "چهارشنبه" to Calendar.WEDNESDAY,
+        "پنجشنبه" to Calendar.THURSDAY,
+        "جمعه" to Calendar.FRIDAY
+    )
+    val persianDayOfWeek = mapOf(
+        Calendar.SATURDAY to 0, // شنبه
+        Calendar.SUNDAY to 1,   // یکشنبه
+        Calendar.MONDAY to 2,   // دوشنبه
+        Calendar.TUESDAY to 3,  // سه‌شنبه
+        Calendar.WEDNESDAY to 4, // چهارشنبه
+        Calendar.THURSDAY to 5, // پنج‌شنبه
+        Calendar.FRIDAY to 6    // جمعه
     )
 }

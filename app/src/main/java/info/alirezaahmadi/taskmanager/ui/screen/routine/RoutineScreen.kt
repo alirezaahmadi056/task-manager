@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -54,6 +55,7 @@ import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.PageType
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
 import info.alirezaahmadi.taskmanager.util.Constants
+import info.alirezaahmadi.taskmanager.util.Constants.persianDayOfWeek
 import info.alirezaahmadi.taskmanager.util.PersianDate
 import info.alirezaahmadi.taskmanager.viewModel.AlarmViewModel
 import info.alirezaahmadi.taskmanager.viewModel.RoutineViewModel
@@ -67,10 +69,18 @@ fun RoutineScreen(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val todayIndex by remember { mutableIntStateOf(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) }
-    val allRoutine by routineViewModel.getAllRoutine().collectAsState(emptyList())
+    val day = remember { Calendar.getInstance().get(Calendar.DAY_OF_WEEK) }
     val dayWeek by remember { mutableStateOf(Constants.deyWeek) }
-    val pagerState = rememberPagerState(initialPage = if (todayIndex > 7) 0 else todayIndex) { dayWeek.size }
+    val pagerState = rememberPagerState { dayWeek.size }
+
+    LaunchedEffect(key1 = day) {
+        val persianIndex = persianDayOfWeek[day] ?: 0
+        pagerState.animateScrollToPage(persianIndex)
+    }
+
+
+    val allRoutine by routineViewModel.getAllRoutine().collectAsState(emptyList())
+
     var singleRoutine by remember { mutableStateOf<RoutineItem?>(null) }
     var showSheetAddRoutine by remember { mutableStateOf(false) }
     val snackBarHostState = remember { SnackbarHostState() }
