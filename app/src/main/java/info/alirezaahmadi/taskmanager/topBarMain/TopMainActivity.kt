@@ -2,8 +2,10 @@ package info.alirezaahmadi.taskmanager.topBarMain
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -29,6 +31,8 @@ import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FormatListNumberedRtl
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.QuestionAnswer
+import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material.icons.outlined.Stars
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.AlertDialog
@@ -59,6 +63,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -276,6 +281,25 @@ fun DrawerContent(
                 showAlertSendMessage = true
                 onFinish()
             })
+        DrawerItem(
+            text = "اشتراک گذاری برنامه",
+            icon = Icons.Outlined.Share,
+            onClick = {
+                onFinish()
+                shareLink(
+                    context,
+                    url = "https://cafebazaar.ir/app/?id=info.alirezaahmadi.taskmanager&ref=share"
+                )
+            },
+        )
+        DrawerItem(
+            text = "امتیاز به برنامه",
+            icon = Icons.Outlined.Stars,
+            onClick = {
+                onFinish()
+                comments(context)
+            },
+        )
         DrawerItem(text = "پوسته تیره", icon = Icons.Outlined.DarkMode,
             addComposable = {
                 Switch(
@@ -441,4 +465,31 @@ fun isOnline(context: Context): Boolean {
         activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
         else -> false
     }
+}
+
+
+fun shareLink(context: Context, url: String) {
+    try {
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, url)
+            type = "text/plain"
+        }
+        context.startActivity(Intent.createChooser(shareIntent, "Share link via"))
+    } catch (e: Exception) {
+        Toast.makeText(context, "خطا", Toast.LENGTH_SHORT).show()
+    }
+}
+
+fun comments(context: Context) {
+    val intent = Intent(Intent.ACTION_EDIT).apply {
+        setData(Uri.parse("bazaar://details?id=" + context.packageName))
+        setPackage("com.farsitel.bazaar")
+    }
+    try {
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        Toast.makeText(context, "خطا", Toast.LENGTH_SHORT).show()
+    }
+
 }
