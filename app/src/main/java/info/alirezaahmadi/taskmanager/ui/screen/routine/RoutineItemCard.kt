@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
+import info.alirezaahmadi.taskmanager.util.TaskHelper
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -55,7 +56,7 @@ fun RoutineItemCard(
         modifier = Modifier
             .padding(horizontal = 6.dp, vertical = 4.dp)
             .fillMaxWidth()
-            .height(80.dp)
+            .height(90.dp)
             .combinedClickable(
                 onClick = { onClick(item) },
                 onLongClick = { onDeleted(item) },
@@ -75,7 +76,7 @@ fun RoutineItemCard(
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                modifier = Modifier.weight(0.8f),
+                modifier = Modifier.weight(0.7f),
                 text = item.title,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
@@ -83,6 +84,16 @@ fun RoutineItemCard(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
+
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Bottom)
+                    .padding(end = 12.dp, bottom = 6.dp),
+                text = TaskHelper.taskByLocate(item.time),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.scrim,
+            )
+
         }
 
     }

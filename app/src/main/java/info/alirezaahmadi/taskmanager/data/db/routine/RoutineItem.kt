@@ -12,4 +12,5 @@ data class RoutineItem(
     val days: List<String> = emptyList(),
     val triggerAlarmTime: Long=0L,
     val enableAlarm:Boolean=false,
+    val time:String=""
 )

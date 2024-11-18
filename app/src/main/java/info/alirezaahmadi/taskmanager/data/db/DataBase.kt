@@ -57,8 +57,8 @@ abstract class DataBase : RoomDatabase() {
                 taskColor INTEGER NOT NULL DEFAULT 1,
                 days TEXT NOT NULL DEFAULT '[]',
                 triggerAlarmTime INTEGER NOT NULL DEFAULT 0,
-                enableAlarm INTEGER NOT NULL DEFAULT 0
-            )
+                enableAlarm INTEGER NOT NULL DEFAULT 0,
+                time TEXT NOT NULL DEFAULT ''   )
             """.trimIndent()
                 )
             }

@@ -11,18 +11,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccessTime
+import androidx.compose.material.icons.rounded.AvTimer
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Timer
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -71,6 +75,18 @@ fun SheetAddRoutine(
     alarmViewModel: AlarmViewModel = hiltViewModel()
 ) {
     if (!show) return
+
+
+    var showDialogSelectedTime by remember { mutableStateOf(false) }
+    var selectedTime by remember { mutableStateOf("7:00") }
+    CustomDataPickerDialog(
+        isShow = showDialogSelectedTime,
+        initialMinute = 0,
+        initialHour = 7,
+        onDismissRequest = { showDialogSelectedTime = false },
+        onSelected = { selectedTime = "${it.hour}:${it.minute}" }
+    )
+
     val context = LocalContext.current
     var title by remember { mutableStateOf("") }
     val selectedDayList = remember { mutableStateListOf<String>() }
@@ -84,8 +100,9 @@ fun SheetAddRoutine(
     LaunchedEffect(routineItem) {
         routineItem?.let { routine ->
             title = routine.title
-            currentTaskColor =routine.taskColor
+            currentTaskColor = routine.taskColor
             enableAlarm = routine.enableAlarm
+            selectedTime =routine.time
             selectedDayList.apply {
                 clear()
                 addAll(routine.days)
@@ -130,9 +147,10 @@ fun SheetAddRoutine(
                                 days = selectedDayList,
                                 triggerAlarmTime = triggerTime,
                                 enableAlarm = true,
-                                taskColor = currentTaskColor
+                                taskColor = currentTaskColor,
+                                time = selectedTime
                             )
-                            alarmViewModel.cancelWeeklyAlarms(context,routine)
+                            alarmViewModel.cancelWeeklyAlarms(context, routine)
                             alarmViewModel.setWeeklyAlarms(
                                 context = context,
                                 routineItem = routine,
@@ -146,7 +164,8 @@ fun SheetAddRoutine(
                                 id = if (routineItem?.id == null) lastId + 1 else routineItem.id,
                                 title = title,
                                 days = selectedDayList,
-                                taskColor = currentTaskColor
+                                taskColor = currentTaskColor,
+                                time = selectedTime
                             )
                             alarmViewModel.cancelWeeklyAlarms(context, routine)
                             routineViewModel.upsertRoutine(routine)
@@ -271,9 +290,51 @@ fun SheetAddRoutine(
             )
             SectionSelectedColorRoutine(
                 currentColor = currentTaskColor,
-                onColor = { currentTaskColor =it }
+                onColor = { currentTaskColor = it }
             )
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .clickable { showDialogSelectedTime =true }
+                    .fillMaxWidth()
+                    .padding(10.dp,),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector =  Icons.Rounded.AccessTime,
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.scrim.copy(0.8f)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = "ساعت شروع",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.scrim.copy(0.8f)
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .border(
+                            .5.dp,
+                            color = MaterialTheme.colorScheme.scrim,
+                            shape = RoundedCornerShape(6.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = selectedTime,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.scrim,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
+            }
             SetAlarmRoutine(
                 enableAlarm = enableAlarm,
                 onSelectedTime = { openDialogTime.value = true },

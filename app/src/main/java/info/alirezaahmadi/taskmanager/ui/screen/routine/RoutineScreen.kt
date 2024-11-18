@@ -1,6 +1,5 @@
 package info.alirezaahmadi.taskmanager.ui.screen.routine
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,12 +55,12 @@ import info.alirezaahmadi.taskmanager.ui.component.PageType
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.util.Constants.persianDayOfWeek
-import info.alirezaahmadi.taskmanager.util.PersianDate
 import info.alirezaahmadi.taskmanager.viewModel.AlarmViewModel
 import info.alirezaahmadi.taskmanager.viewModel.RoutineViewModel
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoutineScreen(
     routineViewModel: RoutineViewModel = hiltViewModel(),
@@ -90,6 +89,12 @@ fun RoutineScreen(
         1 -> allRoutine.sortedBy { it.taskColor }
         2 -> allRoutine.sortedByDescending { it.taskColor == 2 }
         3 -> allRoutine.sortedByDescending { it.taskColor }
+        4 -> allRoutine.sortedBy {
+            val parts = it.time.split(":")
+            val hours = parts[0].toInt()
+            val minutes = parts[1].toInt()
+            hours * 60 + minutes // تبدیل زمان به دقیقه
+        }
         else -> allRoutine.reversed()
     }
 
@@ -98,6 +103,7 @@ fun RoutineScreen(
         routineSort = { sorted ->
             sortOrder = sorted
         })
+
 
     DialogDeleteItemTask(
         title = "حذف روتین",
@@ -214,7 +220,7 @@ private fun Routine(
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(routines) { routine ->
+            items(routines, key = {it.id}) { routine ->
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     val swipeToDismiss = rememberSwipeToDismissBoxState(
                         confirmValueChange = { swip ->

@@ -48,12 +48,15 @@ fun SelectedSortNotList(
         showSelectedSortNotList
     }
     if (show) {
-        val item = listOf(
+        val item = mutableListOf(
             "جدید ترین",
             "اولویت کم",
             "اولویت معمولی",
             "اولویت بالا",
         )
+        if (pageType==PageType.ROUTINE){
+            item.add("اولویت زمانی")
+        }
         AlertDialog(
             containerColor = MaterialTheme.colorScheme.background,
             onDismissRequest = { showSelectedSortNotList.value = false },

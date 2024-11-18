@@ -84,7 +84,7 @@ fun NotesItemCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 3.dp),
-                text = TaskHelper.taskByLocate(item.createTime),
+                text = TaskHelper.taskByLocate("${item.createTime} ${item.createDate}"),
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.End,
                 color = MaterialTheme.colorScheme.scrim

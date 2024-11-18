@@ -73,7 +73,7 @@ fun SetAlarmRoutine(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp),
+                .padding(horizontal = 10.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.Absolute.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -137,7 +137,7 @@ fun SetAlarmRoutine(
                     modifier = Modifier
                         .clickable(onClick = onSelectedTime)
                         .fillMaxWidth()
-                        .padding(15.dp),
+                        .padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
