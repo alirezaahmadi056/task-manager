@@ -15,14 +15,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun TopBar(title: String, onBack: () -> Unit) {
-    Column {
         Row(
             Modifier
+                .drawBehind {
+                    drawLine(
+                        color = Color.LightGray.copy(alpha = 0.5f),
+                        start = Offset(0f, size.height),
+                        end = Offset(size.width, size.height),
+                        strokeWidth = 1.5.dp.toPx()
+                    )
+                }
                 .fillMaxWidth()
                 .padding(vertical = 5.dp, horizontal = 2.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -61,10 +70,7 @@ fun TopBar(title: String, onBack: () -> Unit) {
 */
 
         }
-        HorizontalDivider(
-            thickness = 2.dp,
-            color = Color.LightGray.copy(0.3f),
-        )
-    }
+
+
 
 }

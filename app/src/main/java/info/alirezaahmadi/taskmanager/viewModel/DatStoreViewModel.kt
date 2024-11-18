@@ -60,7 +60,7 @@ class DatStoreViewModel @Inject constructor(
 
     fun getNoteSort(): Int = runBlocking { repository.getInt(NOTE_SORT) ?: 0 }
     fun getTaskSort(): Int = runBlocking { repository.getInt(TASK_SORT) ?: 0 }
-    fun getRoutineSort(): Int = runBlocking { repository.getInt(ROUTINE_SORT) ?: 0 }
+    fun getRoutineSort(): Int = runBlocking { repository.getInt(ROUTINE_SORT) ?: 4 }
 
 
 }
