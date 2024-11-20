@@ -24,9 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccessTime
-import androidx.compose.material.icons.rounded.AvTimer
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Timer
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,6 +60,7 @@ import info.alirezaahmadi.taskmanager.ui.component.SetAlarmRoutine
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 import info.alirezaahmadi.taskmanager.viewModel.AlarmViewModel
 import info.alirezaahmadi.taskmanager.viewModel.RoutineViewModel
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -84,7 +83,10 @@ fun SheetAddRoutine(
         initialMinute = 0,
         initialHour = 7,
         onDismissRequest = { showDialogSelectedTime = false },
-        onSelected = { selectedTime = "${it.hour}:${it.minute}" }
+        onSelected = {
+            val formattedMinute = String.format(Locale.US, "%02d", it.minute)
+            selectedTime = "${it.hour}:${formattedMinute}"
+        }
     )
 
     val context = LocalContext.current
@@ -335,11 +337,12 @@ fun SheetAddRoutine(
                     )
                 }
             }
+            val formattedMinute = String.format(Locale.US, "%02d", selectedTimeMinute)
             SetAlarmRoutine(
                 enableAlarm = enableAlarm,
                 onSelectedTime = { openDialogTime.value = true },
                 onEnable = { enb -> enableAlarm = enb },
-                times = "${selectedTimeHour}:${selectedTimeMinute}",
+                times = "${selectedTimeHour}:${formattedMinute}",
             )
             Spacer(Modifier.imePadding())
             Spacer(Modifier.height(15.dp))

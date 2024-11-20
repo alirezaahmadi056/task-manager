@@ -80,6 +80,7 @@ import ir.huri.jcal.JalaliCalendar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -523,12 +524,13 @@ fun AddTaskScreen(
                 }
             }
             item {
+                val formattedMinute = String.format(Locale.US, "%02d", selectedTimeMinute)
                 SetAlarmSection(
                     enableAlarm = enableAlarm,
                     onSelectedDate = { openDialogDate.value = true },
                     onSelectedTime = { openDialogTime.value = true },
                     onEnable = { enb -> enableAlarm = enb },
-                    times = "${selectedTimeHour}:${selectedTimeMinute}",
+                    times = "${selectedTimeHour}:${formattedMinute}",
                     dates = TaskHelper.gregorianToJalali(
                         selectedAlarmDataList[0],
                         selectedAlarmDataList[1],
