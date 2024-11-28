@@ -1,6 +1,8 @@
 package info.alirezaahmadi.taskmanager.ui.screen.task.addTask
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,16 +23,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import info.alirezaahmadi.taskmanager.data.db.task.Task
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SubTaskItem(
     item: Task,
     onClick: () -> Unit,
+    onLongClick: () -> Unit,
     onCompeted: (Boolean) -> Unit
 ) {
-
-
     Card(
-        enabled = !item.isCompleted,
         elevation = CardDefaults.cardElevation(1.dp),
         border = BorderStroke(1.dp, Color.LightGray),
         colors = CardDefaults.cardColors(
@@ -39,8 +40,9 @@ fun SubTaskItem(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 6.dp, vertical = 2.dp),
-        onClick = { onClick() }) {
+            .padding(horizontal = 6.dp, vertical = 2.dp)
+            .combinedClickable(enabled = !item.isCompleted, onClick = onClick, onLongClick = onLongClick),
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()

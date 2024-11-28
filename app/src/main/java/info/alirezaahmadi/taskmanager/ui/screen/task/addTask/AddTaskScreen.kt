@@ -64,8 +64,10 @@ import com.gmail.hamedvakhide.compose_jalali_datepicker.JalaliDatePickerDialog
 import info.alirezaahmadi.taskmanager.data.db.task.Task
 import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
 import info.alirezaahmadi.taskmanager.ui.component.CustomDataPickerDialog
+import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.SetAlarmSection
+import info.alirezaahmadi.taskmanager.ui.component.SwipeToDismissBoxLayout
 import info.alirezaahmadi.taskmanager.ui.component.TopBar
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.BottomSheetSelectedColor
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.SheetSaveDiscard
@@ -99,7 +101,7 @@ fun AddTaskScreen(
     var taskTitle by remember { mutableStateOf("") }
     var selectedColor by remember { mutableIntStateOf(1) }
     val subTask = remember { mutableStateListOf<Task>() }
-
+    var showDialogDeletedSubTask by remember { mutableStateOf(false) }
     var taskBody by remember { mutableStateOf("") }
     var createTime by remember { mutableStateOf("") }
     var completedTime by remember { mutableStateOf("") }
@@ -118,7 +120,6 @@ fun AddTaskScreen(
     val openDialogTime = remember { mutableStateOf(false) }
 
     val context = LocalContext.current
-
     val taskColor = when (selectedColor) {
         2 -> {
             MaterialTheme.colorScheme.onSecondary
@@ -146,8 +147,8 @@ fun AddTaskScreen(
         }
     }
 
-    if (id != 0) {
-        LaunchedEffect(key1 = id) {
+    LaunchedEffect(key1 = id) {
+        if (id != 0) {
             taskViewModel.getSingleTaskById(id).collectLatest { taskItem ->
                 taskTitle = taskItem.title
                 oldTaskTitle = taskItem.title
@@ -170,7 +171,6 @@ fun AddTaskScreen(
 
     }
 
-
     BackHandler(enabled = oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask.toList() != oldSubTask.toList()) {
         showSheetDiscard = true
     }
@@ -183,7 +183,18 @@ fun AddTaskScreen(
             navHostController.navigateUp()
         }
     )
-
+    DialogDeleteItemTask(
+        show = showDialogDeletedSubTask,
+        title = "حذف وظیفه",
+        body = "آیا از حذف کردن این وظیفه اطمینان دارید؟",
+        onBack = {
+            showDialogDeletedSubTask = false
+        },
+        onDeleteItem = {
+            subTask.removeAt(subTaskId)
+            showDialogDeletedSubTask = false
+        }
+    )
     BottomUpdateSheetTask(
         title = subTaskItem.title,
         obClick = { newTitle ->
@@ -370,13 +381,13 @@ fun AddTaskScreen(
                 }
             },
                 onBack = {
-                keyboardController?.hide()
-                if (oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask.toList() != oldSubTask.toList()) {
-                    showSheetDiscard = true
-                } else {
-                    navHostController.navigateUp()
+                    keyboardController?.hide()
+                    if (oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask.toList() != oldSubTask.toList()) {
+                        showSheetDiscard = true
+                    } else {
+                        navHostController.navigateUp()
+                    }
                 }
-            }
             )
         }
     ) {
@@ -552,17 +563,35 @@ fun AddTaskScreen(
                     )
                 }
             }
-            itemsIndexed(subTask) { index, item ->
-                SubTaskItem(item,
-                    onCompeted = { competed ->
-                        subTask[index] = item.copy(isCompleted = competed)
-                    },
-                    onClick = {
+            itemsIndexed(items = subTask, key = { index, item -> index }) { index, item ->
+                SwipeToDismissBoxLayout(
+                    enableDismissFromEndToStart = true,
+                    enableDismissFromStartToEnd = !item.isCompleted,
+                    startToEnd = {
                         subTaskId = index
                         subTaskItem = item
                         showBottomUpdateSheetTask.value = true
-                    })
-
+                    },
+                    endToStart = {
+                        subTaskId = index
+                        showDialogDeletedSubTask = true
+                    }
+                ) {
+                    SubTaskItem(
+                        item = item,
+                        onCompeted = { competed ->
+                            subTask[index] = item.copy(isCompleted = competed)
+                        },
+                        onClick = {
+                            subTaskId = index
+                            subTaskItem = item
+                            showBottomUpdateSheetTask.value = true
+                        },
+                        onLongClick = {
+                            subTaskId = index
+                            showDialogDeletedSubTask = true
+                        })
+                }
 
             }
             item {
