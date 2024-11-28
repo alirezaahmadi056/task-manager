@@ -1,6 +1,5 @@
 package info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes
 
-import info.alirezaahmadi.taskmanager.util.PersianDate
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.BackHandler
@@ -69,7 +68,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -81,6 +80,7 @@ import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
 import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.TopBar
+import info.alirezaahmadi.taskmanager.util.PersianDate
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -95,8 +95,7 @@ fun AddNotesScreen(
     var showSheetDiscard by remember {
         mutableStateOf(false)
     }
-    val keyboardController = LocalSoftwareKeyboardController.current
-
+    val focusManager = LocalFocusManager.current
 
     var title by remember {
         mutableStateOf("")
@@ -215,7 +214,7 @@ fun AddNotesScreen(
         onDismissRequest = { showSheetDiscard = false },
         exit = {
             showSheetDiscard = false
-            keyboardController?.hide()
+            focusManager.clearFocus()
             navHostController.navigateUp()
         }
     )
@@ -243,8 +242,7 @@ fun AddNotesScreen(
             Bottom(
                 title = bottom,
                 onUpsertItem = {
-                    keyboardController?.hide()
-
+                    focusManager.clearFocus()
                     if (title.isEmpty()) {
                         scope.launch {
                             snackBarHostState.showSnackbar(
@@ -284,7 +282,7 @@ fun AddNotesScreen(
                     if (title != oldTitle || body != oldBody) {
                         showSheetDiscard = true
                     } else {
-                        keyboardController?.hide()
+                        focusManager.clearFocus()
                         navHostController.navigateUp()
                     }
                 })
@@ -294,7 +292,7 @@ fun AddNotesScreen(
                 if (title != oldTitle || body != oldBody) {
                     showSheetDiscard = true
                 } else {
-                    keyboardController?.hide()
+                    focusManager.clearFocus()
                     navHostController.navigateUp()
                 }
             }

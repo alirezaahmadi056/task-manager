@@ -1,6 +1,5 @@
 package info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,7 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
@@ -30,7 +29,7 @@ import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
 
 @Composable
 fun FastNoteSection(notesViewModel: NotesViewModel) {
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     val dates = PersianDate()
     var body by remember { mutableStateOf("") }
 
@@ -75,8 +74,7 @@ fun FastNoteSection(notesViewModel: NotesViewModel) {
                         )
                     )
                     body = ""
-                    keyboardController?.hide()
-
+                    focusManager.clearFocus()
                 }
             ) {
                 Icon(

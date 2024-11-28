@@ -52,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
@@ -95,7 +96,7 @@ fun AddTaskScreen(
 ) {
 
     val dates by remember { mutableStateOf(PersianDate()) }
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     var showSheetDiscard by remember { mutableStateOf(false) }
     var enableAlarm by remember { mutableStateOf(false) }
     var taskTitle by remember { mutableStateOf("") }
@@ -179,7 +180,7 @@ fun AddTaskScreen(
         onDismissRequest = { showSheetDiscard = false },
         exit = {
             showSheetDiscard = false
-            keyboardController?.hide()
+            focusManager.clearFocus()
             navHostController.navigateUp()
         }
     )
@@ -210,7 +211,7 @@ fun AddTaskScreen(
         } else {
             subTask.add(Task(title = title))
             showBottomSheetAddTask.value = false
-            keyboardController?.hide()
+            focusManager.clearFocus()
         }
 
     }
@@ -273,14 +274,14 @@ fun AddTaskScreen(
                 if (oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask.toList() != oldSubTask.toList()) {
                     showSheetDiscard = true
                 } else {
-                    keyboardController?.hide()
+                    focusManager.clearFocus()
                     navHostController.navigateUp()
                 }
             }
         },
         bottomBar = {
             Bottom(onUpsertItem = {
-                keyboardController?.hide()
+                focusManager.clearFocus()
                 if (taskTitle.isEmpty()) {
                     scope.launch {
                         snackBarHostState.showSnackbar(
@@ -381,7 +382,7 @@ fun AddTaskScreen(
                 }
             },
                 onBack = {
-                    keyboardController?.hide()
+                    focusManager.clearFocus()
                     if (oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask.toList() != oldSubTask.toList()) {
                         showSheetDiscard = true
                     } else {
