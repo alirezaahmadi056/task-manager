@@ -73,6 +73,7 @@ import info.alirezaahmadi.taskmanager.ui.component.EmptyList
 import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.PageType
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
+import info.alirezaahmadi.taskmanager.ui.component.SwipeToDismissBoxLayout
 import info.alirezaahmadi.taskmanager.ui.screen.task.addTask.FastNoteSection
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.util.TaskHelper
@@ -80,7 +81,7 @@ import info.alirezaahmadi.taskmanager.viewModel.AlarmViewModel
 import info.alirezaahmadi.taskmanager.viewModel.TaskViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn( ExperimentalFoundationApi::class)
 @Composable
 fun TaskScreen(
     navHostController: NavHostController,
@@ -94,20 +95,21 @@ fun TaskScreen(
     val fastItem by taskViewModel.allFastTask.collectAsState(initial = emptyList())
     var sortOrder by remember { mutableIntStateOf(Constants.SORT_TASK) }
 
-
     // مرتب‌سازی آیتم‌ها بر اساس sortOrder
-    val sortedNotesItem = when (sortOrder) {
-        1 -> normalItem.sortedBy { it.taskColor } // اولویت کم
-        2 -> normalItem.sortedByDescending { it.taskColor == 2 } // اولویت معمولی
-        3 -> normalItem.sortedByDescending { it.taskColor } // اولویت زیاد
-        else -> normalItem.reversed() //  حالت پیش ‌فرض بر اساس اخرین یادداشت
+    val sortedNotesItem = remember(key1 = sortOrder, key2 = normalItem) {
+        when (sortOrder) {
+            1 -> normalItem.sortedBy { it.taskColor } // اولویت کم
+            2 -> normalItem.sortedByDescending { it.taskColor == 2 } // اولویت معمولی
+            3 -> normalItem.sortedByDescending { it.taskColor } // اولویت زیاد
+            else -> normalItem.reversed() //  حالت پیش ‌فرض بر اساس اخرین یادداشت
+        }
     }
 
-    val (completedTasks, incompleteTasks) = sortedNotesItem.partition { sort ->
-        sort.subTask.all { it.isCompleted }
+    val (completedTasks, incompleteTasks) = remember(key1 =sortedNotesItem ) {
+        sortedNotesItem.partition { sort -> sort.subTask.all { it.isCompleted } }
     }
-    val (fastTaskCompleted, fastTaskInCompleted) = fastItem.reversed().partition {
-        it.subTask[0].isCompleted
+    val (fastTaskCompleted, fastTaskInCompleted) = remember(key1 = fastItem) {
+        fastItem.reversed().partition { it.subTask[0].isCompleted }
     }
     SelectedSortNotList(
         pageType = PageType.TASK,
@@ -115,8 +117,6 @@ fun TaskScreen(
             sortOrder = selectedSort
         }, noteSort = {}, routineSort = {}
     )
-
-
     var singleDeleteTask by remember { mutableStateOf(TaskItem()) }
     var showDialogDelete by remember { mutableStateOf(false) }
     val snackBarHostState = remember { SnackbarHostState() }
@@ -154,7 +154,7 @@ fun TaskScreen(
     LaunchedEffect(fastItem) {
         lazyListState.animateScrollToItem(0)
     }
-    val expanded by remember { derivedStateOf { lazyListState.canScrollForward ||lazyListState.firstVisibleItemIndex==0 }}
+    val expanded by remember(key1 =lazyListState ) { derivedStateOf { lazyListState.canScrollForward || lazyListState.firstVisibleItemIndex == 0 } }
     Scaffold(
         snackbarHost = {
             MySnackbarHost(
@@ -220,188 +220,64 @@ fun TaskScreen(
         ) {
             if (normalItem.isNotEmpty() || fastItem.isNotEmpty()) {
                 items(fastTaskInCompleted, key = { it.id }) { task ->
-                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                        val swipeToDismiss = rememberSwipeToDismissBoxState(
-                            confirmValueChange = { swip ->
-                                when (swip) {
-                                    SwipeToDismissBoxValue.StartToEnd -> {
-                                        if (!hasNavigated) {
-                                            hasNavigated = true
-                                            navHostController.navigate(Screen.AddTaskScreen.route + "?id=${task.id}")
-                                        }
-                                    }
-
-                                    SwipeToDismissBoxValue.EndToStart -> {
-                                        singleDeleteTask = task
-                                        showDialogDelete = true
-                                    }
-
-                                    SwipeToDismissBoxValue.Settled -> {
-                                    }
-                                }
-                                return@rememberSwipeToDismissBoxState false
+                    SwipeToDismissBoxLayout(
+                        enableDismissFromEndToStart = true,
+                        enableDismissFromStartToEnd = false,
+                        startToEnd = {
+                            if (!hasNavigated) {
+                                hasNavigated = true
+                                navHostController.navigate(Screen.AddTaskScreen.route + "?id=${task.id}")
                             }
-                        )
-                        SwipeToDismissBox(
-                            enableDismissFromEndToStart = true,
-                            enableDismissFromStartToEnd = false,
-                            state = swipeToDismiss,
-                            backgroundContent = {
-                                when (swipeToDismiss.dismissDirection) {
-                                    SwipeToDismissBoxValue.StartToEnd -> {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .padding(5.dp)
-                                                .clip(RoundedCornerShape(11.dp))
-                                                .background(Color(0xFF4CAF50)),
-                                            contentAlignment = Alignment.CenterStart
-                                        )
-                                        {
-                                            Icon(
-                                                Icons.Rounded.EditNote,
-                                                contentDescription = "",
-                                                tint = Color.White,
-                                                modifier = Modifier.size(50.dp)
-                                            )
-
-                                        }
-                                    }
-
-                                    SwipeToDismissBoxValue.EndToStart -> {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .padding(5.dp)
-                                                .clip(RoundedCornerShape(11.dp))
-                                                .background(Color.Red),
-                                            contentAlignment = Alignment.CenterEnd
-                                        )
-                                        {
-                                            Icon(
-                                                Icons.Rounded.DeleteSweep,
-                                                contentDescription = "",
-                                                tint = Color.White, modifier = Modifier.size(50.dp)
-                                            )
-
-                                        }
-                                    }
-
-                                    SwipeToDismissBoxValue.Settled -> {}
-                                }
-
-                            }
-                        ) {
-                            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                                FastTaskItemCard(task,
-                                    onIsCompletedClick = {
-                                        taskViewModel.upsertTask(
-                                            TaskItem(
-                                                id = task.id, title = task.title,
-                                                type = TaskItemType.FAST.name,
-                                                subTask = listOf(
-                                                    Task(
-                                                        title = task.subTask[0].title,
-                                                        isCompleted = it
-                                                    ),
-                                                ),
-                                            )
-                                        )
-                                    }, onLongClick = {
-                                        singleDeleteTask = task
-                                        showDialogDelete = true
-                                    })
-                            }
-
-
+                        },
+                        endToStart = {
+                            singleDeleteTask = task
+                            showDialogDelete = true
                         }
+                    ) {
+                        FastTaskItemCard(task,
+                            onIsCompletedClick = {
+                                taskViewModel.upsertTask(
+                                    TaskItem(
+                                        id = task.id, title = task.title,
+                                        type = TaskItemType.FAST.name,
+                                        subTask = listOf(
+                                            Task(
+                                                title = task.subTask[0].title,
+                                                isCompleted = it
+                                            ),
+                                        ),
+                                    )
+                                )
+                            },
+                            onLongClick = {
+                                singleDeleteTask = task
+                                showDialogDelete = true
+                            })
                     }
                 }
                 items(incompleteTasks, key = { task -> task.id }) { taskItem ->
-                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                        val swipeToDismiss = rememberSwipeToDismissBoxState(
-                            confirmValueChange = { swip ->
-                                when (swip) {
-                                    SwipeToDismissBoxValue.StartToEnd -> {
-                                        if (!hasNavigated) {
-                                            hasNavigated = true
-                                            navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}")
-                                        }
-                                    }
-
-                                    SwipeToDismissBoxValue.EndToStart -> {
-                                        singleDeleteTask = taskItem
-                                        showDialogDelete = true
-                                    }
-
-                                    SwipeToDismissBoxValue.Settled -> {
-                                    }
-                                }
-                                return@rememberSwipeToDismissBoxState false
+                    SwipeToDismissBoxLayout(
+                        enableDismissFromEndToStart = true,
+                        enableDismissFromStartToEnd = true,
+                        startToEnd = {
+                            if (!hasNavigated) {
+                                hasNavigated = true
+                                navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}")
+                            }
+                        },
+                        endToStart = {
+                            singleDeleteTask = taskItem
+                            showDialogDelete = true
+                        }
+                    ) {
+                        TaskItemCard(
+                            item = taskItem,
+                            onClick = { navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}") },
+                            onLogClick = {
+                                singleDeleteTask = taskItem
+                                showDialogDelete = true
                             }
                         )
-                        SwipeToDismissBox(
-                            enableDismissFromEndToStart = true,
-                            enableDismissFromStartToEnd = true,
-                            state = swipeToDismiss,
-                            backgroundContent = {
-                                when (swipeToDismiss.dismissDirection) {
-                                    SwipeToDismissBoxValue.StartToEnd -> {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .padding(5.dp)
-                                                .clip(RoundedCornerShape(11.dp))
-                                                .background(Color(0xFF4CAF50)),
-                                            contentAlignment = Alignment.CenterStart
-                                        )
-                                        {
-                                            Icon(
-                                                Icons.Rounded.EditNote,
-                                                contentDescription = "",
-                                                tint = Color.White,
-                                                modifier = Modifier.size(50.dp)
-                                            )
-
-                                        }
-                                    }
-
-                                    SwipeToDismissBoxValue.EndToStart -> {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .padding(5.dp)
-                                                .clip(RoundedCornerShape(11.dp))
-                                                .background(Color.Red),
-                                            contentAlignment = Alignment.CenterEnd
-                                        )
-                                        {
-                                            Icon(
-                                                Icons.Rounded.DeleteSweep,
-                                                contentDescription = "",
-                                                tint = Color.White, modifier = Modifier.size(50.dp)
-                                            )
-
-                                        }
-                                    }
-
-                                    SwipeToDismissBoxValue.Settled -> {}
-                                }
-
-                            }
-                        ) {
-                            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                                TaskItemCard(
-                                    item =
-                                    taskItem,
-                                    onClick = { navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}") },
-                                    onLogClick = {
-                                        singleDeleteTask = taskItem
-                                        showDialogDelete = true
-                                    }
-                                )
-                            }
-                        }
                     }
                 }
                 stickyHeader {
@@ -413,7 +289,6 @@ fun TaskScreen(
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-
                         Row(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
@@ -421,7 +296,6 @@ fun TaskScreen(
                             Text(
                                 text = " تکمیل شده",
                                 color = MaterialTheme.colorScheme.primary,
-
                                 style = MaterialTheme.typography.bodyLarge,
                             )
                             Spacer(modifier = Modifier.width(8.dp))
@@ -451,106 +325,42 @@ fun TaskScreen(
                         enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
                         exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
                     ) {
-                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                            val swipeToDismiss =
-                                rememberSwipeToDismissBoxState(confirmValueChange = { swip ->
-                                    when (swip) {
-                                        SwipeToDismissBoxValue.StartToEnd -> {
-                                            if (!hasNavigated) {
-                                                hasNavigated = true
-                                                navHostController.navigate(Screen.AddTaskScreen.route + "?id=${task.id}")
-                                            }
-                                        }
-
-                                        SwipeToDismissBoxValue.EndToStart -> {
-                                            singleDeleteTask = task
-                                            showDialogDelete = true
-                                        }
-
-                                        SwipeToDismissBoxValue.Settled -> {
-                                        }
-                                    }
-                                    return@rememberSwipeToDismissBoxState false
-                                })
-                            SwipeToDismissBox(
-                                enableDismissFromEndToStart = true,
-                                enableDismissFromStartToEnd = true,
-                                state = swipeToDismiss,
-                                backgroundContent = {
-                                    when (swipeToDismiss.dismissDirection) {
-                                        SwipeToDismissBoxValue.StartToEnd -> {
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .padding(5.dp)
-                                                    .clip(RoundedCornerShape(11.dp))
-                                                    .background(Color(0xFF4CAF50)),
-                                                contentAlignment = Alignment.CenterStart
-                                            )
-                                            {
-                                                Icon(
-                                                    Icons.Rounded.EditNote,
-                                                    contentDescription = "",
-                                                    tint = Color.White,
-                                                    modifier = Modifier.size(50.dp)
-                                                )
-
-                                            }
-                                        }
-
-                                        SwipeToDismissBoxValue.EndToStart -> {
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .padding(5.dp)
-                                                    .clip(RoundedCornerShape(11.dp))
-                                                    .background(Color.Red),
-                                                contentAlignment = Alignment.CenterEnd
-                                            )
-                                            {
-                                                Icon(
-                                                    Icons.Rounded.DeleteSweep,
-                                                    contentDescription = "",
-                                                    tint = Color.White,
-                                                    modifier = Modifier.size(50.dp)
-                                                )
-
-                                            }
-                                        }
-
-                                        SwipeToDismissBoxValue.Settled -> {}
-                                    }
-
+                        SwipeToDismissBoxLayout(
+                            enableDismissFromEndToStart = true,
+                            enableDismissFromStartToEnd = false,
+                            startToEnd = {
+                                if (!hasNavigated) {
+                                    hasNavigated = true
+                                    navHostController.navigate(Screen.AddTaskScreen.route + "?id=${task.id}")
                                 }
-                            ) {
-                                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                                    FastTaskItemCard(
-                                        task,
-                                        onIsCompletedClick = {
-                                            taskViewModel.upsertTask(
-                                                TaskItem(
-                                                    id = task.id, title = task.title,
-                                                    type = TaskItemType.FAST.name,
-                                                    subTask = listOf(
-                                                        Task(
-                                                            title = task.subTask[0].title,
-                                                            isCompleted = it
-                                                        ),
-                                                    ),
-                                                )
-                                            )
-                                        }, onLongClick = {
-                                            singleDeleteTask = task
-                                            showDialogDelete = true
-                                        },
-                                        isCompleted = true
-                                    )
-                                }
-
-
+                            },
+                            endToStart = {
+                                singleDeleteTask = task
+                                showDialogDelete = true
                             }
+                        ) {
+                            FastTaskItemCard(
+                                taskItem = task,
+                                onIsCompletedClick = {
+                                    taskViewModel.upsertTask(
+                                        TaskItem(
+                                            id = task.id, title = task.title,
+                                            type = TaskItemType.FAST.name,
+                                            subTask = listOf(
+                                                Task(
+                                                    title = task.subTask[0].title,
+                                                    isCompleted = it
+                                                ),
+                                            ),
+                                        )
+                                    )
+                                }, onLongClick = {
+                                    singleDeleteTask = task
+                                    showDialogDelete = true
+                                },
+                                isCompleted = true
+                            )
                         }
-
                     }
                 }
                 items(completedTasks, key = { task -> task.id }) { taskItem ->
@@ -559,86 +369,25 @@ fun TaskScreen(
                         enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
                         exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
                     ) {
-                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                            val swipeToDismiss = rememberSwipeToDismissBoxState(
-                                confirmValueChange = { swip ->
-                                    when (swip) {
-                                        SwipeToDismissBoxValue.StartToEnd -> {
-                                            navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}")
-                                        }
-
-                                        SwipeToDismissBoxValue.EndToStart -> {
-                                            singleDeleteTask = taskItem
-                                            showDialogDelete = true
-                                        }
-
-                                        SwipeToDismissBoxValue.Settled -> {
-                                        }
-                                    }
-                                    return@rememberSwipeToDismissBoxState false
+                        SwipeToDismissBoxLayout(
+                            enableDismissFromEndToStart = true,
+                            enableDismissFromStartToEnd = true,
+                            startToEnd = {
+                                navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}")
+                            },
+                            endToStart = {
+                                singleDeleteTask = taskItem
+                                showDialogDelete = true
+                            }
+                        ){
+                            TaskItemCard(
+                                item = taskItem,
+                                onClick = { navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}") },
+                                onLogClick = {
+                                    singleDeleteTask = taskItem
+                                    showDialogDelete = true
                                 }
                             )
-                            SwipeToDismissBox(
-                                enableDismissFromEndToStart = true,
-                                enableDismissFromStartToEnd = true,
-                                state = swipeToDismiss,
-                                backgroundContent = {
-                                    when (swipeToDismiss.dismissDirection) {
-                                        SwipeToDismissBoxValue.StartToEnd -> {
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .padding(5.dp)
-                                                    .clip(RoundedCornerShape(11.dp))
-                                                    .background(MaterialTheme.colorScheme.onPrimary),
-                                                contentAlignment = Alignment.CenterStart
-                                            )
-                                            {
-                                                Icon(
-                                                    Icons.Rounded.EditNote,
-                                                    contentDescription = "",
-                                                    tint = Color.White,
-                                                    modifier = Modifier.size(50.dp)
-                                                )
-
-                                            }
-                                        }
-
-                                        SwipeToDismissBoxValue.EndToStart -> {
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .padding(5.dp)
-                                                    .clip(RoundedCornerShape(11.dp))
-                                                    .background(MaterialTheme.colorScheme.error),
-                                                contentAlignment = Alignment.CenterEnd
-                                            )
-                                            {
-                                                Icon(
-                                                    Icons.Rounded.DeleteSweep,
-                                                    contentDescription = "",
-                                                    tint = Color.White,
-                                                    modifier = Modifier.size(50.dp)
-                                                )
-                                            }
-                                        }
-
-                                        SwipeToDismissBoxValue.Settled -> {}
-                                    }
-
-                                }
-                            ) {
-                                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                                    TaskItemCard(
-                                        item = taskItem,
-                                        onClick = { navHostController.navigate(Screen.AddTaskScreen.route + "?id=${taskItem.id}") },
-                                        onLogClick = {
-                                            singleDeleteTask = taskItem
-                                            showDialogDelete = true
-                                        }
-                                    )
-                                }
-                            }
                         }
                     }
                 }

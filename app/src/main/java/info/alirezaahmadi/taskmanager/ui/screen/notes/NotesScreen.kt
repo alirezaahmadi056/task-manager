@@ -64,6 +64,7 @@ import info.alirezaahmadi.taskmanager.ui.component.EmptyList
 import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.PageType
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
+import info.alirezaahmadi.taskmanager.ui.component.SwipeToDismissBoxLayout
 import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.FastNoteSection
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
@@ -80,18 +81,19 @@ fun NotesScreen(
     var notesItem by remember { mutableStateOf<List<NotesItem>>(emptyList()) }
     var sortOrder by remember { mutableIntStateOf(Constants.SORT_NOTE) }
 
-    val sortedNotesItem = when (sortOrder) {
-        1 -> notesItem.sortedBy { it.taskColor } // اولویت کم
-        2 -> notesItem.sortedByDescending { it.taskColor == 2 } // اولویت معمولی
-        3 -> notesItem.sortedByDescending { it.taskColor } // اولویت زیاد
-        else -> notesItem.reversed() //  حالت پیش ‌فرض بر اساس اخرین یادداشت
+    val sortedNotesItem = remember(key1 =sortOrder, key2 =notesItem) {
+        when (sortOrder) {
+            1 -> notesItem.sortedBy { it.taskColor } // اولویت کم
+            2 -> notesItem.sortedByDescending { it.taskColor == 2 } // اولویت معمولی
+            3 -> notesItem.sortedByDescending { it.taskColor } // اولویت زیاد
+            else -> notesItem.reversed() //  حالت پیش ‌فرض بر اساس اخرین یادداشت
+        }
     }
-    SelectedSortNotList(
-        pageType = PageType.NOTE, noteSort = { selectedSort ->
+    SelectedSortNotList(pageType = PageType.NOTE, noteSort = { selectedSort ->
             sortOrder = selectedSort
         }, {}, {})
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = Unit) {
         notesViewModel.allNotesItem.collectLatest {
             notesItem = it
         }
@@ -108,7 +110,6 @@ fun NotesScreen(
         mutableStateOf(false)
     }
     val snackBarHostState = remember { SnackbarHostState() }
-
     val lazyStateStagger = rememberLazyStaggeredGridState()
     val lazyListState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -196,109 +197,27 @@ fun NotesScreen(
                     verticalItemSpacing = 8.dp
                 ) {
                     items(sortedNotesItem, key = { it.id }) { notesItem ->
-                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                            val swipeToDismiss = rememberSwipeToDismissBoxState(
-                                confirmValueChange = { swip ->
-                                    when (swip) {
-                                        SwipeToDismissBoxValue.StartToEnd -> {
-                                            if (!hasNavigated) {
-                                                hasNavigated = true
-                                                navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
-                                            }
-                                        }
-
-                                        SwipeToDismissBoxValue.EndToStart -> {
-                                            singleDeleteNotes = notesItem
-                                            showDialogDelete = true
-                                        }
-
-                                        SwipeToDismissBoxValue.Settled -> {
-                                        }
-                                    }
-                                    return@rememberSwipeToDismissBoxState false
+                        SwipeToDismissBoxLayout(
+                            enableDismissFromEndToStart = true,
+                            enableDismissFromStartToEnd = true,
+                            startToEnd = {
+                                if (!hasNavigated) {
+                                    hasNavigated = true
+                                    navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
                                 }
-                            )
-                            SwipeToDismissBox(
-                                enableDismissFromEndToStart = true,
-                                enableDismissFromStartToEnd = true,
-                                state = swipeToDismiss,
-                                backgroundContent = {
-                                    when (swipeToDismiss.dismissDirection) {
-                                        SwipeToDismissBoxValue.StartToEnd -> {
-
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .padding(5.dp)
-                                                    .clip(RoundedCornerShape(11.dp)),
-                                                contentAlignment = Alignment.CenterStart
-                                            )
-                                            {
-                                                Box(
-                                                    Modifier
-                                                        .clip(CircleShape)
-                                                        .background(Color(0xFF4CAF50)),
-                                                    contentAlignment = Alignment.Center
-                                                ) {
-                                                    Icon(
-                                                        Icons.Rounded.EditNote,
-                                                        contentDescription = "",
-                                                        tint = Color.White,
-                                                        modifier = Modifier
-                                                            .padding(8.dp)
-                                                            .size(50.dp)
-                                                    )
-                                                }
-
-
-                                            }
-                                        }
-
-                                        SwipeToDismissBoxValue.EndToStart -> {
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .padding(5.dp)
-                                                    .clip(RoundedCornerShape(11.dp)),
-                                                contentAlignment = Alignment.CenterEnd
-                                            )
-                                            {
-                                                Box(
-                                                    Modifier
-                                                        .clip(CircleShape)
-                                                        .background(Color.Red),
-                                                    contentAlignment = Alignment.Center
-                                                ) {
-                                                    Icon(
-                                                        Icons.Rounded.DeleteSweep,
-                                                        contentDescription = "",
-                                                        tint = Color.White,
-                                                        modifier = Modifier
-                                                            .padding(8.dp)
-                                                            .size(50.dp)
-                                                    )
-                                                }
-
-
-                                            }
-                                        }
-
-                                        SwipeToDismissBoxValue.Settled -> {}
-                                    }
-
-                                }
-                            ) {
-                                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                                    NotesItemCard(item = notesItem, onLogClick = {
-                                        singleDeleteNotes = notesItem
-                                        showDialogDelete = true
-                                    }, onClick = {
-                                        navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
-                                    })
-                                }
+                            },
+                            endToStart = {
+                                singleDeleteNotes = notesItem
+                                showDialogDelete = true
                             }
+                        ) {
+                            NotesItemCard(item = notesItem, onLogClick = {
+                                singleDeleteNotes = notesItem
+                                showDialogDelete = true
+                            }, onClick = {
+                                navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
+                            })
                         }
-
                     }
                 }
             } else {
@@ -320,93 +239,30 @@ fun NotesScreen(
                         .fillMaxSize()
                         .padding(it)
                 ) {
-                    items(sortedNotesItem) { notesItem ->
-                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                            val swipeToDismiss = rememberSwipeToDismissBoxState(
-                                confirmValueChange = { swip ->
-                                    when (swip) {
-                                        SwipeToDismissBoxValue.StartToEnd -> {
-                                            if (!hasNavigated) {
-                                                hasNavigated = true
-                                                navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
-                                            }
-                                        }
-
-                                        SwipeToDismissBoxValue.EndToStart -> {
-                                            singleDeleteNotes = notesItem
-                                            showDialogDelete = true
-                                        }
-
-                                        SwipeToDismissBoxValue.Settled -> {
-                                        }
-                                    }
-                                    return@rememberSwipeToDismissBoxState false
+                    items(items = sortedNotesItem, key = {it.id}) { notesItem ->
+                        SwipeToDismissBoxLayout(
+                            enableDismissFromEndToStart = true,
+                            enableDismissFromStartToEnd = true,
+                            startToEnd = {
+                                if (!hasNavigated) {
+                                    hasNavigated = true
+                                    navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}")
+                                }
+                            },
+                            endToStart = {
+                                singleDeleteNotes = notesItem
+                                showDialogDelete = true
+                            }
+                        ) {
+                            NotesListItem(
+                                item = notesItem,
+                                onClick = { navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}") },
+                                onLogClick = {
+                                    singleDeleteNotes = notesItem
+                                    showDialogDelete = true
                                 }
                             )
-                            SwipeToDismissBox(
-                                enableDismissFromEndToStart = true,
-                                enableDismissFromStartToEnd = true,
-                                state = swipeToDismiss,
-                                backgroundContent = {
-                                    when (swipeToDismiss.dismissDirection) {
-                                        SwipeToDismissBoxValue.StartToEnd -> {
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .padding(5.dp)
-                                                    .clip(RoundedCornerShape(11.dp))
-                                                    .background(Color(0xFF4CAF50)),
-                                                contentAlignment = Alignment.CenterStart
-                                            )
-                                            {
-                                                Icon(
-                                                    Icons.Rounded.EditNote,
-                                                    contentDescription = "",
-                                                    tint = Color.White,
-                                                    modifier = Modifier.size(50.dp)
-                                                )
-
-                                            }
-                                        }
-
-                                        SwipeToDismissBoxValue.EndToStart -> {
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .padding(5.dp)
-                                                    .clip(RoundedCornerShape(11.dp))
-                                                    .background(Color.Red),
-                                                contentAlignment = Alignment.CenterEnd
-                                            )
-                                            {
-                                                Icon(
-                                                    Icons.Rounded.DeleteSweep,
-                                                    contentDescription = "",
-                                                    tint = Color.White,
-                                                    modifier = Modifier.size(50.dp)
-                                                )
-
-                                            }
-                                        }
-
-                                        SwipeToDismissBoxValue.Settled -> {}
-                                    }
-
-                                }
-                            ) {
-                                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                                    NotesListItem(
-                                        item = notesItem,
-                                        onClick = { navHostController.navigate(Screen.AddNotesScreen.route + "?id=${notesItem.id}") },
-                                        onLogClick = {
-                                            singleDeleteNotes = notesItem
-                                            showDialogDelete = true
-                                        }
-                                    )
-                                }
-                            }
                         }
-
                     }
                 }
             } else {

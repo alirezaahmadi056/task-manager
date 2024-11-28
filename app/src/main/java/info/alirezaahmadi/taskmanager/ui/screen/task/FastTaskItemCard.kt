@@ -14,7 +14,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,7 +32,6 @@ fun FastTaskItemCard(
     onLongClick: () -> Unit,
     isCompleted: Boolean = false
 ) {
-
     val textDecoration = if (isCompleted) TextDecoration.LineThrough else TextDecoration.None
     Card(
         elevation = CardDefaults.cardElevation(1.dp),
