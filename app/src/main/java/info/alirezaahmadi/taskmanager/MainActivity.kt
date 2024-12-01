@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -47,13 +48,13 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun TskApp(navHostController: NavHostController) {
-
         var darkThem by rememberSaveable { mutableStateOf(Constants.isThemDark) }
         TaskManagerTheme(darkThem) {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                 NavGraph(
                     modifier = Modifier
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .safeDrawingPadding(),
                     navHostController = navHostController,
                     darkThem = { darkThem = it }
                 )

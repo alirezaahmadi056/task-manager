@@ -8,9 +8,11 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -80,8 +82,7 @@ fun TopBar(
     openDrawer: () -> Unit,
     pagerState: PagerState,
 ) {
-
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
@@ -94,23 +95,27 @@ fun TopBar(
                 )
             }
             .padding(vertical = 12.dp),
-        horizontalArrangement = Arrangement.Absolute.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
+            modifier = Modifier.align(Alignment.CenterEnd),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = {
-                navHostController.navigate(Screen.SearchScreen.route)
-            }) {
-                Icon(
-                    imageVector = Icons.Rounded.Search,
-                    contentDescription = "",
-                    Modifier.size(25.dp),
-                    tint = MaterialTheme.colorScheme.scrim
-                )
+            AnimatedVisibility(
+                visible = pagerState.currentPage != 2,
+            ) {
+                IconButton(onClick = {
+                    navHostController.navigate(Screen.SearchScreen.route)
+                }) {
+                    Icon(
+                        imageVector = Icons.Rounded.Search,
+                        contentDescription = "",
+                        Modifier.size(25.dp),
+                        tint = MaterialTheme.colorScheme.scrim
+                    )
+                }
             }
+
             var expand by remember {
                 mutableStateOf(false)
             }
@@ -185,7 +190,9 @@ fun TopBar(
         }
 
         Text(
-            modifier = Modifier.padding(start = 30.dp),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(start = 30.dp),
             text = when (pagerState.currentPage) {
                 0 -> "یادداشت های من"
                 1 -> "وظایف من"
@@ -195,7 +202,10 @@ fun TopBar(
             color = MaterialTheme.colorScheme.scrim
         )
 
-        IconButton(onClick = { openDrawer() }) {
+        IconButton(
+            modifier = Modifier.align(Alignment.CenterStart),
+            onClick = openDrawer
+        ) {
             Icon(
                 Icons.Rounded.Menu,
                 contentDescription = ""
