@@ -36,7 +36,7 @@ class AlarmReceiver : BroadcastReceiver() {
             }
 
             Constants.ACTION_TASK_RECEIVER -> {
-                val taskId = intent.getIntExtra("TASK_ID", 0) ?: 0
+                val taskId = intent.getIntExtra("TASK_ID", 0)
                 val taskTitle = intent.getStringExtra("TASK_TITLE") ?: ""
                 context?.let { ctx ->
                     createFullNotification(
@@ -59,13 +59,18 @@ fun createFullNotification(
     id: Int,
     notificationAction: String,
 ) {
-    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return
+    if (ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) != PackageManager.PERMISSION_GRANTED
+    ) return
 
-    Log.i("1212", notificationAction)
+
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val calendar = Calendar.getInstance().apply {
         add(Calendar.WEEK_OF_YEAR, 1)
     }
+    val nextAlarmId = (id * 3) + Random.nextInt(1, 10)
 
     val intent = Intent(context, MainActivity::class.java).apply {
         action = notificationAction
@@ -79,6 +84,12 @@ fun createFullNotification(
      customView.setTextViewText(R.id.notification_title, text)
      customView.setTextViewText(R.id.notification_message, title)*/
 
+    val pendingIntent = PendingIntent.getBroadcast(
+        context,
+        nextAlarmId.toInt(),
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
 
     val notificationBuilder = NotificationCompat.Builder(context, Constants.CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_app)
@@ -91,22 +102,15 @@ fun createFullNotification(
 
 
     with(NotificationManagerCompat.from(context)) {
-
-        notify(Random.nextInt(), notificationBuilder.build())
-        if (notificationAction == Constants.ACTION_ROUTINE_RECEIVER) {
-            val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                id,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                pendingIntent,
-            )
-        }
+        notify(id, notificationBuilder.build())
     }
+    if (notificationAction == Constants.ACTION_ROUTINE_RECEIVER) {
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            pendingIntent
+        )
+    }
+
 }
 
