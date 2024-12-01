@@ -1,7 +1,6 @@
 package info.alirezaahmadi.taskmanager.ui.screen
 
 import android.app.Activity
-import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -16,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import info.alirezaahmadi.taskmanager.MainDrawer
+import info.alirezaahmadi.taskmanager.ui.component.MainDrawer
 import info.alirezaahmadi.taskmanager.navigation.BottomNavigation
 import info.alirezaahmadi.taskmanager.topBarMain.DrawerContent
 import info.alirezaahmadi.taskmanager.topBarMain.TopBar

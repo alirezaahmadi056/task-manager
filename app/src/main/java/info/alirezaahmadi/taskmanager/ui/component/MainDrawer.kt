@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager
+package info.alirezaahmadi.taskmanager.ui.component
 
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ModalNavigationDrawer
