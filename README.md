@@ -49,7 +49,7 @@ Hi! Task Manager is a modern app designed for managing your tasks and routines e
   <tr>
     <td><img src="assest/Add Note Screen.jpg" width=240/></td> 
     <td><img src="assest/Add Routine.jpg" width=240/></td>
-    <td><img src="assest/Add TaskScreen.jpg" width=240/></td>
+    <td><img src="assest/AddTaskScreen d.jpg" width=240/></td>
   </tr>
 </table>
 
@@ -63,7 +63,7 @@ Hi! Task Manager is a modern app designed for managing your tasks and routines e
   <tr>
     <td><img src="assest/Note Screen d.jpg" width=240/></td> 
     <td><img src="assest/Routine Screen d.jpg" width=240/></td>
-    <td><img src="assest/Task Screen d.jpg" width=240/></td>
+    <td><img src="assest/Task Screen d .jpg" width=240/></td>
   </tr>
   <tr>
     <th>Add Note Screen (Dark)</th>
@@ -71,7 +71,7 @@ Hi! Task Manager is a modern app designed for managing your tasks and routines e
     <th>Add Task Screen (Dark)</th> 
   </tr>
   <tr>
-    <td><img src="assest/Add Note Screen d.jpg" width=240/></td> 
+    <td><img src="assest/Add Note Screen d .jpg" width=240/></td> 
     <td><img src="assest/Add Routine d.jpg" width=240/></td>
     <td><img src="assest/AddTaskScreen d.jpg" width=240/></td>
   </tr>
