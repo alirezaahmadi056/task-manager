@@ -1,12 +1,20 @@
 package info.alirezaahmadi.taskmanager.navigation
 
-sealed class Screen(val route: String) {
+import kotlinx.serialization.Serializable
 
-    data object NotesScreen : Screen("motes_Screen")
-    data object TaskScreen : Screen("task_Screen")
-    data object AddNotesScreen : Screen("AddNotesScreen")
-    data object AddTaskScreen : Screen("AddTaskScreen")
-    data object AboutMeScreen : Screen("AboutMeScreen")
-    data object SearchScreen :Screen("SearchScreen")
-    data object MainScreen:Screen("MainScreen")
+sealed interface Screen {
+    @Serializable
+    data object NotesScreen : Screen
+    @Serializable
+    data object TaskScreen : Screen
+    @Serializable
+    data class AddNotesScreen(val id:Int?) : Screen
+    @Serializable
+    data class AddTaskScreen(val id:Int?=null,val lastId:Int?=null) : Screen
+    @Serializable
+    data object AboutMeScreen : Screen
+    @Serializable
+    data object SearchScreen : Screen
+    @Serializable
+    data object MainScreen : Screen
 }

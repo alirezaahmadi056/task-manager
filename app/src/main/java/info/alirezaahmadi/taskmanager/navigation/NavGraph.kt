@@ -10,13 +10,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import info.alirezaahmadi.taskmanager.ui.screen.MainScreen
-import info.alirezaahmadi.taskmanager.ui.screen.SearchScreen
-import info.alirezaahmadi.taskmanager.ui.screen.about.AboutMeScreen
-import info.alirezaahmadi.taskmanager.ui.screen.notes.NotesScreen
-import info.alirezaahmadi.taskmanager.ui.screen.notes.addNotes.AddNotesScreen
-import info.alirezaahmadi.taskmanager.ui.screen.task.TaskScreen
-import info.alirezaahmadi.taskmanager.ui.screen.task.addTask.AddTaskScreen
+import androidx.navigation.toRoute
+import info.alirezaahmadi.taskmanager.ui.graph.MainScreen
+import info.alirezaahmadi.taskmanager.ui.graph.SearchScreen
+import info.alirezaahmadi.taskmanager.ui.graph.about.AboutMeScreen
+import info.alirezaahmadi.taskmanager.ui.graph.notes.NotesScreen
+import info.alirezaahmadi.taskmanager.ui.graph.notes.addNotes.AddNotesScreen
+import info.alirezaahmadi.taskmanager.ui.graph.task.TaskScreen
+import info.alirezaahmadi.taskmanager.ui.graph.task.addTask.AddTaskScreen
 
 @Composable
 fun NavGraph(
@@ -28,25 +29,18 @@ fun NavGraph(
     NavHost(
         modifier = modifier,
         navController = navHostController,
-        startDestination = Screen.MainScreen.route,
+        startDestination = Screen.MainScreen,
     ) {
-
-        composable(Screen.MainScreen.route) {
+        composable<Screen.MainScreen> {
             MainScreen(navHostController = navHostController, darkTheme = darkThem)
         }
-        composable(Screen.NotesScreen.route) {
+        composable<Screen.NotesScreen> {
             NotesScreen(navHostController)
         }
-        composable(Screen.TaskScreen.route) {
+        composable<Screen.TaskScreen> {
             TaskScreen(navHostController)
         }
-        composable(Screen.AddNotesScreen.route + "?id={id}",
-            arguments = listOf(
-                navArgument("id") {
-                    type = NavType.IntType
-                    defaultValue = 0
-                },
-            ),
+        composable<Screen.AddNotesScreen>(
             enterTransition = {
                 slideInVertically(
                     initialOffsetY = { fullHeight -> fullHeight },
@@ -62,23 +56,14 @@ fun NavGraph(
             },
             popExitTransition = { fadeOut(animationSpec = tween(700)) }
         ) {
+            val args =it.toRoute<Screen.AddNotesScreen>()
             AddNotesScreen(
                 navHostController = navHostController,
-                id = it.arguments?.getInt("id") ?: 0,
+                id = args.id ?:0
             )
         }
 
-        composable(Screen.AddTaskScreen.route + "?id={id}&lastId={lastId}",
-            arguments = listOf(
-                navArgument("id") {
-                    type = NavType.IntType
-                    defaultValue = 0
-                },
-                navArgument("lastId") {
-                    type = NavType.IntType
-                    defaultValue = 0
-                }
-            ),
+        composable<Screen.AddTaskScreen>(
             enterTransition = {
                 slideInVertically(
                     initialOffsetY = { fullHeight -> fullHeight },
@@ -94,16 +79,17 @@ fun NavGraph(
             },
             popExitTransition = { fadeOut(animationSpec = tween(700)) }
         ) {
+            val args =it.toRoute<Screen.AddTaskScreen>()
             AddTaskScreen(
                 navHostController = navHostController,
-                id = it.arguments?.getInt("id") ?: 0,
-                lastId = it.arguments?.getInt("lastId") ?: 10
+                id = args.id?:0,
+                lastId = args.lastId?: 10
             )
         }
-        composable(Screen.AboutMeScreen.route) {
+        composable<Screen.AboutMeScreen> {
             AboutMeScreen(navHostController)
         }
-        composable(Screen.SearchScreen.route) {
+        composable<Screen.SearchScreen> {
             SearchScreen(navHostController)
         }
     }

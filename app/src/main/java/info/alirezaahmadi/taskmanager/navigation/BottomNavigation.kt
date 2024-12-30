@@ -1,11 +1,8 @@
 package info.alirezaahmadi.taskmanager.navigation
 
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LineStyle
@@ -22,20 +19,14 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 private data class NavItem(
-    val route: String,
     val selectedIcon: ImageVector,
     val unSelectedIcon: ImageVector,
     val text: String,
@@ -49,19 +40,16 @@ fun BottomNavigation(
 
     val item = listOf(
         NavItem(
-            route = Screen.NotesScreen.route,
             selectedIcon = Icons.Rounded.NoteAlt,
             unSelectedIcon = Icons.Outlined.NoteAlt,
             text = "یادداشت",
         ),
         NavItem(
-            route = Screen.TaskScreen.route,
             selectedIcon = Icons.Rounded.Task,
             unSelectedIcon = Icons.Outlined.Task,
             text = "وظیفه",
         ),
         NavItem(
-            route = "",
             selectedIcon = Icons.Rounded.LineStyle,
             unSelectedIcon = Icons.Outlined.LineStyle,
             text = "روتین",

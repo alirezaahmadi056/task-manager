@@ -69,8 +69,8 @@ class MainActivity : ComponentActivity() {
         if (intent.action == Constants.ACTION_TASK_RECEIVER) {
             intent.extras?.let {
                 val id = it.getInt("TASK_ID", 0)
-                navHostController.navigate(Screen.AddTaskScreen.route + "?id=$id") {
-                    popUpTo(Screen.MainScreen.route) {
+                navHostController.navigate(Screen.AddTaskScreen(id=id)) {
+                    popUpTo(Screen.MainScreen) {
                         inclusive = false
                         saveState = true
                     }

@@ -65,14 +65,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.showSelectedSortNotList
-import info.alirezaahmadi.taskmanager.ui.screen.notes.showDialogSelectedGridList
+import info.alirezaahmadi.taskmanager.ui.graph.notes.showDialogSelectedGridList
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.viewModel.DatStoreViewModel
 
@@ -105,7 +104,7 @@ fun TopBar(
                 visible = pagerState.currentPage != 2,
             ) {
                 IconButton(onClick = {
-                    navHostController.navigate(Screen.SearchScreen.route)
+                    navHostController.navigate(Screen.SearchScreen)
                 }) {
                     Icon(
                         imageVector = Icons.Rounded.Search,
@@ -271,7 +270,7 @@ fun DrawerContent(
         DrawerItem(text = "درباره من", icon = Icons.Outlined.Person,
             onClick = {
                 if (isOnline(context)) {
-                    navHostController.navigate(Screen.AboutMeScreen.route)
+                    navHostController.navigate(Screen.AboutMeScreen)
                 } else {
                     showAlertNoInternet = true
                 }
@@ -436,7 +435,7 @@ private fun NoInterNet(
                     onClick = {
                         if (isOnline(context)) {
                             onFinish()
-                            navHostController.navigate(Screen.AboutMeScreen.route)
+                            navHostController.navigate(Screen.AboutMeScreen)
                         } else {
                             Toast.makeText(context, "عدم اتصال به اینترنت", Toast.LENGTH_SHORT)
                                 .show()
