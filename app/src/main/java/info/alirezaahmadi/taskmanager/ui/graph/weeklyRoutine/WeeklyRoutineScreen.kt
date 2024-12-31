@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.routineWeekly
+package info.alirezaahmadi.taskmanager.ui.graph.weeklyRoutine
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding

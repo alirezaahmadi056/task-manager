@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.routineWeekly
+package info.alirezaahmadi.taskmanager.ui.graph.weeklyRoutine
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
