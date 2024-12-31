@@ -1,12 +1,12 @@
 package info.alirezaahmadi.taskmanager.repository
 
-import info.alirezaahmadi.taskmanager.data.db.routine.RoutineDao
+import info.alirezaahmadi.taskmanager.data.db.routine.WeeklyRoutineDao
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class RoutineRepository @Inject constructor(
-    private val dao: RoutineDao
+class WeeklyRoutineRepository @Inject constructor(
+    private val dao: WeeklyRoutineDao
 ) {
 
     suspend fun upsertRoutine(item: RoutineItem) {

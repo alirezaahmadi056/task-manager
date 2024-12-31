@@ -14,9 +14,9 @@ sealed interface Screen {
 
     //routine
     @Serializable
-    data object RoutineGraph:Screen
+    data object WeeklyRoutineGraph:Screen
     @Serializable
-    data object RoutineScreen:Screen
+    data object WeeklyRoutineScreen:Screen
 
     //duties
     @Serializable

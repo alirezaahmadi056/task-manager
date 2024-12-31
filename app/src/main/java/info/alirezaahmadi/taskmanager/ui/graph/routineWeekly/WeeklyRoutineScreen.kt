@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.routine
+package info.alirezaahmadi.taskmanager.ui.graph.routineWeekly
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -43,14 +43,14 @@ import info.alirezaahmadi.taskmanager.ui.component.SwipeToDismissBoxLayout
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.util.Constants.persianDayOfWeek
 import info.alirezaahmadi.taskmanager.viewModel.AlarmViewModel
-import info.alirezaahmadi.taskmanager.viewModel.RoutineViewModel
+import info.alirezaahmadi.taskmanager.viewModel.WeeklyRoutineViewModel
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
 @Composable
-fun RoutineScreen(
+fun WeeklyRoutineScreen(
     navHostController: NavHostController,
-    routineViewModel: RoutineViewModel = hiltViewModel(),
+    weeklyRoutineViewModel: WeeklyRoutineViewModel = hiltViewModel(),
     alarmViewModel: AlarmViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
@@ -65,7 +65,7 @@ fun RoutineScreen(
     }
 
 
-    val allRoutine by routineViewModel.getAllRoutine().collectAsState(emptyList())
+    val allRoutine by weeklyRoutineViewModel.getAllRoutine().collectAsState(emptyList())
     var singleRoutine by remember { mutableStateOf<RoutineItem?>(null) }
     var showSheetAddRoutine by remember { mutableStateOf(false) }
     val snackBarHostState = remember { SnackbarHostState() }
@@ -99,7 +99,7 @@ fun RoutineScreen(
         onBack = { showDialogDelete = false },
         onDeleteItem = {
             singleRoutine?.let { routine ->
-                routineViewModel.deletedById(routine.id)
+                weeklyRoutineViewModel.deletedById(routine.id)
                 alarmViewModel.cancelWeeklyAlarms(
                     context = context,
                     routineItem = routine
@@ -125,7 +125,7 @@ fun RoutineScreen(
         routineItem = singleRoutine,
         days = dayWeek,
         lastId = getOldId(allRoutine),
-        routineViewModel = routineViewModel,
+        routineViewModel = weeklyRoutineViewModel,
         alarmViewModel = alarmViewModel
     )
     Scaffold(

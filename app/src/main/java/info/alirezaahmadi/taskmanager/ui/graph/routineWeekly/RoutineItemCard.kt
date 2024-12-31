@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.routine
+package info.alirezaahmadi.taskmanager.ui.graph.routineWeekly
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi

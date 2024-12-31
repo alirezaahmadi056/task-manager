@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
-import info.alirezaahmadi.taskmanager.repository.RoutineRepository
+import info.alirezaahmadi.taskmanager.repository.WeeklyRoutineRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RoutineViewModel @Inject constructor(
-    private val repository: RoutineRepository
+class WeeklyRoutineViewModel @Inject constructor(
+    private val repository: WeeklyRoutineRepository
 ) : ViewModel() {
 
     fun upsertRoutine(item: RoutineItem) {

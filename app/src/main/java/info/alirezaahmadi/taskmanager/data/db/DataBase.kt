@@ -7,7 +7,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesDao
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
-import info.alirezaahmadi.taskmanager.data.db.routine.RoutineDao
+import info.alirezaahmadi.taskmanager.data.db.routine.WeeklyRoutineDao
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
 import info.alirezaahmadi.taskmanager.data.db.task.TaskDao
 import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
@@ -22,7 +22,7 @@ abstract class DataBase : RoomDatabase() {
 
     abstract fun NotesDao(): NotesDao
     abstract fun TaskDao(): TaskDao
-    abstract fun RoutineDao(): RoutineDao
+    abstract fun RoutineDao(): WeeklyRoutineDao
 
 
     companion object {

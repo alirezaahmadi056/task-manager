@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.routine
+package info.alirezaahmadi.taskmanager.ui.graph.routineWeekly
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke

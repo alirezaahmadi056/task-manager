@@ -11,7 +11,7 @@ import info.alirezaahmadi.taskmanager.data.db.DataBase
 import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_1_2
 import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_2_3
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesDao
-import info.alirezaahmadi.taskmanager.data.db.routine.RoutineDao
+import info.alirezaahmadi.taskmanager.data.db.routine.WeeklyRoutineDao
 import info.alirezaahmadi.taskmanager.data.db.task.TaskDao
 import javax.inject.Singleton
 
@@ -40,7 +40,7 @@ object ModuleDataBse {
 
     @Provides
     @Singleton
-    fun provideRoutineDao(dataBase: DataBase): RoutineDao = dataBase.RoutineDao()
+    fun provideRoutineDao(dataBase: DataBase): WeeklyRoutineDao = dataBase.RoutineDao()
 
 
 }

@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.routine
+package info.alirezaahmadi.taskmanager.ui.graph.routineWeekly
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -59,7 +59,7 @@ import info.alirezaahmadi.taskmanager.ui.component.CustomDataPickerDialog
 import info.alirezaahmadi.taskmanager.ui.component.SetAlarmRoutine
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 import info.alirezaahmadi.taskmanager.viewModel.AlarmViewModel
-import info.alirezaahmadi.taskmanager.viewModel.RoutineViewModel
+import info.alirezaahmadi.taskmanager.viewModel.WeeklyRoutineViewModel
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -67,7 +67,7 @@ import java.util.Locale
 fun SheetAddRoutine(
     show: Boolean,
     routineItem: RoutineItem?,
-    routineViewModel: RoutineViewModel,
+    routineViewModel: WeeklyRoutineViewModel,
     days: List<String>,
     lastId: Int,
     onDismissRequest: () -> Unit,
