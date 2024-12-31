@@ -23,39 +23,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import info.alirezaahmadi.taskmanager.data.model.NavItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-private data class NavItem(
-    val selectedIcon: ImageVector,
-    val unSelectedIcon: ImageVector,
-    val text: String,
-)
+
 
 @Composable
 fun BottomNavigation(
     pagerState: PagerState,
     coroutineScope: CoroutineScope,
+    navItem:List<NavItem>
 ) {
 
-    val item = listOf(
-        NavItem(
-            selectedIcon = Icons.Rounded.NoteAlt,
-            unSelectedIcon = Icons.Outlined.NoteAlt,
-            text = "یادداشت",
-        ),
-        NavItem(
-            selectedIcon = Icons.Rounded.Task,
-            unSelectedIcon = Icons.Outlined.Task,
-            text = "وظیفه",
-        ),
-        NavItem(
-            selectedIcon = Icons.Rounded.LineStyle,
-            unSelectedIcon = Icons.Outlined.LineStyle,
-            text = "روتین",
-        ),
-
-        )
     Column {
         HorizontalDivider(
             thickness = 1.dp,
@@ -66,7 +46,7 @@ fun BottomNavigation(
                 .fillMaxWidth(),
           containerColor = MaterialTheme.colorScheme.background
         ) {
-            item.forEachIndexed { index, navItem ->
+            navItem.forEachIndexed { index, navItem ->
                 val selected = pagerState.currentPage == index
                 NavigationBarItem(selected = selected,
                     onClick = {

@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.notes.addNotes
+package info.alirezaahmadi.taskmanager.ui.graph.duties.task.addTask
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,15 +22,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
+import info.alirezaahmadi.taskmanager.data.db.task.Task
+import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
+import info.alirezaahmadi.taskmanager.data.db.task.TaskItemType
 import info.alirezaahmadi.taskmanager.ui.theme.LightGray
-import info.alirezaahmadi.taskmanager.util.PersianDate
-import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
+import info.alirezaahmadi.taskmanager.viewModel.TaskViewModel
 
 @Composable
-fun FastNoteSection(notesViewModel: NotesViewModel) {
+fun FastNoteSection(taskViewModel: TaskViewModel, id: Int) {
     val focusManager = LocalFocusManager.current
-    val dates = PersianDate()
+
     var body by remember { mutableStateOf("") }
 
     val textFieldColor = TextFieldDefaults.colors(
@@ -48,7 +49,7 @@ fun FastNoteSection(notesViewModel: NotesViewModel) {
         placeholder = {
             Text(
                 modifier = Modifier.padding(horizontal = 4.dp),
-                text = "نوشتن یادداشت سریع",
+                text = "نوشتن وظیفه سریع",
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.scrim.copy(0.7f),
                 style = MaterialTheme.typography.labelMedium
@@ -64,13 +65,17 @@ fun FastNoteSection(notesViewModel: NotesViewModel) {
                     contentColor = MaterialTheme.colorScheme.primary
                 ),
                 onClick = {
-                    notesViewModel.upsertNotesItem(
-                        NotesItem(
-                            body = body,
-                            title = "یادداشت مهم!",
+                    taskViewModel.upsertTask(
+                        TaskItem(
+                            id = id + 1,
+                            type = TaskItemType.FAST.name,
+                            subTask = listOf(
+                                Task(
+                                    title = body,
+                                    isCompleted = false
+                                )
+                            ),
                             taskColor = 3,
-                            createTime = "${dates.hour}:${dates.min}",
-                            createDate = "${dates.year}/${dates.month}/${dates.day}"
                         )
                     )
                     body = ""

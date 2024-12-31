@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.task
+package info.alirezaahmadi.taskmanager.ui.graph.duties.task
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -60,7 +60,7 @@ import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.PageType
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
 import info.alirezaahmadi.taskmanager.ui.component.SwipeToDismissBoxLayout
-import info.alirezaahmadi.taskmanager.ui.graph.task.addTask.FastNoteSection
+import info.alirezaahmadi.taskmanager.ui.graph.duties.task.addTask.FastNoteSection
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 import info.alirezaahmadi.taskmanager.viewModel.AlarmViewModel

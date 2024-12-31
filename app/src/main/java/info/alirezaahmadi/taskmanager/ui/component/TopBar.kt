@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TopBar(title: String, onBack: () -> Unit) {
+fun BaseTopBar(title: String, onBack: () -> Unit) {
         Row(
             Modifier
                 .drawBehind {

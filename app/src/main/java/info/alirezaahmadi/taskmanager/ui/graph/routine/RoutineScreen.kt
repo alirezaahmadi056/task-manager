@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.ui.component.EmptyList
@@ -48,6 +49,7 @@ import java.util.Calendar
 
 @Composable
 fun RoutineScreen(
+    navHostController: NavHostController,
     routineViewModel: RoutineViewModel = hiltViewModel(),
     alarmViewModel: AlarmViewModel = hiltViewModel()
 ) {
@@ -166,7 +168,8 @@ fun RoutineScreen(
         topBar = {
             TabSection(
                 allTabs = dayWeek,
-                pagerState = pagerState
+                pagerState = pagerState,
+                navHostController = navHostController
             )
         },
         modifier = Modifier.fillMaxSize(),

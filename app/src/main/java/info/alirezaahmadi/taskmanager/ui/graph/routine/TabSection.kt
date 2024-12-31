@@ -2,6 +2,7 @@ package info.alirezaahmadi.taskmanager.ui.graph.routine
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,29 +21,37 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
+import androidx.navigation.NavHostController
+import info.alirezaahmadi.taskmanager.ui.component.BaseTopBar
 import kotlinx.coroutines.launch
 
 @Composable
-fun TabSection(pagerState: PagerState, allTabs: List<String>) {
+fun TabSection(pagerState: PagerState, allTabs: List<String>,navHostController: NavHostController) {
     val scope = rememberCoroutineScope()
-    ScrollableTabRow(
-        selectedTabIndex = pagerState.currentPage,
+    Column(
         modifier = Modifier.fillMaxWidth()
-            .padding(vertical = 12.dp),
-        divider = {},
-        containerColor = MaterialTheme.colorScheme.background,
-        indicator = {},
-        edgePadding = 19.dp
     ) {
-        allTabs.fastForEachIndexed { i, s ->
-            Tabs(
-                tab = s,
-                selected = i == pagerState.currentPage
-            ) {
-                scope.launch { pagerState.animateScrollToPage(i) }
+        BaseTopBar(navHostController = navHostController, text = "روتین های من")
+        ScrollableTabRow(
+            selectedTabIndex = pagerState.currentPage,
+            modifier = Modifier.fillMaxWidth()
+                .padding(vertical = 12.dp),
+            divider = {},
+            containerColor = MaterialTheme.colorScheme.background,
+            indicator = {},
+            edgePadding = 19.dp
+        ) {
+            allTabs.fastForEachIndexed { i, s ->
+                Tabs(
+                    tab = s,
+                    selected = i == pagerState.currentPage
+                ) {
+                    scope.launch { pagerState.animateScrollToPage(i) }
+                }
             }
         }
     }
+
 }
 
 @Composable

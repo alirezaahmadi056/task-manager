@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import info.alirezaahmadi.taskmanager.ui.graph.notes.addNotes.SelectedColor
+import info.alirezaahmadi.taskmanager.ui.graph.duties.notes.addNotes.SelectedColor
 
 @Composable
 fun SectionSelectedColorRoutine(

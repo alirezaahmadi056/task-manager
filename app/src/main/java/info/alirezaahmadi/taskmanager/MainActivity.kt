@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
             intent.extras?.let {
                 val id = it.getInt("TASK_ID", 0)
                 navHostController.navigate(Screen.AddTaskScreen(id=id)) {
-                    popUpTo(Screen.MainScreen) {
+                    popUpTo(Screen.DutiesScreen) {
                         inclusive = false
                         saveState = true
                     }

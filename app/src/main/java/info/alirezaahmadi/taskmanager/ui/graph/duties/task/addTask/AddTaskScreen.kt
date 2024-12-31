@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.task.addTask
+package info.alirezaahmadi.taskmanager.ui.graph.duties.task.addTask
 
 import android.util.Log
 import android.widget.Toast
@@ -68,10 +68,10 @@ import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.SetAlarmSection
 import info.alirezaahmadi.taskmanager.ui.component.SwipeToDismissBoxLayout
-import info.alirezaahmadi.taskmanager.ui.component.TopBar
-import info.alirezaahmadi.taskmanager.ui.graph.notes.addNotes.BottomSheetSelectedColor
-import info.alirezaahmadi.taskmanager.ui.graph.notes.addNotes.SheetSaveDiscard
-import info.alirezaahmadi.taskmanager.ui.graph.notes.addNotes.showBottomSheetSelectedColor
+import info.alirezaahmadi.taskmanager.ui.component.BaseTopBar
+import info.alirezaahmadi.taskmanager.ui.graph.duties.notes.addNotes.BottomSheetSelectedColor
+import info.alirezaahmadi.taskmanager.ui.graph.duties.notes.addNotes.SheetSaveDiscard
+import info.alirezaahmadi.taskmanager.ui.graph.duties.notes.addNotes.showBottomSheetSelectedColor
 import info.alirezaahmadi.taskmanager.ui.theme.font_bold
 import info.alirezaahmadi.taskmanager.util.PersianDate
 import info.alirezaahmadi.taskmanager.util.TaskHelper
@@ -269,7 +269,7 @@ fun AddTaskScreen(
             }
         },
         topBar = {
-            TopBar(title = if (id == 0) "افزودن وظیفه گروهی" else "ویرایش وظیفه گروهی") {
+            BaseTopBar(title = if (id == 0) "افزودن وظیفه گروهی" else "ویرایش وظیفه گروهی") {
                 if (oldTaskTitle != taskTitle || oldTaskBody != taskBody || subTask.toList() != oldSubTask.toList()) {
                     showSheetDiscard = true
                 } else {

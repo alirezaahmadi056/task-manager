@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph
+package info.alirezaahmadi.taskmanager.ui.graph.duties
 
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -43,8 +43,8 @@ import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
 import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
 import info.alirezaahmadi.taskmanager.navigation.Screen
-import info.alirezaahmadi.taskmanager.ui.graph.notes.NotesListItem
-import info.alirezaahmadi.taskmanager.ui.graph.task.TaskItemCard
+import info.alirezaahmadi.taskmanager.ui.graph.duties.notes.NotesListItem
+import info.alirezaahmadi.taskmanager.ui.graph.duties.task.TaskItemCard
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
 import info.alirezaahmadi.taskmanager.viewModel.TaskViewModel
 

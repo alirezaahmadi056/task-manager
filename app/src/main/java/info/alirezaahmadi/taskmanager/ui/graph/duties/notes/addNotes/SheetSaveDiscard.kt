@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.notes.addNotes
+package info.alirezaahmadi.taskmanager.ui.graph.duties.notes.addNotes
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme

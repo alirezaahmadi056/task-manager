@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.notes.addNotes
+package info.alirezaahmadi.taskmanager.ui.graph.duties.notes.addNotes
 
 import android.content.Context
 import android.content.Intent

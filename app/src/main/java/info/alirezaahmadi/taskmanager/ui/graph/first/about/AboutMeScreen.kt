@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.about
+package info.alirezaahmadi.taskmanager.ui.graph.first.about
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

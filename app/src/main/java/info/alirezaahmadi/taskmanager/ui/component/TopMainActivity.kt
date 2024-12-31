@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.topBarMain
+package info.alirezaahmadi.taskmanager.ui.component
 
 import android.app.Activity
 import android.content.Context
@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
@@ -35,8 +34,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Stars
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -70,16 +68,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.navigation.Screen
-import info.alirezaahmadi.taskmanager.ui.component.showSelectedSortNotList
-import info.alirezaahmadi.taskmanager.ui.graph.notes.showDialogSelectedGridList
+import info.alirezaahmadi.taskmanager.topBarMain.AlertDialogSendMessage
+import info.alirezaahmadi.taskmanager.ui.graph.duties.notes.showDialogSelectedGridList
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.viewModel.DatStoreViewModel
 
 @Composable
-fun TopBar(
+fun BaseTopBar(
     navHostController: NavHostController,
-    openDrawer: () -> Unit,
-    pagerState: PagerState,
+    text: String,
+    searchIcon: (@Composable () -> Unit)? = null,
+    isNote: Boolean = false,
 ) {
     Box(
         modifier = Modifier
@@ -101,18 +100,9 @@ fun TopBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             AnimatedVisibility(
-                visible = pagerState.currentPage != 2,
+                visible = searchIcon != null,
             ) {
-                IconButton(onClick = {
-                    navHostController.navigate(Screen.SearchScreen)
-                }) {
-                    Icon(
-                        imageVector = Icons.Rounded.Search,
-                        contentDescription = "",
-                        Modifier.size(25.dp),
-                        tint = MaterialTheme.colorScheme.scrim
-                    )
-                }
+                searchIcon?.invoke()
             }
 
             var expand by remember {
@@ -156,7 +146,7 @@ fun TopBar(
                             expand = false
                         })
 
-                    if (pagerState.currentPage == 0) {
+                    if (isNote) {
                         HorizontalDivider(
                             thickness = 0.5.dp,
                             color = Color.LightGray
@@ -192,21 +182,17 @@ fun TopBar(
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(start = 30.dp),
-            text = when (pagerState.currentPage) {
-                0 -> "یادداشت های من"
-                1 -> "وظایف من"
-                else -> "روتین های من"
-            },
+            text = text,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.scrim
         )
 
         IconButton(
             modifier = Modifier.align(Alignment.CenterStart),
-            onClick = openDrawer
+            onClick = { navHostController.navigateUp() }
         ) {
             Icon(
-                Icons.Rounded.Menu,
+                Icons.Rounded.ArrowForward,
                 contentDescription = ""
             )
         }

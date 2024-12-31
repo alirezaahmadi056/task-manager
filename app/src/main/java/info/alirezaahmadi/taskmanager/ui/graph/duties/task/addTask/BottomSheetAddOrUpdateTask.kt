@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.task.addTask
+package info.alirezaahmadi.taskmanager.ui.graph.duties.task.addTask
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

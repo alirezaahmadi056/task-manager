@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.notes.addNotes
+package info.alirezaahmadi.taskmanager.ui.graph.duties.notes.addNotes
 
 import android.content.Intent
 import android.net.Uri
@@ -79,7 +79,7 @@ import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
 import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
-import info.alirezaahmadi.taskmanager.ui.component.TopBar
+import info.alirezaahmadi.taskmanager.ui.component.BaseTopBar
 import info.alirezaahmadi.taskmanager.util.PersianDate
 import info.alirezaahmadi.taskmanager.util.TaskHelper
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
@@ -288,7 +288,7 @@ fun AddNotesScreen(
                 })
         },
         topBar = {
-            TopBar(title = header) {
+            BaseTopBar(title = header) {
                 if (title != oldTitle || body != oldBody) {
                     showSheetDiscard = true
                 } else {

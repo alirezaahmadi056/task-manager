@@ -1,4 +1,4 @@
-package info.alirezaahmadi.taskmanager.ui.graph.notes
+package info.alirezaahmadi.taskmanager.ui.graph.duties.notes
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -50,7 +50,7 @@ import info.alirezaahmadi.taskmanager.ui.component.MySnackbarHost
 import info.alirezaahmadi.taskmanager.ui.component.PageType
 import info.alirezaahmadi.taskmanager.ui.component.SelectedSortNotList
 import info.alirezaahmadi.taskmanager.ui.component.SwipeToDismissBoxLayout
-import info.alirezaahmadi.taskmanager.ui.graph.notes.addNotes.FastNoteSection
+import info.alirezaahmadi.taskmanager.ui.graph.duties.notes.addNotes.FastNoteSection
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.viewModel.NotesViewModel
 import kotlinx.coroutines.flow.collectLatest
