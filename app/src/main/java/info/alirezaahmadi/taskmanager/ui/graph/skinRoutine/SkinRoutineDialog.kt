@@ -134,7 +134,7 @@ fun SkinRoutineDialog(
                 value = body, onValueChange = { body = it },
                 label = {
                     Text(
-                        text = "عنوان روتین",
+                        text = "توضیحات روتین",
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 })
