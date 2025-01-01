@@ -115,7 +115,6 @@ fun AlertDialogSendMessage(
                             )
                         })
 
-
                     Button(
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier

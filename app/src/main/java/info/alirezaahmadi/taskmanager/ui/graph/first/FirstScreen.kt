@@ -76,6 +76,9 @@ fun FirstScreen(navHostController: NavHostController) {
                 SelectedGraphRoute(
                     text = "روتیم",
                 ) { navHostController.navigate(Screen.WeeklyRoutineGraph) }
+                SelectedGraphRoute(
+                    text = "پوستی",
+                ) { navHostController.navigate(Screen.SkinRoutineGraph) }
             }
         })
 }
