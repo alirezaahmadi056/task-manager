@@ -29,4 +29,10 @@ sealed interface Screen {
     data class AddTaskScreen(val id:Int?=null,val lastId:Int?=null) : Screen
     @Serializable
     data object SearchScreen : Screen
+
+    //skin routine
+    @Serializable
+    data object SkinRoutineGraph:Screen
+    @Serializable
+    data object SkinRoutineScreen:Screen
 }

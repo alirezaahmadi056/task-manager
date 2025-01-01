@@ -9,11 +9,18 @@ import info.alirezaahmadi.taskmanager.data.db.notes.NotesDao
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
 import info.alirezaahmadi.taskmanager.data.db.routine.WeeklyRoutineDao
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
+import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineDao
+import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineItem
 import info.alirezaahmadi.taskmanager.data.db.task.TaskDao
 import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
 
 @Database(
-    entities = [NotesItem::class, TaskItem::class, RoutineItem::class],
+    entities = [
+        NotesItem::class,
+        TaskItem::class,
+        RoutineItem::class,
+        SkinRoutineItem::class
+    ],
     version = 3,
     exportSchema = false
 )
@@ -22,8 +29,8 @@ abstract class DataBase : RoomDatabase() {
 
     abstract fun NotesDao(): NotesDao
     abstract fun TaskDao(): TaskDao
-    abstract fun RoutineDao(): WeeklyRoutineDao
-
+    abstract fun WeeklyRoutineDao(): WeeklyRoutineDao
+    abstract fun SkinRoutineDao(): SkinRoutineDao
 
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
