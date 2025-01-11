@@ -41,7 +41,7 @@ fun AddSkinRoutineScreen(
                 .background(Color.White)
         ) {
             Spacer(modifier = Modifier.height(12.dp))
-            SelectedStatusSection(
+            SelectedSkinStatusSection(
                 currentStatus = currentStatus,
                 onStatusSelectedStatus = { currentStatus = it }
             )
