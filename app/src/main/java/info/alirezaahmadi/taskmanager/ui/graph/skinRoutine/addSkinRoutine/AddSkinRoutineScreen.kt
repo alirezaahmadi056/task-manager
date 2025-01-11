@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -18,19 +19,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinStatus
 
 @Composable
 fun AddSkinRoutineScreen(
     navHostController: NavHostController
 ) {
 
-    var currentStatus by remember { mutableStateOf("") }
-
+    var currentTimeStatus by remember { mutableStateOf(SkinStatus.DAY.name) }
+    val currentDayStatus = remember { mutableStateListOf<String>() }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = Color(0xffFFEDD8),
         topBar = {
-            AddSkinRoutineTopBar{navHostController.navigateUp()}
+            AddSkinRoutineTopBar { navHostController.navigateUp() }
         }
     ) { innerPadding ->
         Column(
@@ -39,12 +41,20 @@ fun AddSkinRoutineScreen(
                 .padding(innerPadding)
                 .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                 .background(Color.White)
+                .padding(horizontal = 12.dp)
         ) {
             Spacer(modifier = Modifier.height(12.dp))
             SelectedSkinStatusSection(
-                currentStatus = currentStatus,
-                onStatusSelectedStatus = { currentStatus = it }
+                currentStatus = currentTimeStatus,
+                onStatusSelectedStatus = { currentTimeStatus = it }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            SelectedSkinDayStatusSection(
+                currentSList =currentDayStatus,
+                onAddDay = { currentDayStatus.add(it) },
+                onRemoveDay = { currentDayStatus.remove(it) }
             )
         }
     }
 }
+
