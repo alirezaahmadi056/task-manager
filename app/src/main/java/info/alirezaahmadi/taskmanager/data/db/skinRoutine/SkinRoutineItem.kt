@@ -9,9 +9,9 @@ data class SkinRoutineItem(
     val id: Int = 0,
     val title: String,
     val description: String,
-    val status: String = SkinStatus.DAY.name,
+    val status: String = SkinStatus.DAY.perName,
 )
 
-enum class SkinStatus {
-    DAY, NIGHT
+enum class SkinStatus(val perName: String) {
+    DAY("روز"),AFTERNOON("عصر"), NIGHT("شب")
 }

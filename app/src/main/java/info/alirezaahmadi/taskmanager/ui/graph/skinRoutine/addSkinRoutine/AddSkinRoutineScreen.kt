@@ -6,15 +6,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -65,6 +70,7 @@ fun AddSkinRoutineScreen(
         }
     }
     var currentImage by remember { mutableIntStateOf(0) }
+    var currentColor by remember { mutableIntStateOf(0) }
     CustomDataPickerDialog(
         isShow = showDialogSelectedTime,
         initialMinute = initialMinute.getOrElse(1) { 0 },
@@ -79,8 +85,38 @@ fun AddSkinRoutineScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = Color(0xffFFEDD8),
-        topBar = {
-            AddSkinRoutineTopBar { navHostController.navigateUp() }
+        topBar = { AddSkinRoutineTopBar { navHostController.navigateUp() } },
+        bottomBar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White),
+                contentAlignment = Alignment.Center
+            ) {
+                Button(
+                    modifier = Modifier
+                        .padding( 12.dp)
+                        .fillMaxWidth(),
+                    contentPadding = PaddingValues(
+                        horizontal = 40.dp,
+                        vertical = 8.dp
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xff774936),
+                        contentColor = Color.White
+                    ),
+                    onClick = {}
+                ) {
+                    Text(
+                        modifier = Modifier.padding(2.dp),
+                        text = stringResource(R.string.save),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
         }
     ) { innerPadding ->
         Column(
@@ -90,6 +126,7 @@ fun AddSkinRoutineScreen(
                 .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                 .background(Color.White)
                 .padding(horizontal = 12.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(12.dp))
             SelectedSkinStatusSection(
@@ -210,13 +247,18 @@ fun AddSkinRoutineScreen(
             )
             SelectedSinImageSection(
                 currentImageIndex = currentImage,
-                onImageIndex = {currentImage=it}
+                onImageIndex = { currentImage = it }
             )
             HorizontalDivider(
                 thickness = 1.dp,
                 color = Color.LightGray.copy(0.5f),
                 modifier = Modifier.padding(vertical = 8.dp)
             )
+            SelectedSkinColorSection(
+                currentColor = currentColor,
+                onColor = { currentColor = it }
+            )
+
         }
     }
 }

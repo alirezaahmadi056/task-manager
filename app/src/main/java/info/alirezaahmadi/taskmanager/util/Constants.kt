@@ -1,5 +1,6 @@
 package info.alirezaahmadi.taskmanager.util
 
+import androidx.compose.ui.graphics.Color
 import info.alirezaahmadi.taskmanager.R
 import java.util.Calendar
 
@@ -54,5 +55,12 @@ object Constants {
         R.drawable.shiny_face,
         R.drawable.makeup2,
         R.drawable.wash_face,
+    )
+    val skinColors = listOf(
+        Color(0xffCAF0F8),
+        Color(0xffFFBDC3),
+        Color(0xffD6B7FF),
+        Color(0xffF9DBBD),
+        Color(0xffC0FFB2),
     )
 }

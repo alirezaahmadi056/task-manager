@@ -3,4 +3,6 @@
     <string name="add_skin_routine">افزودن روتین پوستی</string>
     <string name="selected_hour">انتخاب ساعت</string>
     <string name="selected_image">انتخاب عکس</string>
+    <string name="selected_color">انتخاب رنگ</string>
+    <string name="save">ذخیره</string>
 </resources>
