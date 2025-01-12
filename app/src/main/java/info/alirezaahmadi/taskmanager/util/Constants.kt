@@ -1,5 +1,6 @@
 package info.alirezaahmadi.taskmanager.util
 
+import info.alirezaahmadi.taskmanager.R
 import java.util.Calendar
 
 object Constants {
@@ -46,5 +47,12 @@ object Constants {
         Calendar.WEDNESDAY to 4, // چهارشنبه
         Calendar.THURSDAY to 5, // پنج‌شنبه
         Calendar.FRIDAY to 6    // جمعه
+    )
+    val SkinsImage = listOf(
+        R.drawable.massage_face,
+        R.drawable.toilet_liquid,
+        R.drawable.shiny_face,
+        R.drawable.makeup2,
+        R.drawable.wash_face,
     )
 }

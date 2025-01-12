@@ -12,17 +12,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.NoteAdd
 import androidx.compose.material.icons.outlined.Nightlight
-import androidx.compose.material.icons.outlined.NightlightRound
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.NightlightRound
-import androidx.compose.material.icons.rounded.Today
 import androidx.compose.material.icons.rounded.WbSunny
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
@@ -48,17 +45,13 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineItem
 import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinStatus
 import info.alirezaahmadi.taskmanager.navigation.Screen
-import info.alirezaahmadi.taskmanager.ui.component.BaseTopBar
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
-import info.alirezaahmadi.taskmanager.ui.graph.duties.task.getNextTaskId
-import info.alirezaahmadi.taskmanager.ui.theme.LightGray
 import info.alirezaahmadi.taskmanager.viewModel.SkinRoutineViewModel
 import kotlinx.coroutines.launch
 
@@ -135,7 +128,7 @@ fun SkinRoutineScreen(
                     )
                 },
                 onClick = {
-                    showDialogAdd = true
+                    navHostController.navigate(Screen.AddSkinRoutineScreen)
                 }
             )
         },

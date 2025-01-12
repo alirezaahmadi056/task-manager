@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -24,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
@@ -61,7 +64,7 @@ fun AddSkinRoutineScreen(
             listOf(7, 0)
         }
     }
-
+    var currentImage by remember { mutableIntStateOf(0) }
     CustomDataPickerDialog(
         isShow = showDialogSelectedTime,
         initialMinute = initialMinute.getOrElse(1) { 0 },
@@ -95,7 +98,7 @@ fun AddSkinRoutineScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
             SelectedSkinDayStatusSection(
-                currentSList =currentDayStatus,
+                currentSList = currentDayStatus,
                 onAddDay = { currentDayStatus.add(it) },
                 onRemoveDay = { currentDayStatus.remove(it) }
             )
@@ -131,7 +134,8 @@ fun AddSkinRoutineScreen(
             )
 
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(vertical = 20.dp, horizontal = 2.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -145,8 +149,8 @@ fun AddSkinRoutineScreen(
                             .clip(RoundedCornerShape(8.dp))
                             .background(Color(0xffFFE3D5))
                             .border(1.dp, Color(0xff9D6B53), RoundedCornerShape(8.dp))
-                            .clickable { showDialogSelectedTime =true }
-                    ){
+                            .clickable { showDialogSelectedTime = true }
+                    ) {
                         Icon(
                             imageVector = Icons.Rounded.Edit,
                             contentDescription = "",
@@ -158,6 +162,7 @@ fun AddSkinRoutineScreen(
                         text = stringResource(R.string.selected_hour),
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.Black,
+                        fontWeight = FontWeight.SemiBold
                     )
 
                 }
@@ -197,6 +202,20 @@ fun AddSkinRoutineScreen(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
+            )
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = Color.LightGray.copy(0.5f),
+                modifier = Modifier.padding(top = 15.dp, bottom = 8.dp)
+            )
+            SelectedSinImageSection(
+                currentImageIndex = currentImage,
+                onImageIndex = {currentImage=it}
+            )
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = Color.LightGray.copy(0.5f),
+                modifier = Modifier.padding(vertical = 8.dp)
             )
         }
     }
