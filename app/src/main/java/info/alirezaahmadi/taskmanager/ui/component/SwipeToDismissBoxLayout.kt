@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SwipeToDismissBoxLayout(
+    modifier: Modifier=Modifier,
     enableDismissFromEndToStart: Boolean,
     enableDismissFromStartToEnd: Boolean,
     startToEnd: () -> Unit = {},
@@ -45,6 +47,7 @@ fun SwipeToDismissBoxLayout(
             }
         )
         SwipeToDismissBox(
+            modifier = modifier,
             enableDismissFromEndToStart = enableDismissFromEndToStart,
             enableDismissFromStartToEnd = enableDismissFromStartToEnd,
             state = swipeToDismiss,

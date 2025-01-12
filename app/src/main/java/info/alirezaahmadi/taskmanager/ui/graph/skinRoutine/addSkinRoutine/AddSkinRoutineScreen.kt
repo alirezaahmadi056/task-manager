@@ -1,5 +1,6 @@
 package info.alirezaahmadi.taskmanager.ui.graph.skinRoutine.addSkinRoutine
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,18 +42,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
+import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineItem
 import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinStatus
 import info.alirezaahmadi.taskmanager.ui.component.CustomDataPickerDialog
 import info.alirezaahmadi.taskmanager.util.TaskHelper.byLocate
+import info.alirezaahmadi.taskmanager.viewModel.SkinRoutineViewModel
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddSkinRoutineScreen(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    id: Int,
+    skinRoutineViewModel: SkinRoutineViewModel = hiltViewModel()
 ) {
 
     var currentTimeStatus by remember { mutableStateOf(SkinStatus.DAY.name) }
@@ -71,6 +78,7 @@ fun AddSkinRoutineScreen(
     }
     var currentImage by remember { mutableIntStateOf(0) }
     var currentColor by remember { mutableIntStateOf(0) }
+    var checkInput by remember { mutableStateOf(false) }
     CustomDataPickerDialog(
         isShow = showDialogSelectedTime,
         initialMinute = initialMinute.getOrElse(1) { 0 },
@@ -95,8 +103,8 @@ fun AddSkinRoutineScreen(
             ) {
                 Button(
                     modifier = Modifier
-                        .padding( 12.dp)
-                        .fillMaxWidth(),
+                        .padding(12.dp)
+                        .fillMaxWidth(0.8f),
                     contentPadding = PaddingValues(
                         horizontal = 40.dp,
                         vertical = 8.dp
@@ -106,7 +114,26 @@ fun AddSkinRoutineScreen(
                         containerColor = Color(0xff774936),
                         contentColor = Color.White
                     ),
-                    onClick = {}
+                    onClick = {
+                        if (currentDayStatus.isNotEmpty() && title.isNotEmpty()) {
+                            checkInput = false
+                            skinRoutineViewModel.upsertSkinRoutine(
+                                SkinRoutineItem(
+                                    id =id,
+                                    title =title,
+                                    description = body,
+                                    image = currentImage,
+                                    color = currentColor,
+                                    status = currentTimeStatus,
+                                    time = selectedTime,
+                                    dayWeek = currentDayStatus
+                                )
+                            )
+                            navHostController.navigateUp()
+                        } else {
+                            checkInput = true
+                        }
+                    }
                 ) {
                     Text(
                         modifier = Modifier.padding(2.dp),
@@ -139,6 +166,20 @@ fun AddSkinRoutineScreen(
                 onAddDay = { currentDayStatus.add(it) },
                 onRemoveDay = { currentDayStatus.remove(it) }
             )
+            AnimatedVisibility(
+                checkInput && currentDayStatus.isEmpty()
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp),
+                    text = "حداقل یک روز هفته را انتخاب کنید",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Start
+                )
+            }
             Spacer(modifier = Modifier.height(15.dp))
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
@@ -150,9 +191,12 @@ fun AddSkinRoutineScreen(
                     unfocusedLabelColor = Color.DarkGray,
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White.copy(0.8f),
+                    errorContainerColor = Color.White,
+                    errorSupportingTextColor = Color(0xFFE20000)
                 ),
                 modifier = Modifier.fillMaxWidth(),
                 maxLines = 1,
+                isError = checkInput && title.isEmpty(),
                 textStyle = MaterialTheme.typography.bodyLarge,
                 shape = RoundedCornerShape(9.dp),
                 value = title, onValueChange = { title = it },
@@ -167,6 +211,14 @@ fun AddSkinRoutineScreen(
                         text = "عنوان روتین را وارد کنید",
                         style = MaterialTheme.typography.bodyMedium,
                     )
+                },
+                supportingText = {
+                    if(checkInput && title.isEmpty()){
+                        Text(
+                            text = "عنوان روتین را وارد کنید",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                }
                 }
             )
 

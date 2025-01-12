@@ -10,6 +10,10 @@ data class SkinRoutineItem(
     val title: String,
     val description: String,
     val status: String = SkinStatus.DAY.perName,
+    val color:Int,
+    val image:Int,
+    val time:String,
+    val dayWeek :List<String>
 )
 
 enum class SkinStatus(val perName: String) {

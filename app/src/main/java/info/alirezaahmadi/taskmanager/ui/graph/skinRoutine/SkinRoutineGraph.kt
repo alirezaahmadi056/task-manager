@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.graph.skinRoutine.addSkinRoutine.AddSkinRoutineScreen
 
@@ -13,7 +14,8 @@ fun NavGraphBuilder.skinRoutineGraph(navHostController: NavHostController){
             SkinRoutineScreen(navHostController)
         }
         composable<Screen.AddSkinRoutineScreen> {
-            AddSkinRoutineScreen(navHostController)
+            val args =it.toRoute<Screen.AddSkinRoutineScreen>()
+            AddSkinRoutineScreen(navHostController, id = args.id)
         }
 
     }

@@ -35,9 +35,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,10 +50,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
 import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineItem
 import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinStatus
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
+import info.alirezaahmadi.taskmanager.ui.graph.skinRoutine.bottomNavigation.SkinBottomNavigation
 import info.alirezaahmadi.taskmanager.viewModel.SkinRoutineViewModel
 import kotlinx.coroutines.launch
 
@@ -61,15 +65,24 @@ fun SkinRoutineScreen(
     skinRoutineViewModel: SkinRoutineViewModel = hiltViewModel()
 ) {
     val allSkinRoutine by skinRoutineViewModel.getAllSkinRoutine().collectAsState(emptyList())
-    val (dayRoutine, nightRoutine) = remember(key1 = allSkinRoutine) {
-        val day = allSkinRoutine.filter { it.status == SkinStatus.DAY.name }
-        val night = allSkinRoutine.filter { it.status == SkinStatus.NIGHT.name }
-        day to night
+    var currentSkinStatus by rememberSaveable  { mutableIntStateOf(0) }
+    val filterStatus = remember(currentSkinStatus) {
+        when (currentSkinStatus) {
+            0 -> SkinStatus.DAY.name
+            1 -> SkinStatus.AFTERNOON.name
+            2 -> SkinStatus.NIGHT.name
+            else -> SkinStatus.DAY.name
+        }
     }
+
+    val routines = remember(allSkinRoutine, filterStatus) {
+        allSkinRoutine.filter { it.status == filterStatus }
+    }
+
+
 
     val pagerState = rememberPagerState { 2 }
     val coroutineScope = rememberCoroutineScope()
-    var showDialogAdd by remember { mutableStateOf(false) }
     var showDialogDeleted by remember { mutableStateOf(false) }
     var singleRoutineItem by remember { mutableStateOf<SkinRoutineItem?>(null) }
 
@@ -84,30 +97,11 @@ fun SkinRoutineScreen(
             singleRoutineItem = null
         }
     )
-    SkinRoutineDialog(
-        skinRoutineItem =singleRoutineItem,
-        show = showDialogAdd,
-        onDismissRequest = {
-            showDialogAdd = false
-            singleRoutineItem = null
-        },
-        skinRoutineViewModel = skinRoutineViewModel
-    )
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            SkinTopBar(
-                currentPage = pagerState.currentPage,
-                onClick = {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(
-                            it,
-                            animationSpec = tween(600)
-                        )
-                    }
-                },
-                onBack = { navHostController.navigateUp() }
-            )
+
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
@@ -127,160 +121,37 @@ fun SkinRoutineScreen(
                         tint = Color.White
                     )
                 },
-                onClick = {
-                    navHostController.navigate(Screen.AddSkinRoutineScreen)
-                }
+                onClick = { navHostController.navigate(Screen.AddSkinRoutineScreen()) }
             )
         },
         floatingActionButtonPosition = FabPosition.Start,
+        bottomBar = {
+            SkinBottomNavigation(
+                currentPage = currentSkinStatus,
+                onSelectedPage = { currentSkinStatus = it }
+            )
+        }
     ) { innerPadding ->
-        HorizontalPager(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
-            state = pagerState
-        ) { page ->
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                item { Spacer(Modifier.height(8.dp)) }
-                if (page == 0) {
-                    skinRoutine(
-                        items = dayRoutine,
-                        onDeleted = {
-                            singleRoutineItem = it
-                            showDialogDeleted = true
-                        },
-                        onEdited = {
-                            singleRoutineItem = it
-                            showDialogAdd = true
-                        }
-                    )
-                } else {
-                    skinRoutine(
-                        items = nightRoutine,
-                        onDeleted = {
-                            singleRoutineItem = it
-                            showDialogDeleted = true
-                        },
-                        onEdited = {
-                            singleRoutineItem = it
-                            showDialogAdd = true
-                        }
-                    )
-                }
-            }
-        }
-    }
-
-}
-
-@Composable
-fun SkinTopBar(
-    currentPage: Int, onBack: () -> Unit,
-    onClick: (Int) -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
-            .drawBehind {
-                drawLine(
-                    color = Color.LightGray.copy(alpha = 0.5f),
-                    start = Offset(0f, size.height), // شروع خط در پایین کامپوزبل
-                    end = Offset(size.width, size.height), // پایان خط در پایین کامپوزبل
-                    strokeWidth = 1.5.dp.toPx()
-                )
-            }
-            .padding(horizontal = 8.dp),
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp)
-        )
-        {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(start = 30.dp),
-                text = "روتین پوستی من",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.scrim
-            )
-
-            IconButton(
-                modifier = Modifier.align(Alignment.CenterStart),
-                onClick = onBack
-            ) {
-                Icon(
-                    Icons.Rounded.ArrowForward,
-                    contentDescription = ""
-                )
-            }
-        }
-        TabRow(
-            containerColor = MaterialTheme.colorScheme.background,
-            selectedTabIndex = currentPage,
-            modifier = Modifier.fillMaxWidth(),
-            indicator = {
-                Box(
-                    modifier = Modifier
-                        .tabIndicatorOffset(it[currentPage])
-                        .fillMaxWidth()
-                        .height(2.dp)
-                        .background(MaterialTheme.colorScheme.primary)
-
-                )
-            },
-            divider = {
-                HorizontalDivider(thickness = 0.6.dp, color = Color.LightGray.copy(0.6f))
-            }
+                .padding(innerPadding)
         ) {
-            Tab(
-                unselectedContentColor = MaterialTheme.colorScheme.scrim.copy(0.8f),
-                selectedContentColor = MaterialTheme.colorScheme.primary,
-                text = {
-                    Text(
-                        text = "روز",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.SemiBold,
-                    )
+            item { Spacer(Modifier.height(8.dp)) }
+            skinRoutine(
+                items = routines,
+                onDeleted = {
+                    singleRoutineItem = it
+                    showDialogDeleted = true
                 },
-                onClick = { onClick(0) },
-                icon = {
-                    Icon(
-                        imageVector = if (currentPage == 0) Icons.Rounded.WbSunny else Icons.Outlined.WbSunny,
-                        contentDescription = "",
-                    )
-                },
-                selected = currentPage == 0
-            )
-
-            Tab(
-                unselectedContentColor = MaterialTheme.colorScheme.scrim.copy(0.8f),
-                selectedContentColor = MaterialTheme.colorScheme.primary,
-                text = {
-                    Text(
-                        text = "شب",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                },
-                onClick = { onClick(1) },
-                icon = {
-                    Icon(
-                        imageVector = if (currentPage == 1) Icons.Rounded.NightlightRound else Icons.Outlined.Nightlight,
-                        contentDescription = "",
-                    )
-                },
-                selected = currentPage == 1
+                onEdited = { navHostController.navigate(Screen.AddSkinRoutineScreen(it.id)) }
             )
 
         }
-
     }
 }
+
+
 
 private fun LazyListScope.skinRoutine(
     items: List<SkinRoutineItem>,

@@ -36,5 +36,5 @@ sealed interface Screen {
     @Serializable
     data object SkinRoutineScreen:Screen
     @Serializable
-    data object AddSkinRoutineScreen:Screen
+    data class AddSkinRoutineScreen(val id :Int=0):Screen
 }
