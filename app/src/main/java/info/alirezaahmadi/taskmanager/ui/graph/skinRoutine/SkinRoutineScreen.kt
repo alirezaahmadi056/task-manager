@@ -2,11 +2,8 @@ package info.alirezaahmadi.taskmanager.ui.graph.skinRoutine
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,26 +13,14 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.NoteAdd
-import androidx.compose.material.icons.outlined.Nightlight
-import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.ArrowForward
-import androidx.compose.material.icons.rounded.NightlightRound
-import androidx.compose.material.icons.rounded.WbSunny
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -44,17 +29,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
 import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineItem
 import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinStatus
 import info.alirezaahmadi.taskmanager.navigation.Screen
@@ -73,7 +53,7 @@ fun SkinRoutineScreen(
 ) {
     val day = remember { Calendar.getInstance().get(Calendar.DAY_OF_WEEK) }
     val dayWeek = remember { Constants.deyWeek }
-    val pagerState = rememberPagerState { dayWeek.size }
+    val pagerState = rememberPagerState(initialPage = persianDayOfWeek[day] ?: 0) { dayWeek.size }
     val allSkinRoutine by skinRoutineViewModel.getAllSkinRoutine().collectAsState(emptyList())
     var currentSkinStatus by rememberSaveable { mutableIntStateOf(0) }
     val filterStatus = remember(currentSkinStatus) {
@@ -87,12 +67,17 @@ fun SkinRoutineScreen(
 
     val routines = remember(allSkinRoutine, filterStatus) {
         allSkinRoutine.filter { it.status == filterStatus }
-    }
-
-
-    LaunchedEffect(key1 = day) {
-        val persianIndex = persianDayOfWeek[day] ?: 0
-        pagerState.animateScrollToPage(persianIndex)
+            .sortedBy {
+                val time = it.time
+                val parts = time.split(":")
+                if (parts.size == 2) {
+                    val hours = parts[0].toIntOrNull() ?: 0
+                    val minutes = parts[1].toIntOrNull() ?: 0
+                    hours * 60 + minutes
+                } else {
+                    Int.MAX_VALUE
+                }
+            }
     }
     val coroutineScope = rememberCoroutineScope()
     var showDialogDeleted by remember { mutableStateOf(false) }
@@ -121,7 +106,8 @@ fun SkinRoutineScreen(
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(page, animationSpec = tween(600))
                     }
-                }
+                },
+                onBack = {navHostController.navigateUp()}
             )
         },
         floatingActionButton = {
@@ -158,7 +144,7 @@ fun SkinRoutineScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
                 .background(Color.White)
         ) { page ->
             val currentRoutine = remember(key1 = page, key2 = routines) {
@@ -168,16 +154,16 @@ fun SkinRoutineScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 item { Spacer(Modifier.height(15.dp)) }
-                if (currentRoutine.isNotEmpty()){
+                if (currentRoutine.isNotEmpty()) {
                     skinRoutine(
-                        items =currentRoutine,
+                        items = currentRoutine,
                         onDeleted = {
                             singleRoutineItem = it
                             showDialogDeleted = true
                         },
                         onEdited = { navHostController.navigate(Screen.AddSkinRoutineScreen(it.id)) }
                     )
-                }else{
+                } else {
                     item {
                         Text(
                             "روتین برای یان بازه تنظیم نشده"

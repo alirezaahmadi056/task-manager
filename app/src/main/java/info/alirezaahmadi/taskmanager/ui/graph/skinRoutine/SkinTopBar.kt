@@ -2,14 +2,20 @@ package info.alirezaahmadi.taskmanager.ui.graph.skinRoutine
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Text
@@ -29,25 +35,41 @@ import info.alirezaahmadi.taskmanager.R
 fun SkinTopBar(
     allDayWeek: List<String>,
     currentPage: Int,
-    onSelected: (Int) -> Unit
+    onSelected: (Int) -> Unit,
+    onBack: () -> Unit
 ) {
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .statusBarsPadding()
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.height(8.dp))
-        Text(
-            text = stringResource(R.string.my_skin_routine),
-            style = MaterialTheme.typography.labelLarge.copy(
-                fontSize = 22.sp,
-            ),
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(vertical = 12.dp)
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 16.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = stringResource(R.string.my_skin_routine),
+                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 19.sp),
+                color = Color.Black,
+                modifier = Modifier.align(Alignment.Center),
+                fontWeight = FontWeight.Black
+            )
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.Rounded.ArrowForward,
+                    contentDescription = "",
+                    tint = Color.Black
+                )
+            }
+        }
         ScrollableTabRow(
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = 25.dp, top = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 25.dp),
             selectedTabIndex = currentPage,
             edgePadding = 19.dp,
             divider = {},

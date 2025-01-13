@@ -16,4 +16,7 @@ interface SkinRoutineDao {
 
     @Query("delete from skinroutineitem where id=:itemId")
     suspend fun deletedSkinRoutine(itemId:Int)
+
+    @Query("select * from skinroutineitem where id=:itemId")
+     fun getSkinRoutine(itemId:Int):Flow<SkinRoutineItem?>
 }

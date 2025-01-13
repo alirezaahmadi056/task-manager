@@ -22,4 +22,6 @@ class SkinRoutineViewModel @Inject constructor(
     fun deletedSkinRoutine(id: Int) {
         viewModelScope.launch { repository.deletedSkinRoutine(id) }
     }
+    fun getSkinRoutine(itemId: Int): Flow<SkinRoutineItem?> = repository.getSkinRoutine(itemId)
+
 }

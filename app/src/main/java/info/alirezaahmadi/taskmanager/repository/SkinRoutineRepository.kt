@@ -12,8 +12,12 @@ class SkinRoutineRepository @Inject constructor(
     suspend fun upsertSkinRoutine(skinRoutineItem: SkinRoutineItem) {
         skinRoutineDao.upsertSkinRoutine(skinRoutineItem)
     }
+
     fun getAllSkinRoutine(): Flow<List<SkinRoutineItem>> = skinRoutineDao.getAllSkinRoutine()
     suspend fun deletedSkinRoutine(id: Int) {
         skinRoutineDao.deletedSkinRoutine(id)
     }
+
+    fun getSkinRoutine(itemId: Int): Flow<SkinRoutineItem?> = skinRoutineDao.getSkinRoutine(itemId)
+
 }

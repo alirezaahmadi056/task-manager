@@ -30,6 +30,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -52,6 +53,7 @@ import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinStatus
 import info.alirezaahmadi.taskmanager.ui.component.CustomDataPickerDialog
 import info.alirezaahmadi.taskmanager.util.TaskHelper.byLocate
 import info.alirezaahmadi.taskmanager.viewModel.SkinRoutineViewModel
+import kotlinx.coroutines.flow.collectLatest
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,6 +81,20 @@ fun AddSkinRoutineScreen(
     var currentImage by remember { mutableIntStateOf(0) }
     var currentColor by remember { mutableIntStateOf(0) }
     var checkInput by remember { mutableStateOf(false) }
+
+    LaunchedEffect(id) {
+        skinRoutineViewModel.getSkinRoutine(id).collectLatest { routine ->
+            routine?.let { skin ->
+                currentTimeStatus =skin.status
+                title = skin.title
+                body =skin.description
+                selectedTime =skin.time
+                currentImage =skin.image
+                currentColor =skin.color
+                currentDayStatus.addAll(skin.dayWeek)
+            }
+        }
+    }
     CustomDataPickerDialog(
         isShow = showDialogSelectedTime,
         initialMinute = initialMinute.getOrElse(1) { 0 },
@@ -119,8 +135,8 @@ fun AddSkinRoutineScreen(
                             checkInput = false
                             skinRoutineViewModel.upsertSkinRoutine(
                                 SkinRoutineItem(
-                                    id =id,
-                                    title =title,
+                                    id = id,
+                                    title = title,
                                     description = body,
                                     image = currentImage,
                                     color = currentColor,
@@ -213,19 +229,19 @@ fun AddSkinRoutineScreen(
                     )
                 },
                 supportingText = {
-                    if(checkInput && title.isEmpty()){
+                    if (checkInput && title.isEmpty()) {
                         Text(
                             text = "عنوان روتین را وارد کنید",
                             style = MaterialTheme.typography.bodyMedium,
                         )
-                }
+                    }
                 }
             )
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 20.dp, horizontal = 2.dp),
+                    .padding(vertical = 10.dp, horizontal = 2.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
