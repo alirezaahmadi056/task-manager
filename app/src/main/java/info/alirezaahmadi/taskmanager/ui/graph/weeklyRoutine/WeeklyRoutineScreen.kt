@@ -77,10 +77,15 @@ fun WeeklyRoutineScreen(
             2 -> allRoutine.sortedByDescending { it.taskColor == 2 }
             3 -> allRoutine.sortedByDescending { it.taskColor }
             4 -> allRoutine.sortedBy {
-                val parts = it.time.split(":")
-                val hours = parts[0].toInt()
-                val minutes = parts[1].toInt()
-                hours * 60 + minutes // تبدیل زمان به دقیقه
+                val time = it.time
+                val parts = time.split(":")
+                if (parts.size == 2) {
+                    val hours = parts[0].toIntOrNull() ?: 0
+                    val minutes = parts[1].toIntOrNull() ?: 0
+                    hours * 60 + minutes
+                } else {
+                    Int.MAX_VALUE
+                }
             }
 
             else -> allRoutine.reversed()
