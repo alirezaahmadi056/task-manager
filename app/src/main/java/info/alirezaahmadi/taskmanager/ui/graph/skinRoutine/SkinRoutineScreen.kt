@@ -14,10 +14,12 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.NoteAdd
 import androidx.compose.material.icons.outlined.Nightlight
 import androidx.compose.material.icons.outlined.WbSunny
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.NightlightRound
 import androidx.compose.material.icons.rounded.WbSunny
@@ -33,6 +35,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -43,6 +46,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -56,16 +60,22 @@ import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinStatus
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.ui.graph.skinRoutine.bottomNavigation.SkinBottomNavigation
+import info.alirezaahmadi.taskmanager.util.Constants
+import info.alirezaahmadi.taskmanager.util.Constants.persianDayOfWeek
 import info.alirezaahmadi.taskmanager.viewModel.SkinRoutineViewModel
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 @Composable
 fun SkinRoutineScreen(
     navHostController: NavHostController,
     skinRoutineViewModel: SkinRoutineViewModel = hiltViewModel()
 ) {
+    val day = remember { Calendar.getInstance().get(Calendar.DAY_OF_WEEK) }
+    val dayWeek = remember { Constants.deyWeek }
+    val pagerState = rememberPagerState { dayWeek.size }
     val allSkinRoutine by skinRoutineViewModel.getAllSkinRoutine().collectAsState(emptyList())
-    var currentSkinStatus by rememberSaveable  { mutableIntStateOf(0) }
+    var currentSkinStatus by rememberSaveable { mutableIntStateOf(0) }
     val filterStatus = remember(currentSkinStatus) {
         when (currentSkinStatus) {
             0 -> SkinStatus.DAY.name
@@ -80,8 +90,10 @@ fun SkinRoutineScreen(
     }
 
 
-
-    val pagerState = rememberPagerState { 2 }
+    LaunchedEffect(key1 = day) {
+        val persianIndex = persianDayOfWeek[day] ?: 0
+        pagerState.animateScrollToPage(persianIndex)
+    }
     val coroutineScope = rememberCoroutineScope()
     var showDialogDeleted by remember { mutableStateOf(false) }
     var singleRoutineItem by remember { mutableStateOf<SkinRoutineItem?>(null) }
@@ -99,24 +111,33 @@ fun SkinRoutineScreen(
     )
 
     Scaffold(
+        containerColor = Color(0xffFFEDD8),
         modifier = Modifier.fillMaxSize(),
         topBar = {
-
+            SkinTopBar(
+                allDayWeek = dayWeek,
+                currentPage = pagerState.currentPage,
+                onSelected = { page ->
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(page, animationSpec = tween(600))
+                    }
+                }
+            )
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.primary,
+                containerColor = Color.Black,
                 expanded = true,
                 text = {
                     Text(
-                        text = "روتین پوستی",
+                        text = "روتین جدید",
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.White
                     )
                 },
                 icon = {
                     Icon(
-                        Icons.AutoMirrored.Rounded.NoteAdd,
+                        Icons.Rounded.Add,
                         contentDescription = "",
                         tint = Color.White
                     )
@@ -132,25 +153,43 @@ fun SkinRoutineScreen(
             )
         }
     ) { innerPadding ->
-        LazyColumn(
+        HorizontalPager(
+            state = pagerState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-        ) {
-            item { Spacer(Modifier.height(8.dp)) }
-            skinRoutine(
-                items = routines,
-                onDeleted = {
-                    singleRoutineItem = it
-                    showDialogDeleted = true
-                },
-                onEdited = { navHostController.navigate(Screen.AddSkinRoutineScreen(it.id)) }
-            )
+                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                .background(Color.White)
+        ) { page ->
+            val currentRoutine = remember(key1 = page, key2 = routines) {
+                filterRoutinesByDay(day = dayWeek[page], routines = routines)
+            }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                item { Spacer(Modifier.height(15.dp)) }
+                if (currentRoutine.isNotEmpty()){
+                    skinRoutine(
+                        items =currentRoutine,
+                        onDeleted = {
+                            singleRoutineItem = it
+                            showDialogDeleted = true
+                        },
+                        onEdited = { navHostController.navigate(Screen.AddSkinRoutineScreen(it.id)) }
+                    )
+                }else{
+                    item {
+                        Text(
+                            "روتین برای یان بازه تنظیم نشده"
+                        )
+                    }
 
+                }
+
+            }
         }
     }
 }
-
 
 
 private fun LazyListScope.skinRoutine(
@@ -165,4 +204,8 @@ private fun LazyListScope.skinRoutine(
             onDeleted = { onDeleted(routine) }
         )
     }
+}
+
+fun filterRoutinesByDay(day: String, routines: List<SkinRoutineItem>): List<SkinRoutineItem> {
+    return routines.filter { it.dayWeek.contains(day) }
 }
