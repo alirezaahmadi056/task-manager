@@ -2,10 +2,14 @@ package info.alirezaahmadi.taskmanager.ui.graph.skinRoutine
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
@@ -14,6 +18,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.EmojiPeople
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -29,9 +34,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -107,7 +114,7 @@ fun SkinRoutineScreen(
                         pagerState.animateScrollToPage(page, animationSpec = tween(600))
                     }
                 },
-                onBack = {navHostController.navigateUp()}
+                onBack = { navHostController.navigateUp() }
             )
         },
         floatingActionButton = {
@@ -150,29 +157,21 @@ fun SkinRoutineScreen(
             val currentRoutine = remember(key1 = page, key2 = routines) {
                 filterRoutinesByDay(day = dayWeek[page], routines = routines)
             }
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                item { Spacer(Modifier.height(15.dp)) }
-                if (currentRoutine.isNotEmpty()) {
+            if (currentRoutine.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    item { Spacer(Modifier.height(15.dp)) }
                     skinRoutine(
                         items = currentRoutine,
                         onDeleted = {
                             singleRoutineItem = it
                             showDialogDeleted = true
                         },
-                        onEdited = { navHostController.navigate(Screen.AddSkinRoutineScreen(it.id)) }
-                    )
-                } else {
-                    item {
-                        Text(
-                            "روتین برای یان بازه تنظیم نشده"
-                        )
-                    }
+                        onEdited = { navHostController.navigate(Screen.AddSkinRoutineScreen(it.id)) })
 
                 }
-
-            }
+            } else { SkinEmpty() }
         }
     }
 }
@@ -194,4 +193,26 @@ private fun LazyListScope.skinRoutine(
 
 fun filterRoutinesByDay(day: String, routines: List<SkinRoutineItem>): List<SkinRoutineItem> {
     return routines.filter { it.dayWeek.contains(day) }
+}
+
+@Composable
+private fun SkinEmpty() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        Icon(
+            imageVector = Icons.Rounded.EmojiPeople,
+            contentDescription = "",
+            modifier = Modifier.size(100.dp)
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text ="روتینی برای این بازه تنظیم نشده است!",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = Color.Black
+        )
+    }
 }
