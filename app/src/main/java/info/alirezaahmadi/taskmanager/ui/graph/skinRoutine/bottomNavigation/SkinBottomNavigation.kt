@@ -14,6 +14,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +32,14 @@ fun SkinBottomNavigation(
     val mavItemList = SkinDayStatus.statusList
     Row(
         modifier = Modifier
+            .drawBehind {
+                drawLine(
+                    color = Color.LightGray,
+                    start = Offset(0f, 0f),
+                    end = Offset(size.width, 0f),
+                    strokeWidth = 1.5f
+                )
+            }
             .background(Color.White)
             .navigationBarsPadding()
             .fillMaxWidth()
