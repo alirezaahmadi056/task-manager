@@ -80,7 +80,7 @@ fun AddImageSection(
             modifier = Modifier
                 .clip(RoundedCornerShape(10.dp))
                 .background(Color(0xff9747FF), RoundedCornerShape(10.dp))
-                .clickable { launcher.launch(arrayOf("*/*")) },
+                .clickable { launcher.launch(arrayOf("image/*")) },
         ) {
             Icon(
                 imageVector = Icons.Rounded.DriveFolderUpload,
