@@ -22,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -39,8 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
+import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramItem
 import info.alirezaahmadi.taskmanager.ui.graph.skinRoutine.addSkinRoutine.SectionSetNumber
 import info.alirezaahmadi.taskmanager.viewModel.ExerciseProgramViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AddExerciseProgramScreen(
@@ -58,6 +61,19 @@ fun AddExerciseProgramScreen(
     var setNumber by remember { mutableIntStateOf(0) }
     var repetitionSetNumber by remember { mutableIntStateOf(0) }
     var timeNumber by remember { mutableIntStateOf(0) }
+    LaunchedEffect(id) {
+        exerciseProgramViewModel.getExerciseProgram(id ?: 0).collectLatest { exercise ->
+            exercise?.let {
+                currentDayStatus.addAll(it.dayWeek)
+                selectedImage = Uri.parse(it.imageUri)
+                selectedVideo = Uri.parse(it.videoUri)
+                title = it.name
+                description = it.description
+                enableDropDown = it.dropdown
+            }
+        }
+
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -83,6 +99,26 @@ fun AddExerciseProgramScreen(
                         contentColor = Color.White
                     ),
                     onClick = {
+                        if (currentDayStatus.isNotEmpty()||title.isNotEmpty()){
+                            checkInput = false
+                            exerciseProgramViewModel.upsertExerciseProgram(
+                                ExerciseProgramItem(
+                                    id = id?:0,
+                                    setNumber = setNumber,
+                                    time = timeNumber,
+                                    name =title,
+                                    repetitionSetNumber = repetitionSetNumber,
+                                    imageUri = selectedImage.toString(),
+                                    dropdown = enableDropDown,
+                                    videoUri = selectedVideo.toString(),
+                                    description = description,
+                                    dayWeek = currentDayStatus
+                                )
+                            )
+                            navHostController.navigateUp()
+                        }else{
+                            checkInput = true
+                        }
                     }
                 ) {
                     Text(
@@ -149,7 +185,7 @@ fun AddExerciseProgramScreen(
                     unfocusedPlaceholderColor = Color.DarkGray,
                     focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
                     focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                    unfocusedTextColor = MaterialTheme.colorScheme.background,
+                    unfocusedTextColor = Color.DarkGray,
                     focusedContainerColor = MaterialTheme.colorScheme.background,
                     unfocusedContainerColor = Color(0xffECECEC),
                     errorContainerColor = Color(0xFFE20000).copy(0.4f),
@@ -201,7 +237,7 @@ fun AddExerciseProgramScreen(
                     unfocusedPlaceholderColor = Color.DarkGray,
                     focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
                     focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                    unfocusedTextColor = MaterialTheme.colorScheme.background,
+                    unfocusedTextColor = Color.DarkGray,
                     focusedContainerColor = MaterialTheme.colorScheme.background,
                     unfocusedContainerColor = Color(0xffECECEC),
                     errorContainerColor = Color(0xFFE20000).copy(0.4f),

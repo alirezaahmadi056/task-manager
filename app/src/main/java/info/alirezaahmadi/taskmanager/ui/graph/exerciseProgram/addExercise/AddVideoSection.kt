@@ -1,5 +1,6 @@
 package info.alirezaahmadi.taskmanager.ui.graph.exerciseProgram.addExercise
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,6 +46,12 @@ fun AddVideoSection(
         contract = ActivityResultContracts.OpenDocument()
     ) {
         onVideoSelected(it)
+        if (it != null) {
+            context.contentResolver.takePersistableUriPermission(
+                it,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+        }
     }
 
     Text(

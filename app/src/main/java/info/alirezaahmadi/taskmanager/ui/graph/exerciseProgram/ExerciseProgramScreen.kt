@@ -97,7 +97,11 @@ fun ExerciseProgramScreen(
                 items(items = currentExerciseProgramItems, key = { it.id }) { exercise ->
                     ExerciseItemCard(
                         item = exercise,
-                        onClick = {},
+                        onClick = {
+                            navHostController.navigate(Screen.AddExerciseProgramScreen(id = exercise.id)){
+                                launchSingleTop =true
+                            }
+                        },
                         onLongClick = {}
                     )
                 }
