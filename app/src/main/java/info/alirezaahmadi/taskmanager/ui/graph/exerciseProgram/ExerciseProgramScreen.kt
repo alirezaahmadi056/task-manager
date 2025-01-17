@@ -3,6 +3,7 @@ package info.alirezaahmadi.taskmanager.ui.graph.exerciseProgram
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -77,7 +78,8 @@ fun ExerciseProgramScreen(
         ) { page ->
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
-                    .padding(horizontal = 12.dp)
+                    .padding(horizontal = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 stickyHeader {
                     SectionAddExercise(
@@ -85,6 +87,13 @@ fun ExerciseProgramScreen(
                         onAddClick = {navHostController.navigate(Screen.AddExerciseProgramScreen())}
                     )
                 }
+                item {
+                    ExerciseItemCard()
+                }
+                    item {
+                    ExerciseItemCard()
+                }
+
             }
         }
     }
