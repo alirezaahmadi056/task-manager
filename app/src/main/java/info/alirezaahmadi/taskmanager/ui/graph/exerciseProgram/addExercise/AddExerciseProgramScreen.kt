@@ -108,9 +108,9 @@ fun AddExerciseProgramScreen(
                                     time = timeNumber,
                                     name =title,
                                     repetitionSetNumber = repetitionSetNumber,
-                                    imageUri = selectedImage.toString(),
+                                    imageUri = (selectedImage?:"").toString(),
                                     dropdown = enableDropDown,
-                                    videoUri = selectedVideo.toString(),
+                                    videoUri = (selectedVideo?:"").toString(),
                                     description = description,
                                     dayWeek = currentDayStatus
                                 )
