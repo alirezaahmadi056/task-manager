@@ -9,4 +9,5 @@
     <string name="my_exercise_program">برنامه ورزشی من</string>
     <string name="today_exercise_program">برنامه تمرینی امروز</string>
     <string name="add_exercise">افزودن تمرین</string>
+    <string name="day_week">روز های هفته</string>
 </resources>

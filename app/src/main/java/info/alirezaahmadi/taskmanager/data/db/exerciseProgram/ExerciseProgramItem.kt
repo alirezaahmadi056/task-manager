@@ -11,7 +11,7 @@ data class ExerciseProgramItem(
     val imageUri:String,
     val videoUri:String,
     val description: String,
-    val deyWeek:List<String>,
+    val dayWeek:List<String>,
     val setNumber:Int,
     val repetitionSetNumber:Int,
     val disability:Boolean,
@@ -26,7 +26,7 @@ data class ExerciseProgramItem(
             imageUri = "",
             dropdown = false,
             videoUri = "",
-            deyWeek = emptyList(),
+            dayWeek = emptyList(),
             setNumber = 3,
             repetitionSetNumber = 15,
             disability = false
