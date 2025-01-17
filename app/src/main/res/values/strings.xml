@@ -18,4 +18,7 @@
     <string name="to_disability">تا ناتوانی</string>
     <string name="Dropdown">Dropdown</string>
     <string name="Approximate_time">زمان تقریبی (دقیقه)</string>
+    <string name="start_exercise">شروع تمرین</string>
+    <string name="played_video">پخش ویدیو</string>
+    <string name="exercise_list">لیست حرکات</string>
 </resources>
