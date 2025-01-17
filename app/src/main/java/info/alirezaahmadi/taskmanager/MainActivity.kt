@@ -1,10 +1,10 @@
 package info.alirezaahmadi.taskmanager
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
@@ -25,12 +25,11 @@ import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.AppConfig
 import info.alirezaahmadi.taskmanager.ui.theme.TaskManagerTheme
 import info.alirezaahmadi.taskmanager.util.Constants
+import info.alirezaahmadi.taskmanager.viewModel.SkinRoutineViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var navHostController: NavHostController
-
-    @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

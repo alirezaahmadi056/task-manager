@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import info.alirezaahmadi.taskmanager.data.db.DataBase
 import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_1_2
 import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_2_3
+import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramDao
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesDao
 import info.alirezaahmadi.taskmanager.data.db.routine.WeeklyRoutineDao
 import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineDao
@@ -47,5 +48,7 @@ object ModuleDataBse {
     @Singleton
     fun provideSkinRoutineDao(dataBase: DataBase): SkinRoutineDao = dataBase.SkinRoutineDao()
 
-
+    @Provides
+    @Singleton
+    fun provideExerciseProgramDao(dataBase: DataBase): ExerciseProgramDao = dataBase.ExerciseProgramDao()
 }

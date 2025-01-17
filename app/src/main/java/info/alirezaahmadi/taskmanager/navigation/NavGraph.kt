@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import info.alirezaahmadi.taskmanager.ui.graph.duties.dutiesGraph
+import info.alirezaahmadi.taskmanager.ui.graph.exerciseProgram.exerciseProgramGraph
 import info.alirezaahmadi.taskmanager.ui.graph.first.firstGraph
 import info.alirezaahmadi.taskmanager.ui.graph.skinRoutine.skinRoutineGraph
 import info.alirezaahmadi.taskmanager.ui.graph.weeklyRoutine.weeklyRoutineGraph
@@ -24,6 +25,7 @@ fun NavGraph(
         weeklyRoutineGraph(navHostController)
         dutiesGraph(navHostController)
         skinRoutineGraph(navHostController)
+        exerciseProgramGraph(navHostController)
     }
 
 }

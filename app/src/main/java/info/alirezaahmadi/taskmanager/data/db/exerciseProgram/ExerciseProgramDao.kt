@@ -10,12 +10,12 @@ interface ExerciseProgramDao {
     @Upsert
     suspend fun upsertExerciseProgram(exerciseProgramItem: ExerciseProgramItem)
 
-    @Query("select * from exerciseprogramitem")
+    @Query("select * from ExerciseProgramItem")
     fun getAllExerciseProgram(): Flow<List<ExerciseProgramItem>>
 
-    @Query("delete from skinroutineitem where id=:itemId")
+    @Query("delete from ExerciseProgramItem where id=:itemId")
     suspend fun deletedExerciseProgram(itemId:Int)
 
-    @Query("select * from exerciseprogramitem where id=:itemId")
+    @Query("select * from ExerciseProgramItem where id=:itemId")
     fun getExerciseProgram(itemId:Int): Flow<ExerciseProgramItem?>
 }

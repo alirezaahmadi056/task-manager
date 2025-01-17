@@ -5,6 +5,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramDao
+import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramItem
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesDao
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
 import info.alirezaahmadi.taskmanager.data.db.routine.WeeklyRoutineDao
@@ -19,7 +21,8 @@ import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
         NotesItem::class,
         TaskItem::class,
         RoutineItem::class,
-        SkinRoutineItem::class
+        SkinRoutineItem::class,
+        ExerciseProgramItem::class,
     ],
     version = 3,
     exportSchema = false
@@ -31,6 +34,7 @@ abstract class DataBase : RoomDatabase() {
     abstract fun TaskDao(): TaskDao
     abstract fun WeeklyRoutineDao(): WeeklyRoutineDao
     abstract fun SkinRoutineDao(): SkinRoutineDao
+    abstract fun ExerciseProgramDao(): ExerciseProgramDao
 
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
