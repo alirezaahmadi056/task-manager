@@ -35,6 +35,7 @@ fun StartExerciseProgramScreen(
             val currentExercise =
                 remember(key1 = allExercise, key2 = page) { currentDayExercise.getOrNull(page) }
             SingleExerciseComponent(
+                index = page,
                 currentExercise = currentExercise,
                 onBack = {navHostController.navigateUp()}
             )

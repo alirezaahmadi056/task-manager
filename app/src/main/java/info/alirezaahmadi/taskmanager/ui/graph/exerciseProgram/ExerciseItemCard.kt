@@ -38,6 +38,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramItem
+import info.alirezaahmadi.taskmanager.ui.component.BaseImageLoader
 import info.alirezaahmadi.taskmanager.util.TaskHelper.byLocate
 
 @Preview(locale = "fa")
@@ -58,17 +59,14 @@ fun ExerciseItemCard(
             .padding(horizontal = 8.dp, vertical = 13.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        GlideImage(
+        BaseImageLoader(
             model = Uri.parse(item.imageUri),
-            contentDescription = "",
             modifier = Modifier
                 .weight(0.2f)
                 .clip(RoundedCornerShape(12.dp))
                 .aspectRatio(1f),
             contentScale = ContentScale.Crop
-        ) {
-            it.placeholder(R.drawable.ic_launcher_background)
-        }
+        )
         Spacer(Modifier.weight(0.05f))
         Column(
             modifier = Modifier
@@ -88,14 +86,14 @@ fun ExerciseItemCard(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.Start
             ) {
-                BottomInfo(
+                ExerciseItemCardBottomInfo(
                     icon = R.drawable.b,
                     text = "${
                         item.setNumber.toString().byLocate()
-                    }ست ${item.repetitionSetNumber.toString().byLocate()} تایی"
+                    } ست ${item.repetitionSetNumber.toString().byLocate()} تایی"
                 )
                 Spacer(Modifier.width(8.dp))
-                BottomInfo(
+                ExerciseItemCardBottomInfo(
                     icon = R.drawable.stopwatch_progress,
                     text = "زمان تقریبی: ${item.time.toString().byLocate()} دقیقه"
                 )
@@ -106,25 +104,27 @@ fun ExerciseItemCard(
 }
 
 @Composable
-private fun BottomInfo(
+fun ExerciseItemCardBottomInfo(
     @DrawableRes
     icon: Int,
     text: String,
+    bigText: Boolean = false,
 ) {
     val tint = Color(0xff5A697D)
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             painter = painterResource(icon),
             contentDescription = "",
-            modifier = Modifier.size(17.dp),
+            modifier = Modifier.size(if (bigText) 25.dp else 17.dp),
             tint = tint
         )
         Spacer(Modifier.width(6.dp))
         Text(
             text = text,
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.titleSmall
+                .copy(fontSize = if (bigText) 16.sp else 12.sp),
             color = tint,
             fontWeight = FontWeight.SemiBold
         )
