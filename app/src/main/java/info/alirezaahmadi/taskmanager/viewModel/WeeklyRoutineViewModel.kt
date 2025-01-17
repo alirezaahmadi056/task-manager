@@ -32,11 +32,4 @@ class WeeklyRoutineViewModel @Inject constructor(
 
     fun getAllRoutine(): Flow<List<RoutineItem>> = repository.getAllRoutine()
 
-    fun getRoutine(){
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.getAllRoutine().collectLatest { result->
-
-            }
-        }
-    }
 }
