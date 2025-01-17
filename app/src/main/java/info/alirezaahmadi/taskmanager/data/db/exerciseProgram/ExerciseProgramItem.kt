@@ -9,7 +9,7 @@ data class ExerciseProgramItem(
     val id: Int=0,
     val name: String,
     val imageUri:String,
-    val videoUri:String,
+    val videoUri:String?,
     val description: String,
     val dayWeek:List<String>,
     val setNumber:Int,
