@@ -17,7 +17,7 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = Pink80,
 
     background = Color(0xff121212),
-
+    onBackground = Color.White,
     scrim = Color.White,
 
 
@@ -32,7 +32,7 @@ private val LightColorScheme = lightColorScheme(
     secondary = PurpleGrey40,
     tertiary = Pink40,
     background = Color.White,
-
+    onBackground = Color.Black,
     scrim = Color.Black,
 
     error = LightRed,
@@ -56,7 +56,7 @@ fun TaskManagerTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.background.toArgb()
-            window.navigationBarColor =colorScheme.background.toArgb()
+            window.navigationBarColor = colorScheme.background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }

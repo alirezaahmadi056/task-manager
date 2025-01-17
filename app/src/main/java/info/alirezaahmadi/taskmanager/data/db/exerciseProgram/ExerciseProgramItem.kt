@@ -14,8 +14,7 @@ data class ExerciseProgramItem(
     val dayWeek:List<String>,
     val setNumber:Int,
     val repetitionSetNumber:Int,
-    val disability:Boolean,
-    val dropdown:Boolean,
+    val dropdown:Boolean?,
     val time :Int,
 ){
     companion object{
@@ -29,7 +28,6 @@ data class ExerciseProgramItem(
             dayWeek = emptyList(),
             setNumber = 3,
             repetitionSetNumber = 15,
-            disability = false
         )
     }
 }

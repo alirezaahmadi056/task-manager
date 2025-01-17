@@ -44,5 +44,5 @@ sealed interface Screen {
     @Serializable
     data object ExerciseProgramScreen:Screen
     @Serializable
-    data class AddExerciseProgramScreen(val id :Int=0):Screen
+    data class AddExerciseProgramScreen(val id :Int?=null):Screen
 }

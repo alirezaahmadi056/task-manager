@@ -17,10 +17,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,18 +39,25 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
+import info.alirezaahmadi.taskmanager.ui.graph.skinRoutine.addSkinRoutine.SectionSetNumber
 import info.alirezaahmadi.taskmanager.viewModel.ExerciseProgramViewModel
 
 @Composable
 fun AddExerciseProgramScreen(
     navHostController: NavHostController,
+    id: Int?,
     exerciseProgramViewModel: ExerciseProgramViewModel = hiltViewModel()
 ) {
     val currentDayStatus = remember { mutableStateListOf<String>() }
     var checkInput by remember { mutableStateOf(false) }
     var selectedImage by remember { mutableStateOf<Uri?>(null) }
     var selectedVideo by remember { mutableStateOf<Uri?>(null) }
-
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var enableDropDown by remember { mutableStateOf<Boolean?>(null) }
+    var setNumber by remember { mutableIntStateOf(0) }
+    var repetitionSetNumber by remember { mutableIntStateOf(0) }
+    var timeNumber by remember { mutableIntStateOf(0) }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = Color(0xff9747FF).copy(0.4f),
@@ -123,7 +133,59 @@ fun AddExerciseProgramScreen(
             Spacer(modifier = Modifier.height(8.dp))
             AddVideoSection(
                 uri = selectedVideo,
-                onVideoSelected = {selectedVideo =it}
+                onVideoSelected = { selectedVideo = it }
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            OutlinedTextField(
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Gray,
+                    unfocusedIndicatorColor = Color.DarkGray,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.DarkGray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.DarkGray,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White.copy(0.8f),
+                    errorContainerColor = Color.White,
+                    errorSupportingTextColor = Color(0xFFE20000)
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 1,
+                isError = checkInput && title.isEmpty(),
+                textStyle = MaterialTheme.typography.bodyLarge,
+                shape = RoundedCornerShape(9.dp),
+                value = title, onValueChange = { title = it },
+                label = {
+                    Text(
+                        text = stringResource(R.string.name_exercise),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = "نام تمریت را وارد کنید",
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                },
+                supportingText = {
+                    if (checkInput && title.isEmpty()) {
+                        Text(
+                            text = "نام تمرین را وارد کنید",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            SectionSetNumber(
+                enableDropDown = enableDropDown,
+                onDropDown = { enableDropDown = it },
+                setNumber = setNumber,
+                onSetNumberChange = { setNumber = it },
+                repetitionSetNumber = repetitionSetNumber,
+                onRepetitionSetNumberChange = { repetitionSetNumber = it },
+                timeNumber = timeNumber,
+                onTimeNumber = { timeNumber = it }
             )
         }
     }

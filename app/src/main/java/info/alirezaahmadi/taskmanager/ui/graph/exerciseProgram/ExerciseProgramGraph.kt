@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.graph.exerciseProgram.addExercise.AddExerciseProgramScreen
 
@@ -17,7 +18,8 @@ fun NavGraphBuilder.exerciseProgramGraph(
             ExerciseProgramScreen(navHostController = navHostController)
         }
         composable<Screen.AddExerciseProgramScreen> {
-            AddExerciseProgramScreen(navHostController = navHostController)
+            val args =it.toRoute<Screen.AddExerciseProgramScreen>()
+            AddExerciseProgramScreen(navHostController = navHostController,id=args.id)
         }
     }
 

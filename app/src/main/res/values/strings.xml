@@ -11,4 +11,11 @@
     <string name="today_exercise_program">برنامه تمرینی امروز</string>
     <string name="add_exercise">افزودن تمرین</string>
     <string name="day_week">روز های هفته</string>
+    <string name="name_exercise">نام تمرین</string>
+    <string name="description_exercise">توضیحات تمرین</string>
+    <string name="set_number">تعداد ست</string>
+    <string name="repetition_set_number">تکرار هر ست</string>
+    <string name="to_disability">تا ناتوانی</string>
+    <string name="Dropdown">Dropdown</string>
+    <string name="Approximate_time">زمان تقریبی (دقیقه)</string>
 </resources>
