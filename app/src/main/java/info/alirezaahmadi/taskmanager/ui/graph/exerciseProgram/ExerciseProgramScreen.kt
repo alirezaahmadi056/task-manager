@@ -4,7 +4,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +16,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -24,12 +29,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramItem
 import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineItem
 import info.alirezaahmadi.taskmanager.navigation.Screen
@@ -50,7 +59,7 @@ fun ExerciseProgramScreen(
     val dayWeek = remember { Constants.deyWeek }
     val pagerState = rememberPagerState(initialPage = persianDayOfWeek[day] ?: 0) { dayWeek.size }
     val coroutineScope = rememberCoroutineScope()
-    val allExercise by exerciseProgramViewModel.getAllExerciseProgram().collectAsState(emptyList())
+    val allExercise by exerciseProgramViewModel.allExerciseProgram.collectAsState()
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -69,7 +78,35 @@ fun ExerciseProgramScreen(
         },
         floatingActionButtonPosition = FabPosition.Start,
         bottomBar = {
-
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background),
+                contentAlignment = Alignment.Center
+            ) {
+                Button(
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .fillMaxWidth(0.8f),
+                    contentPadding = PaddingValues(
+                        horizontal = 40.dp,
+                        vertical = 8.dp
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xff9747FF),
+                        contentColor = Color.White
+                    ),
+                    onClick = { navHostController.navigate(Screen.StartExerciseProgramScreen(dayWeek[pagerState.currentPage])) }
+                ) {
+                    Text(
+                        modifier = Modifier.padding(2.dp),
+                        text = stringResource(R.string.start_exercise),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         }
     ) { innerPadding ->
         HorizontalPager(
@@ -80,9 +117,10 @@ fun ExerciseProgramScreen(
                 .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
                 .background(MaterialTheme.colorScheme.background)
         ) { page ->
-            val currentExerciseProgramItems = remember(key1 = allExercise, key2 = pagerState.currentPage) {
-                allExercise.filter { it.dayWeek.contains(dayWeek[page]) }
-            }
+            val currentExerciseProgramItems =
+                remember(key1 = allExercise, key2 = pagerState.currentPage) {
+                    allExercise.filter { it.dayWeek.contains(dayWeek[page]) }
+                }
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -99,8 +137,8 @@ fun ExerciseProgramScreen(
                     ExerciseItemCard(
                         item = exercise,
                         onClick = {
-                            navHostController.navigate(Screen.AddExerciseProgramScreen(id = exercise.id)){
-                                launchSingleTop =true
+                            navHostController.navigate(Screen.AddExerciseProgramScreen(id = exercise.id)) {
+                                launchSingleTop = true
                             }
                         },
                         onLongClick = {}
