@@ -31,8 +31,9 @@ fun SectionAddExercise(
 ) {
     Row(
         modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
             .fillMaxWidth()
-            .padding(vertical = 25.dp),
+            .padding(top = 25.dp, bottom = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

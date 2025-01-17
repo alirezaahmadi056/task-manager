@@ -35,7 +35,6 @@ fun SingleExerciseComponent(
     currentExercise: ExerciseProgramItem?,
     onBack: () -> Unit,
 ) {
-
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {

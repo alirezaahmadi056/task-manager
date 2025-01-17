@@ -23,9 +23,16 @@ fun StartExerciseProgramScreen(
     val allExercise by exerciseProgramViewModel.allExerciseProgram.collectAsState()
     val currentDayExercise =
         remember(key1 = allExercise) { allExercise.filter { it.dayWeek.contains(day) } }
-    val pagerState = rememberPagerState { allExercise.size }
+    val pagerState = rememberPagerState { currentDayExercise.size }
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        bottomBar = {
+            SingleExerciseBottomBar(
+                maxSize = currentDayExercise.size,
+                currentIndex = pagerState.currentPage
+            )
+        }
+    ) { innerPadding ->
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
@@ -33,7 +40,7 @@ fun StartExerciseProgramScreen(
                 .padding(innerPadding)
         ) { page ->
             val currentExercise =
-                remember(key1 = allExercise, key2 = page) { currentDayExercise.getOrNull(page) }
+                remember(key1 = currentDayExercise, key2 = page) { currentDayExercise.getOrNull(page) }
             SingleExerciseComponent(
                 index = page,
                 currentExercise = currentExercise,
