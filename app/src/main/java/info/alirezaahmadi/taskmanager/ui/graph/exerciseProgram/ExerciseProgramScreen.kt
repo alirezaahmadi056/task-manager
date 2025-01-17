@@ -51,9 +51,7 @@ fun ExerciseProgramScreen(
     val pagerState = rememberPagerState(initialPage = persianDayOfWeek[day] ?: 0) { dayWeek.size }
     val coroutineScope = rememberCoroutineScope()
     val allExercise by exerciseProgramViewModel.getAllExerciseProgram().collectAsState(emptyList())
-    val currentExerciseProgramItems = remember(key1 = allExercise, key2 = pagerState.currentPage) {
-        allExercise.filter { it.dayWeek.contains(dayWeek.getOrNull(pagerState.currentPage) ?: 0) }
-    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         modifier = Modifier.fillMaxSize(),
@@ -82,6 +80,9 @@ fun ExerciseProgramScreen(
                 .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
                 .background(MaterialTheme.colorScheme.background)
         ) { page ->
+            val currentExerciseProgramItems = remember(key1 = allExercise, key2 = pagerState.currentPage) {
+                allExercise.filter { it.dayWeek.contains(dayWeek[page]) }
+            }
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
