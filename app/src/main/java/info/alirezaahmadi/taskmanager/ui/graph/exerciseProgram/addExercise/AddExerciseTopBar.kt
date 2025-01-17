@@ -33,8 +33,8 @@ fun AddExerciseTopBar(
     ) {
         Text(
             text = stringResource(R.string.add_exercise),
-            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 19.sp),
-            color = Color.Black,
+            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 20.sp),
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.align(Alignment.Center),
             fontWeight = FontWeight.Black
         )
@@ -42,7 +42,7 @@ fun AddExerciseTopBar(
             Icon(
                 imageVector = Icons.Rounded.ArrowForward,
                 contentDescription = "",
-                tint = Color.Black
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
     }

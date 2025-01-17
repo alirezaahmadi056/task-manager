@@ -52,7 +52,7 @@ fun AddImageSection(
         text = stringResource(R.string.selected_image),
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.SemiBold,
-        color = Color.Black
+        color = MaterialTheme.colorScheme.onBackground
     )
     Row(
         modifier = Modifier

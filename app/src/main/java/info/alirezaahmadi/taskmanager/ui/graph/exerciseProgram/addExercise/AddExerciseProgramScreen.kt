@@ -60,13 +60,13 @@ fun AddExerciseProgramScreen(
     var timeNumber by remember { mutableIntStateOf(0) }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = Color(0xff9747FF).copy(0.4f),
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
         topBar = { AddExerciseTopBar { navHostController.navigateUp() } },
         bottomBar = {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 Button(
@@ -101,7 +101,7 @@ fun AddExerciseProgramScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 12.dp)
                 .verticalScroll(rememberScrollState())
         ) {
@@ -135,19 +135,25 @@ fun AddExerciseProgramScreen(
                 uri = selectedVideo,
                 onVideoSelected = { selectedVideo = it }
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                modifier = Modifier.padding(top = 12.dp, bottom = 4.dp, start = 10.dp),
+                text = stringResource(R.string.name_exercise),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Gray,
                     unfocusedIndicatorColor = Color.DarkGray,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.DarkGray,
-                    focusedLabelColor = Color.Black,
-                    unfocusedLabelColor = Color.DarkGray,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White.copy(0.8f),
-                    errorContainerColor = Color.White,
-                    errorSupportingTextColor = Color(0xFFE20000)
+                    unfocusedPlaceholderColor = Color.DarkGray,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.background,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = Color(0xffECECEC),
+                    errorContainerColor = Color(0xFFE20000).copy(0.4f),
+                    errorSupportingTextColor = Color(0xFFE20000),
                 ),
                 modifier = Modifier.fillMaxWidth(),
                 maxLines = 1,
@@ -155,15 +161,9 @@ fun AddExerciseProgramScreen(
                 textStyle = MaterialTheme.typography.bodyLarge,
                 shape = RoundedCornerShape(9.dp),
                 value = title, onValueChange = { title = it },
-                label = {
-                    Text(
-                        text = stringResource(R.string.name_exercise),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                },
                 placeholder = {
                     Text(
-                        text = "نام تمریت را وارد کنید",
+                        text = "نام تمرین را وارد کنید",
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 },
@@ -187,6 +187,41 @@ fun AddExerciseProgramScreen(
                 timeNumber = timeNumber,
                 onTimeNumber = { timeNumber = it }
             )
+            Text(
+                modifier = Modifier.padding(top = 12.dp, bottom = 4.dp, start = 10.dp),
+                text = stringResource(R.string.description_exercise),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            OutlinedTextField(
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Gray,
+                    unfocusedIndicatorColor = Color.DarkGray,
+                    unfocusedPlaceholderColor = Color.DarkGray,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.background,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = Color(0xffECECEC),
+                    errorContainerColor = Color(0xFFE20000).copy(0.4f),
+                    errorSupportingTextColor = Color(0xFFE20000),
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 6,
+                minLines = 3,
+                textStyle = MaterialTheme.typography.bodyLarge,
+                shape = RoundedCornerShape(9.dp),
+                value = description, onValueChange = { description = it },
+                placeholder = {
+                    Text(
+                        text = "توضیحات تمرین را وارد کنید",
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                },
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
         }
     }
 }

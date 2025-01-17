@@ -55,7 +55,7 @@ fun ExerciseProgramScreen(
         allExercise.filter { it.dayWeek.contains(dayWeek.getOrNull(pagerState.currentPage) ?: 0) }
     }
     Scaffold(
-        containerColor = Color(0xff9747FF).copy(0.4f),
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
         modifier = Modifier.fillMaxSize(),
         topBar = {
             ExerciseTopBar(
@@ -69,7 +69,6 @@ fun ExerciseProgramScreen(
                 onBack = { navHostController.navigateUp() }
             )
         },
-
         floatingActionButtonPosition = FabPosition.Start,
         bottomBar = {
 
@@ -81,7 +80,7 @@ fun ExerciseProgramScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
         ) { page ->
             LazyColumn(
                 modifier = Modifier

@@ -163,6 +163,11 @@ private fun NumberSection(
         ),
         label = "",
     )
+    val enableContentTextColor by animateColorAsState(
+        targetValue = if (enable) Color.Black else Color.DarkGray,
+        label = "",
+    )
+
     Column(
         modifier = modifier
     ) {
@@ -197,9 +202,7 @@ private fun NumberSection(
                 text = number.toString().byLocate(),
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
                 fontWeight = FontWeight.Bold,
-                color = if (enable) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onBackground.copy(
-                    0.4f
-                )
+                color = enableContentTextColor
             )
             IconButton(
                 enabled = enable && number > 0,

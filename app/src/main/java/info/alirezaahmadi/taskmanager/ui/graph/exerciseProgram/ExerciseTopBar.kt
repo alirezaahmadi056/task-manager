@@ -51,8 +51,8 @@ fun ExerciseTopBar(
         ) {
             Text(
                 text = stringResource(R.string.my_exercise_program),
-                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 19.sp),
-                color = Color.Black,
+                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 20.sp),
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.align(Alignment.Center),
                 fontWeight = FontWeight.Black
             )
@@ -60,7 +60,7 @@ fun ExerciseTopBar(
                 Icon(
                     imageVector = Icons.Rounded.ArrowForward,
                     contentDescription = "",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
@@ -91,11 +91,11 @@ private fun SingeTopDay(
     onClick: () -> Unit
 ) {
     val textColor by animateColorAsState(
-        targetValue = if (!isSelected) Color.Black
+        targetValue = if (!isSelected) MaterialTheme.colorScheme.onBackground
         else Color.White, label = ""
     )
     val backColor by animateColorAsState(
-        targetValue = if (!isSelected) Color.White else
+        targetValue = if (!isSelected) MaterialTheme.colorScheme.background else
             Color(0xff9747FF), label = ""
     )
 

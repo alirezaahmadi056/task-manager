@@ -39,7 +39,7 @@ fun SelectedExerciseDayStatusSection(
         text = stringResource(R.string.day_week),
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.SemiBold,
-        color = Color.Black
+        color = MaterialTheme.colorScheme.onBackground
     )
     FlowRow(
         modifier = Modifier.fillMaxWidth(),
@@ -75,7 +75,8 @@ private fun SingleDay(
         else Color(0xFF9747FF), label = ""
     )
     val backgroundColor by animateColorAsState(
-        targetValue = if (selected) Color(0xFF9747FF) else Color.White,
+        targetValue = if (selected) Color(0xFF9747FF) else
+           MaterialTheme.colorScheme.background,
         label = ""
     )
     Box(

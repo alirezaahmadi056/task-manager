@@ -40,7 +40,7 @@ fun SectionAddExercise(
             text = "${stringResource(R.string.today_exercise_program)} ($day)",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onBackground
         )
         Row(
             modifier = Modifier
