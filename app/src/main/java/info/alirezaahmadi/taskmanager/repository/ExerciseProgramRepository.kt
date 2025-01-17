@@ -2,7 +2,6 @@ package info.alirezaahmadi.taskmanager.repository
 
 import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramDao
 import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramItem
-import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineItem
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
