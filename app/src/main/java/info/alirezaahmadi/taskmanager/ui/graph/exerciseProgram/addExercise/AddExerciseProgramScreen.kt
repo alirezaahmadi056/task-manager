@@ -36,8 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
-import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineItem
-import info.alirezaahmadi.taskmanager.ui.graph.skinRoutine.addSkinRoutine.AddSkinRoutineTopBar
 import info.alirezaahmadi.taskmanager.viewModel.ExerciseProgramViewModel
 
 @Composable
@@ -48,6 +46,7 @@ fun AddExerciseProgramScreen(
     val currentDayStatus = remember { mutableStateListOf<String>() }
     var checkInput by remember { mutableStateOf(false) }
     var selectedImage by remember { mutableStateOf<Uri?>(null) }
+    var selectedVideo by remember { mutableStateOf<Uri?>(null) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -120,6 +119,11 @@ fun AddExerciseProgramScreen(
             AddImageSection(
                 uri = selectedImage,
                 onImageSelected = { selectedImage = it }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            AddVideoSection(
+                uri = selectedVideo,
+                onVideoSelected = {selectedVideo =it}
             )
         }
     }
