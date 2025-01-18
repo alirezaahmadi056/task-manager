@@ -102,7 +102,7 @@ fun AddExerciseProgramScreen(
                         contentColor = Color.White
                     ),
                     onClick = {
-                        if (currentDayStatus.isNotEmpty() || title.isNotEmpty()) {
+                        if (currentDayStatus.isNotEmpty() && title.isNotEmpty()) {
                             checkInput = false
                             exerciseProgramViewModel.upsertExerciseProgram(
                                 ExerciseProgramItem(
