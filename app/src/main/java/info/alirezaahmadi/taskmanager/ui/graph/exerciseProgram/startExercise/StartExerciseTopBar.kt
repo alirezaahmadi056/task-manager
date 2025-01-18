@@ -59,7 +59,7 @@ fun StartExerciseTopBar(
         ) {
             BaseImageLoader(
                 modifier = Modifier.fillMaxSize()
-                    .clickable { openUri(context,Uri.parse(image)) },
+                    .clickable(enabled =image.isNotEmpty() ) { openUri(context,Uri.parse(image)) },
                 contentScale = ContentScale.Crop,
                 model = Uri.parse(image)
             )

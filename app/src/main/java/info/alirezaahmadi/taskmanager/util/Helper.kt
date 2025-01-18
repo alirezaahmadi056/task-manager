@@ -4,12 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.OpenableColumns
-import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 
 fun openUri(context: Context, uri: Uri) {
-    Log.i("1515","uri:$uri")
     try {
         val mimeType: String? = context.contentResolver.getType(uri)
             ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(uri.toString()))
@@ -21,12 +19,10 @@ fun openUri(context: Context, uri: Uri) {
             }
             context.startActivity(intent)
         } else {
-            throw IllegalArgumentException("Unknown MIME type")
+            throw IllegalArgumentException("نوع فایل نامشخص!")
         }
     } catch (e: Exception) {
-        e.printStackTrace()
-        // Handling the error, e.g., showing a Toast message to the user
-        Toast.makeText(context, "Unable to open the file: ${e.message}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "خطا${e.message}", Toast.LENGTH_SHORT).show()
     }
 }
 

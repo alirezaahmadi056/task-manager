@@ -19,8 +19,8 @@ private val DarkColorScheme = darkColorScheme(
     background = Color(0xff121212),
     onBackground = Color.White,
     scrim = Color.White,
-    primaryContainer =Color(0xff272727),
-
+    primaryContainer = Color(0xff272727),
+    onPrimaryContainer = Color(0xff3B3B3B),
 
     error = DarkRed,
     onSecondary = DarkOrange,
@@ -35,13 +35,13 @@ private val LightColorScheme = lightColorScheme(
     background = Color.White,
     onBackground = Color.Black,
     scrim = Color.Black,
-    primaryContainer =Color(0xffD0ACFF),
+    primaryContainer = Color(0xffD0ACFF),
     error = LightRed,
     onSecondary = LightOrange,
-    onPrimary = LightGreen
+    onPrimary = LightGreen,
+    onPrimaryContainer = Color(0xffECECEC),
 
-
-)
+    )
 
 @Composable
 fun TaskManagerTheme(

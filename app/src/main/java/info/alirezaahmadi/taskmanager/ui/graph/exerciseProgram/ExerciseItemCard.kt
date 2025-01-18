@@ -53,7 +53,7 @@ fun ExerciseItemCard(
             .fillMaxWidth()
             .height(85.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(Color(0xffECECEC), RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.onPrimaryContainer, RoundedCornerShape(12.dp))
             .combinedClickable(onClick = onClick, onLongClick = onLongClick)
             .padding(horizontal = 8.dp, vertical = 13.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -77,7 +77,7 @@ fun ExerciseItemCard(
                 text = item.name,
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp),
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
             Row(
                 modifier = Modifier
@@ -112,7 +112,6 @@ fun ExerciseItemCardBottomInfo(
     text: String,
     bigText: Boolean = false,
 ) {
-    val tint = Color(0xff5A697D)
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -120,14 +119,14 @@ fun ExerciseItemCardBottomInfo(
             painter = painterResource(icon),
             contentDescription = "",
             modifier = Modifier.size(if (bigText) 25.dp else 17.dp),
-            tint = tint
+            tint = MaterialTheme.colorScheme.onBackground.copy(0.8f)
         )
         Spacer(Modifier.width(6.dp))
         Text(
             text = text,
             style = MaterialTheme.typography.titleSmall
                 .copy(fontSize = if (bigText) 16.sp else 12.sp),
-            color = tint,
+            color = MaterialTheme.colorScheme.onBackground.copy(0.8f),
             fontWeight = FontWeight.SemiBold
         )
     }
