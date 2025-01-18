@@ -33,6 +33,7 @@ import info.alirezaahmadi.taskmanager.util.getOrdinalInPersian
 
 @Composable
 fun SingleExerciseComponent(
+    modifier: Modifier,
     index: Int,
     dayName:String,
     currentExercise: ExerciseProgramItem?,
@@ -50,6 +51,7 @@ fun SingleExerciseComponent(
         onClick = onScrollPage
     )
     Scaffold(
+        modifier =modifier,
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             StartExerciseTopBar(

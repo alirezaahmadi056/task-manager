@@ -14,13 +14,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,10 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
-import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramItem
-import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineItem
 import info.alirezaahmadi.taskmanager.navigation.Screen
-import info.alirezaahmadi.taskmanager.ui.graph.skinRoutine.SkinTopBar
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.util.Constants.persianDayOfWeek
 import info.alirezaahmadi.taskmanager.viewModel.ExerciseProgramViewModel
@@ -87,7 +80,7 @@ fun ExerciseProgramScreen(
                 Button(
                     modifier = Modifier
                         .padding(12.dp)
-                        .fillMaxWidth(0.8f),
+                        .fillMaxWidth(0.9f),
                     contentPadding = PaddingValues(
                         horizontal = 40.dp,
                         vertical = 8.dp
@@ -97,7 +90,9 @@ fun ExerciseProgramScreen(
                         containerColor = Color(0xff9747FF),
                         contentColor = Color.White
                     ),
-                    onClick = { navHostController.navigate(Screen.StartExerciseProgramScreen(dayWeek[pagerState.currentPage])) }
+                    onClick = {
+                        navHostController.navigate(Screen.StartExerciseProgramScreen(dayWeek[pagerState.currentPage])) { launchSingleTop = true }
+                    }
                 ) {
                     Text(
                         modifier = Modifier.padding(2.dp),
