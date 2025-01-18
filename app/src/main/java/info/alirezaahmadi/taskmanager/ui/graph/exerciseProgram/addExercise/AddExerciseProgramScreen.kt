@@ -99,24 +99,24 @@ fun AddExerciseProgramScreen(
                         contentColor = Color.White
                     ),
                     onClick = {
-                        if (currentDayStatus.isNotEmpty()||title.isNotEmpty()){
+                        if (currentDayStatus.isNotEmpty() || title.isNotEmpty()) {
                             checkInput = false
                             exerciseProgramViewModel.upsertExerciseProgram(
                                 ExerciseProgramItem(
-                                    id = id?:0,
+                                    id = id ?: 0,
                                     setNumber = setNumber,
                                     time = timeNumber,
-                                    name =title,
+                                    name = title,
                                     repetitionSetNumber = repetitionSetNumber,
-                                    imageUri = (selectedImage?:"").toString(),
+                                    imageUri = (selectedImage ?: "").toString(),
                                     dropdown = enableDropDown,
-                                    videoUri = (selectedVideo?:"").toString(),
+                                    videoUri = (selectedVideo ?: "").toString(),
                                     description = description,
                                     dayWeek = currentDayStatus
                                 )
                             )
                             navHostController.navigateUp()
-                        }else{
+                        } else {
                             checkInput = true
                         }
                     }
@@ -196,7 +196,11 @@ fun AddExerciseProgramScreen(
                 isError = checkInput && title.isEmpty(),
                 textStyle = MaterialTheme.typography.bodyLarge,
                 shape = RoundedCornerShape(9.dp),
-                value = title, onValueChange = { title = it },
+                value = title, onValueChange = {
+                    if (it.length <= 40) {
+                        title = it
+                    }
+                },
                 placeholder = {
                     Text(
                         text = "نام تمرین را وارد کنید",

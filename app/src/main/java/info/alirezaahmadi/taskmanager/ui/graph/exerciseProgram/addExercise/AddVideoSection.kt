@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DriveFolderUpload
+import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import info.alirezaahmadi.taskmanager.R
@@ -66,22 +68,34 @@ fun AddVideoSection(
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(Color(0xffECECEC))
-            .clickable(enabled = uri != Uri.EMPTY && uri != null) {
-                uri?.let {
-                    openUri(context, it)
-                }
-            }
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        if (uri != Uri.EMPTY && uri != null) {
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color(0xff9747FF), RoundedCornerShape(10.dp))
+                    .clickable(enabled = uri != Uri.EMPTY) { openUri(context, uri) },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Visibility,
+                    contentDescription = "",
+                    tint = Color.White,
+                    modifier = Modifier.padding(5.dp)
+                )
+            }
+        }
         Text(
             text = fileName,
             style = MaterialTheme.typography.bodyLarge,
             color = Color.Black,
             maxLines = 1,
+            textAlign =if (uri!=null) TextAlign.Center else TextAlign.Start,
+            modifier = Modifier.fillMaxWidth(0.8f),
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.fillMaxWidth(0.8f)
         )
         Box(
             modifier = Modifier

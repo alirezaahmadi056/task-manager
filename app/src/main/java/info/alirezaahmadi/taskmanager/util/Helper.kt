@@ -22,7 +22,7 @@ fun openUri(context: Context, uri: Uri) {
             throw IllegalArgumentException("نوع فایل نامشخص!")
         }
     } catch (e: Exception) {
-        Toast.makeText(context, "خطا${e.message}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, " خطا${e.message}", Toast.LENGTH_SHORT).show()
     }
 }
 

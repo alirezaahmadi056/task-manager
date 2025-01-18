@@ -98,6 +98,7 @@ fun SectionSetNumber(
             Text(
                 text = stringResource(R.string.to_disability),
                 style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onBackground,
             )
         }
@@ -127,7 +128,8 @@ fun SectionSetNumber(
                 text = stringResource(R.string.Dropdown),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground,
-            )
+                fontWeight = FontWeight.SemiBold,
+                )
         }
     }
     NumberSection(
