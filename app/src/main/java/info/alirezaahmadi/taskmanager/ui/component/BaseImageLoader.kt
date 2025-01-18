@@ -20,6 +20,6 @@ fun BaseImageLoader(
         contentDescription = "",
         contentScale = contentScale
     ){
-        it.placeholder(R.drawable.ic_launcher_background)
+        it.placeholder(R.drawable.image_placeholder)
     }
 }
