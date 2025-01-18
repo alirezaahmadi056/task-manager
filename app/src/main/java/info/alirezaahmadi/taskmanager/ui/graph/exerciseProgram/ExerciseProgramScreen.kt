@@ -24,8 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.navigation.Screen
+import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.util.Constants.persianDayOfWeek
 import info.alirezaahmadi.taskmanager.viewModel.ExerciseProgramViewModel
@@ -63,8 +66,18 @@ fun ExerciseProgramScreen(
         }
     }
 
+    var singleId by remember { mutableStateOf<Int?>(null) }
 
-
+    DialogDeleteItemTask(
+        title = "حذف حرکت ",
+        body = "از حذف کردن این جرکت ورزشی اطمینان دارید؟",
+        show = singleId != null,
+        onBack = { singleId = null },
+        onDeleteItem = {
+            singleId?.let { exerciseProgramViewModel.deletedExerciseProgram(it) }
+            singleId = null
+        }
+    )
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         modifier = Modifier.fillMaxSize(),
@@ -82,40 +95,40 @@ fun ExerciseProgramScreen(
         },
         floatingActionButtonPosition = FabPosition.Start,
         bottomBar = {
-                Box(
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background),
+                contentAlignment = Alignment.Center
+            ) {
+                Button(
+                    enabled = enableStartExercise.value,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.background),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Button(
-                        enabled =enableStartExercise.value ,
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .fillMaxWidth(0.9f),
-                        contentPadding = PaddingValues(
-                            horizontal = 40.dp,
-                            vertical = 8.dp
-                        ),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xff9747FF),
-                            contentColor = Color.White
-                        ),
-                        onClick = {
-                            navHostController.navigate(Screen.StartExerciseProgramScreen(dayWeek[pagerState.currentPage])) {
-                                launchSingleTop = true
-                            }
+                        .padding(12.dp)
+                        .fillMaxWidth(0.9f),
+                    contentPadding = PaddingValues(
+                        horizontal = 40.dp,
+                        vertical = 8.dp
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xff9747FF),
+                        contentColor = Color.White
+                    ),
+                    onClick = {
+                        navHostController.navigate(Screen.StartExerciseProgramScreen(dayWeek[pagerState.currentPage])) {
+                            launchSingleTop = true
                         }
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(2.dp),
-                            text = stringResource(R.string.start_exercise),
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold
-                        )
                     }
+                ) {
+                    Text(
+                        modifier = Modifier.padding(2.dp),
+                        text = stringResource(R.string.start_exercise),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
+            }
         }
     ) { innerPadding ->
         HorizontalPager(
@@ -150,7 +163,9 @@ fun ExerciseProgramScreen(
                                 launchSingleTop = true
                             }
                         },
-                        onLongClick = {}
+                        onLongClick = {
+                            singleId =exercise.id
+                        }
                     )
                 }
 
