@@ -93,7 +93,7 @@ fun AddVideoSection(
             style = MaterialTheme.typography.bodyLarge,
             color = Color.Black,
             maxLines = 1,
-            textAlign =if (uri!=null) TextAlign.Center else TextAlign.Start,
+            textAlign =if (uri != Uri.EMPTY && uri != null) TextAlign.Center else TextAlign.Start,
             modifier = Modifier.fillMaxWidth(0.8f),
             overflow = TextOverflow.Ellipsis,
         )
