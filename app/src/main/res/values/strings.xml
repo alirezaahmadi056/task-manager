@@ -20,8 +20,8 @@
     <string name="Approximate_time">زمان تقریبی (دقیقه)</string>
     <string name="start_exercise">شروع تمرین</string>
     <string name="played_video">پخش ویدیو</string>
-    <string name="exercise_list">لیست تمرینات</string>
-    <string name="next_exercise">تمرین بعدی</string>
-    <string name="previous_exercise">تمرین قبلی</string>
+    <string name="exercise_list">لیست حرکات</string>
+    <string name="next_exercise">حرکت بعدی</string>
+    <string name="previous_exercise">حرکت قبلی</string>
     <string name="end_exercise">پایان  تمرین</string>
 </resources>

@@ -41,13 +41,12 @@ import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramIte
 import info.alirezaahmadi.taskmanager.ui.component.BaseImageLoader
 import info.alirezaahmadi.taskmanager.util.TaskHelper.byLocate
 
-@Preview(locale = "fa")
-@OptIn(ExperimentalFoundationApi::class, ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ExerciseItemCard(
-    item: ExerciseProgramItem = ExerciseProgramItem.fakeItem,
-    onClick: () -> Unit = {},
-    onLongClick: () -> Unit = {}
+    item: ExerciseProgramItem,
+    onClick: () -> Unit ,
+    onLongClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -73,7 +72,7 @@ fun ExerciseItemCard(
                 .weight(0.75f)
                 .fillMaxSize(),
         ) {
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(5.dp))
             Text(
                 text = item.name,
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp),
@@ -86,11 +85,14 @@ fun ExerciseItemCard(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.Start
             ) {
+                val repetitionSetText = if(item.dropdown==false)
+                    "تا ناتوانی"
+                else "ست ${item.repetitionSetNumber.toString().byLocate()} تایی"
                 ExerciseItemCardBottomInfo(
                     icon = R.drawable.b,
                     text = "${
                         item.setNumber.toString().byLocate()
-                    } ست ${item.repetitionSetNumber.toString().byLocate()} تایی"
+                    } $repetitionSetText",
                 )
                 Spacer(Modifier.width(8.dp))
                 ExerciseItemCardBottomInfo(
