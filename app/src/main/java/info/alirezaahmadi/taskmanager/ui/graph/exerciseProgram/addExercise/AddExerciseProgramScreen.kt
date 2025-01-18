@@ -70,6 +70,9 @@ fun AddExerciseProgramScreen(
                 title = it.name
                 description = it.description
                 enableDropDown = it.dropdown
+                setNumber =it.setNumber
+                repetitionSetNumber =it.repetitionSetNumber
+                timeNumber =it.time
             }
         }
 
