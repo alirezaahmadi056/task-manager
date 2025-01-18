@@ -14,6 +14,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,9 +34,21 @@ import info.alirezaahmadi.taskmanager.util.getOrdinalInPersian
 @Composable
 fun SingleExerciseComponent(
     index: Int,
+    dayName:String,
     currentExercise: ExerciseProgramItem?,
+    exerciseList: List<ExerciseProgramItem>,
+    onScrollPage :(Int)->Unit,
     onBack: () -> Unit,
 ) {
+    var showDialogExerciseList by remember { mutableStateOf(false) }
+
+    SheetListExercise(
+        isShow = showDialogExerciseList,
+        onDismiss = {showDialogExerciseList=false},
+        day = dayName,
+        exerciseList = exerciseList,
+        onClick = onScrollPage
+    )
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -40,7 +56,7 @@ fun SingleExerciseComponent(
                 image = currentExercise?.imageUri ?: "",
                 video = currentExercise?.videoUri ?: "",
                 onBack = onBack,
-                openDialogListExercise = {}
+                openDialogListExercise = {showDialogExerciseList=true}
             )
         },
     ) { innerPadding ->

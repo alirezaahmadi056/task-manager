@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
@@ -48,7 +49,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun TskApp(navHostController: NavHostController) {
         var darkThem by rememberSaveable { mutableStateOf(Constants.isThemDark) }
-        TaskManagerTheme(darkThem) {
+        TaskManagerTheme(isSystemInDarkTheme()) {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                 NavGraph(
                     modifier = Modifier

@@ -118,7 +118,7 @@ fun ExerciseProgramScreen(
                 .background(MaterialTheme.colorScheme.background)
         ) { page ->
             val currentExerciseProgramItems =
-                remember(key1 = allExercise, key2 = pagerState.currentPage) {
+                remember(key1 = allExercise, key2 = page) {
                     allExercise.filter { it.dayWeek.contains(dayWeek[page]) }
                 }
             LazyColumn(

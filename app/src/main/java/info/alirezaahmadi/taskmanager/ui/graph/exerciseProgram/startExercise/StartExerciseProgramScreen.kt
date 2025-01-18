@@ -65,8 +65,17 @@ fun StartExerciseProgramScreen(
                 remember(key1 = currentDayExercise, key2 = page) { currentDayExercise.getOrNull(page) }
             SingleExerciseComponent(
                 index = page,
+                dayName = day,
+                exerciseList =currentDayExercise ,
                 currentExercise = currentExercise,
-                onBack = {navHostController.navigateUp()}
+                onBack = {navHostController.navigateUp()},
+                onScrollPage = {pageIndex->
+                    if (pageIndex!=page){
+                        scope.launch {
+                            pagerState.animateScrollToPage(pageIndex, animationSpec = tween(600))
+                        }
+                    }
+                }
             )
         }
     }

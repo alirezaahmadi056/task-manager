@@ -72,8 +72,8 @@ fun StartExerciseTopBar(
                     contentDescription = "",
                     tint = Color.White,
                     modifier = Modifier
-                        .padding(vertical = 4.dp, horizontal = 5.dp)
-                        .size(26.dp)
+                        .padding(vertical = 4.dp, horizontal = 6.dp)
+                        .size(28.dp)
                 )
             }
 
@@ -86,7 +86,7 @@ fun StartExerciseTopBar(
                 ) {
                     Row(
                         modifier = Modifier
-                            .padding(vertical = 4.dp, horizontal = 12.dp),
+                            .padding(vertical = 5.dp, horizontal = 15.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -109,7 +109,7 @@ fun StartExerciseTopBar(
             ) {
                 Row(
                     modifier = Modifier
-                        .padding(vertical = 4.dp, horizontal = 12.dp),
+                        .padding(vertical = 5.dp, horizontal = 15.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
