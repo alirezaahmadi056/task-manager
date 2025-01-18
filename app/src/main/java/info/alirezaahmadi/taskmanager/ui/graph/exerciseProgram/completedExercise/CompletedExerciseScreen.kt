@@ -88,7 +88,7 @@ fun CompletedExerciseScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(innerPadding)
-                .padding(horizontal = 12.dp)
+                .padding(horizontal = 15.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -166,7 +166,7 @@ fun CompletedExerciseScreen(
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = stringResource(R.string.exercise_list),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -174,15 +174,14 @@ fun CompletedExerciseScreen(
             exerciseList.fastMapIndexed { index, s ->
                 Text(
                     text = "${index + 1}. $s",
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp)
+                        .padding(top = 4.dp, start = 18.dp),
                 )
             }
         }
