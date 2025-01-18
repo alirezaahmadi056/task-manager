@@ -22,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -53,6 +54,16 @@ fun ExerciseProgramScreen(
     val pagerState = rememberPagerState(initialPage = persianDayOfWeek[day] ?: 0) { dayWeek.size }
     val coroutineScope = rememberCoroutineScope()
     val allExercise by exerciseProgramViewModel.allExerciseProgram.collectAsState()
+    val enableStartExercise = remember(key1 = pagerState.currentPage, key2 = allExercise) {
+        derivedStateOf {
+            val filteredExercises = allExercise.filter { exercise ->
+                exercise.dayWeek.contains(dayWeek.getOrNull(pagerState.currentPage))
+            }
+            filteredExercises.isNotEmpty()
+        }
+    }
+
+
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -71,37 +82,40 @@ fun ExerciseProgramScreen(
         },
         floatingActionButtonPosition = FabPosition.Start,
         bottomBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background),
-                contentAlignment = Alignment.Center
-            ) {
-                Button(
+                Box(
                     modifier = Modifier
-                        .padding(12.dp)
-                        .fillMaxWidth(0.9f),
-                    contentPadding = PaddingValues(
-                        horizontal = 40.dp,
-                        vertical = 8.dp
-                    ),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xff9747FF),
-                        contentColor = Color.White
-                    ),
-                    onClick = {
-                        navHostController.navigate(Screen.StartExerciseProgramScreen(dayWeek[pagerState.currentPage])) { launchSingleTop = true }
-                    }
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        modifier = Modifier.padding(2.dp),
-                        text = stringResource(R.string.start_exercise),
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Button(
+                        enabled =enableStartExercise.value ,
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .fillMaxWidth(0.9f),
+                        contentPadding = PaddingValues(
+                            horizontal = 40.dp,
+                            vertical = 8.dp
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xff9747FF),
+                            contentColor = Color.White
+                        ),
+                        onClick = {
+                            navHostController.navigate(Screen.StartExerciseProgramScreen(dayWeek[pagerState.currentPage])) {
+                                launchSingleTop = true
+                            }
+                        }
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(2.dp),
+                            text = stringResource(R.string.start_exercise),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
-            }
         }
     ) { innerPadding ->
         HorizontalPager(
