@@ -34,7 +34,7 @@ fun ProgressExerciseSection(
         targetValue = (currentIndex.plus(1).toFloat() / maxSize.toFloat()).coerceIn(0f, 1f),
         label = "",
         animationSpec = tween(
-            durationMillis = 1000,
+            durationMillis = 600,
             easing = FastOutSlowInEasing
         ),
     )

@@ -33,10 +33,11 @@ import info.alirezaahmadi.taskmanager.R
 @Composable
 fun SingleExerciseBottomBar(
     currentIndex: Int,
+    enableScroll: Boolean,
     maxSize: Int,
     onFinish: () -> Unit,
     onNext: (Int) -> Unit,
-    onPrevious:(Int)->Unit
+    onPrevious: (Int) -> Unit
 ) {
 
     Column(
@@ -52,7 +53,7 @@ fun SingleExerciseBottomBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .padding(vertical = 15.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -70,15 +71,16 @@ fun SingleExerciseBottomBar(
                         onClick = onFinish
                     ) {
                         Text(
-                            modifier = Modifier.padding(2.dp),
+                            modifier = Modifier.padding(horizontal = 25.dp),
                             text = stringResource(R.string.end_exercise),
-                            style = MaterialTheme.typography.labelMedium,
+                            style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 } else {
                     TextButton(
-                        onClick = {onNext(currentIndex.plus(1))},
+                        enabled = enableScroll,
+                        onClick = { onNext(currentIndex.plus(1)) },
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = Color(0xff9747FF),
                             disabledContentColor = Color(0xff9747FF).copy(0.4f)
@@ -101,8 +103,8 @@ fun SingleExerciseBottomBar(
 
 
             TextButton(
-                onClick = {onPrevious(currentIndex.minus(1))},
-                enabled = currentIndex > 0,
+                onClick = { onPrevious(currentIndex.minus(1)) },
+                enabled = currentIndex > 0 && enableScroll,
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color(0xff9747FF),
                     disabledContentColor = Color(0xff9747FF).copy(0.4f)

@@ -1,5 +1,6 @@
 package info.alirezaahmadi.taskmanager.ui.graph.exerciseProgram.startExercise
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.viewModel.ExerciseProgramViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun StartExerciseProgramScreen(
@@ -38,9 +40,18 @@ fun StartExerciseProgramScreen(
             SingleExerciseBottomBar(
                 maxSize = currentDayExercise.size,
                 currentIndex = pagerState.currentPage,
+                enableScroll = !pagerState.isScrollInProgress,
                 onFinish = {},
-                onPrevious = {},
-                onNext = {}
+                onPrevious = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(it, animationSpec = tween(500))
+                    }
+                },
+                onNext = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(it, animationSpec = tween(500))
+                    }
+                }
             )
         }
     ) { innerPadding ->
