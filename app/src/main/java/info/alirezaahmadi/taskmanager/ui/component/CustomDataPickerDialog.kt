@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.LayoutDirection
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDataPickerDialog(
-    initialHour:Int,
-    initialMinute:Int,
+    initialHour: Int,
+    initialMinute: Int,
     isShow: Boolean,
     onDismissRequest: () -> Unit,
     onSelected: (TimePickerState) -> Unit
@@ -33,8 +33,9 @@ fun CustomDataPickerDialog(
     )
     CompositionLocalProvider(value = LocalLayoutDirection provides LayoutDirection.Ltr) {
         AlertDialog(
-            textContentColor = MaterialTheme.colorScheme.scrim,
-            titleContentColor = MaterialTheme.colorScheme.scrim,
+            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            textContentColor = MaterialTheme.colorScheme.onBackground,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
             onDismissRequest = onDismissRequest,
             confirmButton = {
                 TextButton(onClick = {
@@ -62,7 +63,9 @@ fun CustomDataPickerDialog(
             text = {
                 TimePicker(
                     colors = TimePickerDefaults.colors(
-                        clockDialSelectedContentColor = MaterialTheme.colorScheme.scrim
+                        clockDialSelectedContentColor = MaterialTheme.colorScheme.onBackground,
+                        timeSelectorSelectedContentColor = MaterialTheme.colorScheme.onBackground,
+                        timeSelectorSelectedContainerColor = MaterialTheme.colorScheme.onBackground.copy(0.5f),
                     ),
                     state = timePickerState,
                     layoutType = TimePickerLayoutType.Vertical
