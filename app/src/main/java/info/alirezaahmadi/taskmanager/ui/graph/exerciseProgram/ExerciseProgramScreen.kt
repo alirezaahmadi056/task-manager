@@ -5,18 +5,25 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.EmojiPeople
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -40,6 +48,7 @@ import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
+import info.alirezaahmadi.taskmanager.ui.component.SwipeToDismissBoxLayout
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.util.Constants.persianDayOfWeek
 import info.alirezaahmadi.taskmanager.viewModel.ExerciseProgramViewModel
@@ -70,7 +79,7 @@ fun ExerciseProgramScreen(
 
     DialogDeleteItemTask(
         title = "حذف حرکت ",
-        body = "از حذف کردن این جرکت ورزشی اطمینان دارید؟",
+        body = "از حذف کردن این حرکت ورزشی اطمینان دارید؟",
         show = singleId != null,
         onBack = { singleId = null },
         onDeleteItem = {
@@ -79,7 +88,7 @@ fun ExerciseProgramScreen(
         }
     )
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
         modifier = Modifier.fillMaxSize(),
         topBar = {
             ExerciseTopBar(
@@ -87,7 +96,7 @@ fun ExerciseProgramScreen(
                 currentPage = pagerState.currentPage,
                 onSelected = { page ->
                     coroutineScope.launch {
-                        pagerState.animateScrollToPage(page, animationSpec = tween(600))
+                        pagerState.animateScrollToPage(page, animationSpec = tween(550))
                     }
                 },
                 onBack = { navHostController.navigateUp() }
@@ -155,22 +164,68 @@ fun ExerciseProgramScreen(
                         onAddClick = { navHostController.navigate(Screen.AddExerciseProgramScreen()) }
                     )
                 }
+                if (currentExerciseProgramItems.isEmpty()) {
+                    stickyHeader { ExerciseEmpty() }
+                }
                 items(items = currentExerciseProgramItems, key = { it.id }) { exercise ->
-                    ExerciseItemCard(
-                        item = exercise,
-                        onClick = {
+                    SwipeToDismissBoxLayout(
+                        enableDismissFromEndToStart = true,
+                        enableDismissFromStartToEnd = true,
+                        endToStart = { singleId = exercise.id },
+                        startToEnd = {
                             navHostController.navigate(Screen.AddExerciseProgramScreen(id = exercise.id)) {
                                 launchSingleTop = true
                             }
-                        },
-                        onLongClick = {
-                            singleId =exercise.id
                         }
-                    )
+                    ) {
+                        ExerciseItemCard(
+                            item = exercise,
+                            onClick = {
+                                navHostController.navigate(
+                                    Screen.AddExerciseProgramScreen(
+                                        id = exercise.id
+                                    )
+                                ) {
+                                    launchSingleTop = true
+                                }
+                            },
+                            onLongClick = { singleId = exercise.id }
+                        )
+                    }
+
                 }
 
             }
+
+
         }
     }
 }
 
+@Composable
+private fun ExerciseEmpty() {
+    val config = LocalConfiguration.current
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(config.screenHeightDp.dp / 2),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Spacer(Modifier.height(15.dp))
+        Icon(
+            imageVector = Icons.Rounded.EmojiPeople,
+            contentDescription = "",
+            modifier = Modifier.size(100.dp),
+            tint = MaterialTheme.colorScheme.onBackground
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = "تمرینی برای این روز تنظیم نشده است!",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onBackground
+
+        )
+    }
+}
