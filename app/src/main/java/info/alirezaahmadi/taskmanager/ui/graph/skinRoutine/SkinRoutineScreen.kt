@@ -1,5 +1,6 @@
 package info.alirezaahmadi.taskmanager.ui.graph.skinRoutine
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -46,6 +47,7 @@ import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineItem
 import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinStatus
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
+import info.alirezaahmadi.taskmanager.ui.component.SwipeToDismissBoxLayout
 import info.alirezaahmadi.taskmanager.ui.graph.skinRoutine.bottomNavigation.SkinBottomNavigation
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.util.Constants.persianDayOfWeek
@@ -94,7 +96,7 @@ fun SkinRoutineScreen(
         show = showDialogDeleted,
         title = "حذف روتین",
         onBack = { showDialogDeleted = false },
-        body = "از حذف کردن این روتین پوستی اطمینان دارید",
+        body = "از حذف کردن این روتین پوستی اطمینان دارید؟",
         onDeleteItem = {
             singleRoutineItem?.id?.let { skinRoutineViewModel.deletedSkinRoutine(it) }
             showDialogDeleted = false
@@ -157,21 +159,26 @@ fun SkinRoutineScreen(
             val currentRoutine = remember(key1 = page, key2 = routines) {
                 filterRoutinesByDay(day = dayWeek[page], routines = routines)
             }
-            if (currentRoutine.isNotEmpty()) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    item { Spacer(Modifier.height(15.dp)) }
-                    skinRoutine(
-                        items = currentRoutine,
-                        onDeleted = {
-                            singleRoutineItem = it
-                            showDialogDeleted = true
-                        },
-                        onEdited = { navHostController.navigate(Screen.AddSkinRoutineScreen(it.id)) })
+            AnimatedContent(
+                targetState = currentRoutine.isNotEmpty(), label = ""
+            ) {routines->
+                if (routines) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        item { Spacer(Modifier.height(15.dp)) }
+                        skinRoutine(
+                            items = currentRoutine,
+                            onDeleted = {
+                                singleRoutineItem = it
+                                showDialogDeleted = true
+                            },
+                            onEdited = { navHostController.navigate(Screen.AddSkinRoutineScreen(it.id)){launchSingleTop=true} })
 
-                }
-            } else { SkinEmpty() }
+                    }
+                } else { SkinEmpty() }
+            }
+
         }
     }
 }
@@ -183,11 +190,19 @@ private fun LazyListScope.skinRoutine(
     onDeleted: (SkinRoutineItem) -> Unit
 ) {
     items(items = items, key = { it.id }) { routine ->
-        SkinRoutineItemCard(
-            item = routine,
-            onEdited = { onEdited(routine) },
-            onDeleted = { onDeleted(routine) }
-        )
+        SwipeToDismissBoxLayout(
+            enableDismissFromStartToEnd = true,
+            enableDismissFromEndToStart = true,
+            startToEnd = {onEdited(routine)},
+            endToStart = {onDeleted(routine)}
+        ) {
+            SkinRoutineItemCard(
+                item = routine,
+                onEdited = { onEdited(routine) },
+                onDeleted = { onDeleted(routine) }
+            )
+        }
+
     }
 }
 
