@@ -73,7 +73,6 @@ fun SkinRoutineScreen(
             else -> SkinStatus.DAY.name
         }
     }
-
     val routines = remember(allSkinRoutine, filterStatus) {
         allSkinRoutine.filter { it.status == filterStatus }
             .sortedBy {
@@ -103,7 +102,9 @@ fun SkinRoutineScreen(
             singleRoutineItem = null
         }
     )
-
+    val currentDayRoutines = remember(key1 = allSkinRoutine,key2=pagerState.currentPage) {
+        allSkinRoutine.filter { it.dayWeek.contains(dayWeek[pagerState.currentPage]) }
+    }
     Scaffold(
         containerColor = Color(0xffFFEDD8),
         modifier = Modifier.fillMaxSize(),
@@ -144,6 +145,7 @@ fun SkinRoutineScreen(
         bottomBar = {
             SkinBottomNavigation(
                 currentPage = currentSkinStatus,
+                allSkinRoutine = currentDayRoutines,
                 onSelectedPage = { currentSkinStatus = it }
             )
         }
@@ -161,7 +163,7 @@ fun SkinRoutineScreen(
             }
             AnimatedContent(
                 targetState = currentRoutine.isNotEmpty(), label = ""
-            ) {routines->
+            ) { routines ->
                 if (routines) {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
@@ -173,10 +175,16 @@ fun SkinRoutineScreen(
                                 singleRoutineItem = it
                                 showDialogDeleted = true
                             },
-                            onEdited = { navHostController.navigate(Screen.AddSkinRoutineScreen(it.id)){launchSingleTop=true} })
+                            onEdited = {
+                                navHostController.navigate(Screen.AddSkinRoutineScreen(it.id)) {
+                                    launchSingleTop = true
+                                }
+                            })
 
                     }
-                } else { SkinEmpty() }
+                } else {
+                    SkinEmpty()
+                }
             }
 
         }
@@ -193,8 +201,8 @@ private fun LazyListScope.skinRoutine(
         SwipeToDismissBoxLayout(
             enableDismissFromStartToEnd = true,
             enableDismissFromEndToStart = true,
-            startToEnd = {onEdited(routine)},
-            endToStart = {onDeleted(routine)}
+            startToEnd = { onEdited(routine) },
+            endToStart = { onDeleted(routine) }
         ) {
             SkinRoutineItemCard(
                 item = routine,
@@ -224,7 +232,7 @@ private fun SkinEmpty() {
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            text ="روتینی برای این بازه تنظیم نشده است!",
+            text = "روتینی برای این بازه تنظیم نشده است!",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold,
             color = Color.Black
