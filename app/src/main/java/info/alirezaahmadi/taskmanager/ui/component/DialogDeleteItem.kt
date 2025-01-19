@@ -13,6 +13,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -26,8 +27,9 @@ fun DialogDeleteItemTask(
 
     if (show) {
         AlertDialog(
-            textContentColor = MaterialTheme.colorScheme.scrim,
-            titleContentColor = MaterialTheme.colorScheme.scrim,
+            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            textContentColor = MaterialTheme.colorScheme.onBackground,
+            titleContentColor =MaterialTheme.colorScheme.onBackground,
             icon = {
                    Icon(imageVector = Icons.Rounded.DeleteSweep,
                        contentDescription ="",
@@ -48,26 +50,25 @@ fun DialogDeleteItemTask(
             },
             onDismissRequest = { onBack() },
             confirmButton = {
-                Button(
+                TextButton(
                     modifier = Modifier.padding(horizontal = 3.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = Color.White
-                    ),
                     onClick = { onDeleteItem() }) {
                     Text(
                         text = "حذف",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             },
             dismissButton = {
                 TextButton(
-
                     onClick = { onBack() }) {
                     Text(
                         text = "لغو",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
 
