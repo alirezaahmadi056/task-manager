@@ -91,7 +91,7 @@ fun AddExerciseProgramScreen(
                 Button(
                     modifier = Modifier
                         .padding(12.dp)
-                        .fillMaxWidth(0.8f),
+                        .fillMaxWidth(0.9f),
                     contentPadding = PaddingValues(
                         horizontal = 40.dp,
                         vertical = 8.dp
