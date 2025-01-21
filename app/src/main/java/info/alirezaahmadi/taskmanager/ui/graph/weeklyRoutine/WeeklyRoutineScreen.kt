@@ -136,20 +136,20 @@ fun WeeklyRoutineScreen(
         containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.primary,
+                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 expanded = true,
                 text = {
                     Text(
                         text = "روتین",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 },
                 icon = {
                     Icon(
                         Icons.AutoMirrored.Rounded.NoteAdd,
                         contentDescription = "",
-                        tint = Color.White
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 },
                 onClick = {
