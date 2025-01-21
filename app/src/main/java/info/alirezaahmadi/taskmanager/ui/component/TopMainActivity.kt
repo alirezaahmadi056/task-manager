@@ -180,8 +180,7 @@ fun BaseTopBar(
 
         Text(
             modifier = Modifier
-                .align(Alignment.Center)
-                .padding(start = 30.dp),
+                .align(Alignment.Center),
             text = text,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.scrim

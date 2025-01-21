@@ -2,42 +2,77 @@ package info.alirezaahmadi.taskmanager.ui.graph.weeklyRoutine
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
-import androidx.navigation.NavHostController
-import info.alirezaahmadi.taskmanager.ui.component.BaseTopBar
 import kotlinx.coroutines.launch
 
 @Composable
-fun TabSection(pagerState: PagerState, allTabs: List<String>,navHostController: NavHostController) {
+fun WeeklyRoutineTopBar(
+    pagerState: PagerState,
+    allTabs: List<String>,
+    onBack: () -> Unit
+) {
     val scope = rememberCoroutineScope()
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .statusBarsPadding()
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        BaseTopBar(navHostController = navHostController, text = "روتین های من")
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 16.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = "روتین های من",
+                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 19.sp),
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.align(Alignment.Center),
+                fontWeight = FontWeight.Black
+            )
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.Rounded.ArrowForward,
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        }
         ScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
-            modifier = Modifier.fillMaxWidth()
-                .padding(vertical = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 25.dp),
             divider = {},
-            containerColor = MaterialTheme.colorScheme.background,
+            containerColor = Color.Transparent,
             indicator = {},
             edgePadding = 19.dp
         ) {
@@ -61,23 +96,23 @@ private fun Tabs(
     onClick: () -> Unit
 ) {
     val textColor by animateColorAsState(
-        targetValue = if (!selected) MaterialTheme.colorScheme.scrim
+        targetValue = if (!selected) MaterialTheme.colorScheme.onBackground
         else MaterialTheme.colorScheme.background, label = ""
     )
+
     val backColor by animateColorAsState(
-        targetValue = if (!selected) MaterialTheme.colorScheme.background else
-            MaterialTheme.colorScheme.scrim, label = ""
+        targetValue = if (!selected) MaterialTheme.colorScheme.background  else
+            MaterialTheme.colorScheme.onBackground , label = ""
     )
 
     ElevatedButton(
-        border = BorderStroke(0.8.dp,MaterialTheme.colorScheme.scrim),
         colors = ButtonDefaults.elevatedButtonColors(
             containerColor = backColor,
             contentColor = textColor
         ),
         modifier = Modifier
-            .padding(horizontal = 2.5.dp)
-            .height(40.dp),
+            .padding(horizontal = 3.dp)
+            .height(42.dp),
         onClick = onClick,
         shape = RoundedCornerShape(14.dp),
     ) {
@@ -88,6 +123,5 @@ private fun Tabs(
             textAlign = TextAlign.Center
         )
     }
-
 
 }

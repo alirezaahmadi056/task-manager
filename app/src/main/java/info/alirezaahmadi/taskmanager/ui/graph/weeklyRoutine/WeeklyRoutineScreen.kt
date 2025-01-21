@@ -1,11 +1,16 @@
 package info.alirezaahmadi.taskmanager.ui.graph.weeklyRoutine
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.NoteAdd
 import androidx.compose.material.icons.rounded.Close
@@ -19,7 +24,6 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -29,8 +33,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.data.db.routine.RoutineItem
@@ -57,12 +63,7 @@ fun WeeklyRoutineScreen(
     val context = LocalContext.current
     val day = remember { Calendar.getInstance().get(Calendar.DAY_OF_WEEK) }
     val dayWeek = remember { Constants.deyWeek }
-    val pagerState = rememberPagerState { dayWeek.size }
-
-    LaunchedEffect(key1 = day) {
-        val persianIndex = persianDayOfWeek[day] ?: 0
-        pagerState.animateScrollToPage(persianIndex)
-    }
+    val pagerState = rememberPagerState(initialPage = persianDayOfWeek[day] ?: 0) { dayWeek.size }
 
 
     val allRoutine by weeklyRoutineViewModel.getAllRoutine().collectAsState(emptyList())
@@ -134,6 +135,7 @@ fun WeeklyRoutineScreen(
         alarmViewModel = alarmViewModel
     )
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -171,18 +173,21 @@ fun WeeklyRoutineScreen(
             }
         },
         topBar = {
-            TabSection(
+            WeeklyRoutineTopBar(
                 allTabs = dayWeek,
                 pagerState = pagerState,
-                navHostController = navHostController
+                onBack = {navHostController.navigateUp()}
             )
         },
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
         HorizontalPager(
+            key = { "pageKey:${dayWeek[it]}" },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
+                .background(MaterialTheme.colorScheme.background),
             verticalAlignment = Alignment.Top,
             state = pagerState
         ) { page ->
@@ -209,22 +214,28 @@ private fun Routine(
     onDeleted: (RoutineItem) -> Unit,
     currentDay: String
 ) {
-    if (routines.isNotEmpty()) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(items = routines, key = { it.id }) { routine ->
-                SwipeToDismissBoxLayout(
-                    enableDismissFromEndToStart = true,
-                    enableDismissFromStartToEnd = true,
-                    startToEnd = { onClick(routine) },
-                    endToStart = { onDeleted(routine) }
-                ) { RoutineItemCard(routine, onClick = onClick, onDeleted = onDeleted) }
+    AnimatedContent(
+        targetState = routines.isNotEmpty(), label = ""
+    ) {
+        if (it) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                item { Spacer(Modifier.height(15.dp)) }
+                items(items = routines, key = { it.id }) { routine ->
+                    SwipeToDismissBoxLayout(
+                        enableDismissFromEndToStart = true,
+                        enableDismissFromStartToEnd = true,
+                        startToEnd = { onClick(routine) },
+                        endToStart = { onDeleted(routine) }
+                    ) { RoutineItemCard(routine, onClick = onClick, onDeleted = onDeleted) }
+                }
             }
+        } else {
+            EmptyList("روتینی برای روز $currentDay ثبت نکرده اید! ")
         }
-    } else {
-        EmptyList("روتینی برای روز $currentDay ثبت نکرده اید! ")
     }
+
 
 }
 
