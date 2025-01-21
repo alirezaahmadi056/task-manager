@@ -125,9 +125,7 @@ fun WeeklyRoutineScreen(
 
     SheetAddRoutine(
         show = showSheetAddRoutine,
-        onDismissRequest = {
-            showSheetAddRoutine = false
-        },
+        onDismissRequest = { showSheetAddRoutine = false },
         routineItem = singleRoutine,
         days = dayWeek,
         lastId = getOldId(allRoutine),

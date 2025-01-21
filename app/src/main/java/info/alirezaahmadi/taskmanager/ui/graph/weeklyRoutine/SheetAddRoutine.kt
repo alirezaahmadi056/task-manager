@@ -73,6 +73,7 @@ fun SheetAddRoutine(
     onDismissRequest: () -> Unit,
     alarmViewModel: AlarmViewModel = hiltViewModel()
 ) {
+    val sheetState = rememberModalBottomSheetState(true)
     if (!show) return
     var showDialogSelectedTime by remember { mutableStateOf(false) }
     var selectedTime by remember { mutableStateOf("7:00") }
@@ -88,15 +89,14 @@ fun SheetAddRoutine(
     )
 
     val context = LocalContext.current
-    var title by remember { mutableStateOf("") }
+    var title by remember { mutableStateOf(routineItem?.title?:"") }
     val selectedDayList = remember { mutableStateListOf<String>() }
-    var enableAlarm by remember { mutableStateOf(false) }
+    var enableAlarm by remember { mutableStateOf(routineItem?.enableAlarm?:false) }
     var selectedTimeHour by rememberSaveable { mutableIntStateOf(7) }
     var selectedTimeMinute by rememberSaveable { mutableIntStateOf(0) }
     val openDialogTime = remember { mutableStateOf(false) }
     var checkInput by remember { mutableStateOf(false) }
-    var currentTaskColor by remember { mutableIntStateOf(1) }
-    val sheetState = rememberModalBottomSheetState(true)
+    var currentTaskColor by remember { mutableIntStateOf(routineItem?.taskColor?:1) }
     LaunchedEffect(routineItem) {
         routineItem?.let { routine ->
             title = routine.title
