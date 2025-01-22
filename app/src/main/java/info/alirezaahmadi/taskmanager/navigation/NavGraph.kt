@@ -8,16 +8,19 @@ import androidx.navigation.compose.NavHost
 import info.alirezaahmadi.taskmanager.ui.graph.duties.dutiesGraph
 import info.alirezaahmadi.taskmanager.ui.graph.exerciseProgram.exerciseProgramGraph
 import info.alirezaahmadi.taskmanager.ui.graph.first.firstGraph
+import info.alirezaahmadi.taskmanager.ui.graph.goals.goalsGraph
 import info.alirezaahmadi.taskmanager.ui.graph.skinRoutine.skinRoutineGraph
 import info.alirezaahmadi.taskmanager.ui.graph.weeklyRoutine.weeklyRoutineGraph
 import info.alirezaahmadi.taskmanager.viewModel.ExerciseProgramViewModel
+import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
 
 @Composable
 fun NavGraph(
     modifier: Modifier,
     navHostController: NavHostController,
     darkThem: (Boolean) -> Unit,
-    exerciseProgramViewModel: ExerciseProgramViewModel= hiltViewModel()
+    exerciseProgramViewModel: ExerciseProgramViewModel= hiltViewModel(),
+    goalsViewModel: GoalsViewModel= hiltViewModel()
 ) {
     NavHost(
         modifier = modifier,
@@ -29,6 +32,7 @@ fun NavGraph(
         dutiesGraph(navHostController)
         skinRoutineGraph(navHostController)
         exerciseProgramGraph(navHostController,exerciseProgramViewModel)
+        goalsGraph(navHostController,goalsViewModel)
     }
 
 }

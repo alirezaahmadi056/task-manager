@@ -59,11 +59,18 @@ sealed interface Screen {
 
     @Serializable
     data class StartExerciseProgramScreen(val day: String) : Screen
+
     @Serializable
     data class CompletedExerciseScreen(
         val dayName: String,
         val time: Long,
         val exerciseList: List<String>
-    ):Screen
+    ) : Screen
+
+    //goals
+    @Serializable
+    data object GoalsGraph : Screen
+    @Serializable
+    data object GoalsScreen : Screen
 
 }
