@@ -80,9 +80,13 @@ fun FirstScreen(navHostController: NavHostController) {
                     text = "پوستی",
                 ) { navHostController.navigate(Screen.SkinRoutineGraph) }
 
-                   SelectedGraphRoute(
+                SelectedGraphRoute(
                     text = "باشگاه",
                 ) { navHostController.navigate(Screen.ExerciseProgramGraph) }
+
+                SelectedGraphRoute(
+                    text = "اهداف",
+                ) { navHostController.navigate(Screen.GoalsGraph) }
 
             }
         })
@@ -94,29 +98,29 @@ fun SelectedGraphRoute(
     @DrawableRes image: Int = R.drawable.lesson,
     onClick: () -> Unit
 ) {
-        Column(
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
+            .padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(image),
+            contentDescription = "",
             modifier = Modifier
-                .padding(8.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .clickable(onClick = onClick)
-                .padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(image),
-                contentDescription = "",
-                modifier = Modifier
-                    .size(80.dp),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(Modifier.height(6.dp))
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.scrim,
-                textAlign = TextAlign.Center
-            )
-        }
-
+                .size(80.dp),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(Modifier.height(6.dp))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.scrim,
+            textAlign = TextAlign.Center
+        )
     }
+
+}

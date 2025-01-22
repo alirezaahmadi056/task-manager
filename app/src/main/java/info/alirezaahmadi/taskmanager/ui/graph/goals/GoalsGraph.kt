@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import info.alirezaahmadi.taskmanager.navigation.Screen
+import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsScreen
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
 
 fun NavGraphBuilder.goalsGraph(navHostController: NavHostController, goalsViewModel: GoalsViewModel){

@@ -25,4 +25,6 @@
     <string name="previous_exercise">حرکت قبلی</string>
     <string name="end_exercise">پایان  تمرین</string>
     <string name="return_to_homePage">برگشت به صفحه اصلی</string>
+    <string name="goals">هدف</string>
+    <string name="my_goals">اهداف من</string>
 </resources>

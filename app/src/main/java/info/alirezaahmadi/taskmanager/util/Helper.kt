@@ -6,11 +6,14 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import androidx.compose.ui.graphics.Color
+import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
 
 fun openUri(context: Context, uri: Uri) {
     try {
         val mimeType: String? = context.contentResolver.getType(uri)
-            ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(uri.toString()))
+            ?: MimeTypeMap.getSingleton()
+                .getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(uri.toString()))
 
         if (mimeType != null) {
             val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -68,6 +71,7 @@ fun Long.toDetailedTimeString(): String {
         else -> "$seconds ثانیه"
     }
 }
+
 fun getOrdinalInPersian(number: Int): String {
     val ones = listOf(
         "", "اول", "دوم", "سوم", "چهارم", "پنجم",
@@ -104,5 +108,14 @@ fun getOrdinalInPersian(number: Int): String {
         "$hundredPart و $remainderPart"
     } else {
         hundredPart + remainderPart
+    }
+}
+
+fun getGoalColor(status: String): Pair<Color, Color> {
+    return when (status) {
+        GoalsTimeFrame.SHORT.name -> Pair(Color(0xff6C66FF), Color(0xff334FDE))
+        GoalsTimeFrame.MEDIUM.name -> Pair(Color(0xff66FFFC), Color(0xff00868D))
+        GoalsTimeFrame.LONG.name -> Pair(Color(0xff66FF99), Color(0xff08B539))
+        else -> Pair(Color(0xff6C66FF), Color(0xff334FDE))
     }
 }
