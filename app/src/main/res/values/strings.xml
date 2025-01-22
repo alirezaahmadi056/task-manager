@@ -29,4 +29,6 @@
     <string name="my_goals">اهداف من</string>
     <string name="introduction_movies_books">معرفی فیلم و کتاب</string>
     <string name="more">بیشتر</string>
+    <string name="goals_list">لیست اهداف</string>
+    <string name="add_goals">هدف جدید</string>
 </resources>

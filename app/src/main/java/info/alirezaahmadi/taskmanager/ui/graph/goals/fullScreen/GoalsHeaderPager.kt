@@ -1,12 +1,8 @@
 package info.alirezaahmadi.taskmanager.ui.graph.goals.fullScreen
 
-import android.media.Image
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -16,8 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -26,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,12 +35,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.room.Index
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItem
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
 import info.alirezaahmadi.taskmanager.ui.component.BaseProgress
-import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsTopBar
 import info.alirezaahmadi.taskmanager.util.TaskHelper.byLocate
 import info.alirezaahmadi.taskmanager.util.applyQuizGraphics
 import info.alirezaahmadi.taskmanager.util.getGoalColor
@@ -58,11 +49,8 @@ import kotlin.math.roundToInt
 fun GoalsHeaderPager(
     allGoalsList: List<GoalsItem>,
     pagerState: PagerState,
-    onBack: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    Column {
-        GoalsTopBar("", onBack)
         HorizontalPager(
             contentPadding = PaddingValues(horizontal = 4.dp),
             state = pagerState,
@@ -83,7 +71,7 @@ fun GoalsHeaderPager(
                 modifier = Modifier
                     .fillMaxWidth()
                     .applyQuizGraphics(pagerState, page),
-                name = currentTimeFrame.perName,
+                timeFrame = currentTimeFrame,
                 currentList = currentGoals,
                 currentIndex = page,
                 onClick = { nextPage ->
@@ -98,18 +86,17 @@ fun GoalsHeaderPager(
         }
     }
 
-}
 
 @Composable
 private fun HeadersImage(
     modifier: Modifier,
-    name: String,
+    timeFrame: GoalsTimeFrame,
     currentList: List<GoalsItem>,
     currentIndex: Int,
     onClick: (Int) -> Unit,
 ) {
     val backGroundColor: Pair<Color, Color> =
-        remember(key1 = name) { getGoalColor(name) }
+        remember(key1 = timeFrame.name) { getGoalColor(timeFrame.name) }
     val animatedProgress = animateFloatAsState(
         targetValue = (if (currentList.isNotEmpty()) {
             val completedCount = currentList.count { it.isCompleted }
@@ -134,7 +121,7 @@ private fun HeadersImage(
         ) {
             Spacer(Modifier.height(12.dp))
             Text(
-                text = name,
+                text = timeFrame.perName,
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 23.sp),
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
