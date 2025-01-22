@@ -11,6 +11,7 @@ import info.alirezaahmadi.taskmanager.data.db.DataBase
 import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_1_2
 import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_2_3
 import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramDao
+import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItemDao
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesDao
 import info.alirezaahmadi.taskmanager.data.db.routine.WeeklyRoutineDao
 import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineDao
@@ -28,8 +29,8 @@ object ModuleDataBse {
     ) = Room.databaseBuilder(
         context = context,
         klass = DataBase::class.java,
-        name = "بیحبیتنخ"
-    ).addMigrations(MIGRATION_1_2).addMigrations(MIGRATION_2_3).build()
+        name = "my_db"
+    ).build()
 
 
     @Provides
@@ -50,5 +51,11 @@ object ModuleDataBse {
 
     @Provides
     @Singleton
-    fun provideExerciseProgramDao(dataBase: DataBase): ExerciseProgramDao = dataBase.ExerciseProgramDao()
+    fun provideExerciseProgramDao(dataBase: DataBase): ExerciseProgramDao =
+        dataBase.ExerciseProgramDao()
+
+    @Provides
+    @Singleton
+    fun provideGoalsDao(dataBase: DataBase): GoalsItemDao = dataBase.GoalsItemDao()
+
 }
