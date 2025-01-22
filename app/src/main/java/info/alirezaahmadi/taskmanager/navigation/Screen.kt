@@ -70,7 +70,10 @@ sealed interface Screen {
     //goals
     @Serializable
     data object GoalsGraph : Screen
+
     @Serializable
     data object GoalsScreen : Screen
 
+    @Serializable
+    data class GoalsFullScreen(val pageIndex: Int)
 }

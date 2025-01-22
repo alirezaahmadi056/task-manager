@@ -30,6 +30,7 @@ import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItem
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
+import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.BaseProgress
 import info.alirezaahmadi.taskmanager.util.TaskHelper.byLocate
 import info.alirezaahmadi.taskmanager.util.getGoalColor
@@ -55,19 +56,25 @@ fun GoalsTopSection(
             GoalsSectionItemCard(
                 goalsList = shortTermGoals,
                 timeFrame = GoalsTimeFrame.SHORT
-            )
+            ){
+                navHostController.navigate(Screen.GoalsFullScreen(0))
+            }
         }
         item {
             GoalsSectionItemCard(
                 goalsList = mediumTermGoals,
                 timeFrame = GoalsTimeFrame.MEDIUM
-            )
+            ){
+                navHostController.navigate(Screen.GoalsFullScreen(1))
+            }
         }
         item {
             GoalsSectionItemCard(
                 goalsList = longTermGoals,
                 timeFrame = GoalsTimeFrame.LONG
-            )
+            ){
+                navHostController.navigate(Screen.GoalsFullScreen(2))
+            }
         }
 
     }

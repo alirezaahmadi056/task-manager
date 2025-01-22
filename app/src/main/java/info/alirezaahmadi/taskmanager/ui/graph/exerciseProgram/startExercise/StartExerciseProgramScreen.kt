@@ -24,6 +24,7 @@ import androidx.compose.ui.util.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.navigation.Screen
+import info.alirezaahmadi.taskmanager.util.applyQuizGraphics
 import info.alirezaahmadi.taskmanager.viewModel.ExerciseProgramViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -103,13 +104,4 @@ fun StartExerciseProgramScreen(
         }
     }
 
-}
-fun Modifier.applyQuizGraphics(pagerState: PagerState, page: Int): Modifier {
-    return this.graphicsLayer {
-        val pageOffset =
-            ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
-        alpha = lerp(start = 0.5f, stop = 1f, fraction = 1f - pageOffset.coerceIn(0f, 1f))
-        scaleX = lerp(start = 0.85f, stop = 1f, fraction = 1f - pageOffset.coerceIn(0f, 1f))
-        scaleY = scaleX
-    }
 }

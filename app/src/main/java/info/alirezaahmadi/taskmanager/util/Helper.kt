@@ -6,8 +6,13 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.util.lerp
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
+import kotlin.math.absoluteValue
 
 fun openUri(context: Context, uri: Uri) {
     try {
@@ -119,3 +124,13 @@ fun getGoalColor(status: String): Pair<Color, Color> {
         else -> Pair(Color(0xff6C66FF), Color(0xff334FDE))
     }
 }
+fun Modifier.applyQuizGraphics(pagerState: PagerState, page: Int): Modifier {
+    return this.graphicsLayer {
+        val pageOffset =
+            ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
+        alpha = lerp(start = 0.5f, stop = 1f, fraction = 1f - pageOffset.coerceIn(0f, 1f))
+        scaleX = lerp(start = 0.85f, stop = 1f, fraction = 1f - pageOffset.coerceIn(0f, 1f))
+        scaleY = scaleX
+    }
+}
+
