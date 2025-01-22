@@ -30,7 +30,7 @@ import info.alirezaahmadi.taskmanager.ui.component.BaseImageLoader
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SectionAddGoals(
+fun GoalsItemCard(
     item: GoalsItem,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
