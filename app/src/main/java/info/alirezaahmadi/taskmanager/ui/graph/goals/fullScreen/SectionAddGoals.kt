@@ -32,10 +32,9 @@ fun SectionAddGoals(
 ) {
     Row(
         modifier = Modifier
-            .padding(horizontal = 5.dp)
             .background(MaterialTheme.colorScheme.background)
             .fillMaxWidth()
-            .padding(top = 25.dp, bottom = 12.dp),
+            .padding(horizontal = 5.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

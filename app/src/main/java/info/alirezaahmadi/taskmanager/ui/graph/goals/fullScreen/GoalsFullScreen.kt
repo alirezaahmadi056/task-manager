@@ -24,9 +24,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItem
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
 import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsTopBar
@@ -55,7 +57,7 @@ fun GoalsFullScreen(
     }
     Scaffold(
         containerColor = Color.White,
-        topBar = { GoalsTopBar(""){navHostController.navigateUp()} }
+        topBar = { GoalsTopBar(stringResource(R.string.my_goals)){navHostController.navigateUp()} }
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
@@ -77,12 +79,13 @@ fun GoalsFullScreen(
             if (currentGoals.isEmpty()){
                 item { GoalsEmpty() }
             }
-            items(currentGoals){goals->
-                GoalsItemCard(
-                    item = goals,
-                    onClick = {},
-                    onLongClick = {}
-                )
+            items(items = currentGoals, key = {it.id}){goals->
+                    GoalsItemCard(
+                        item = goals,
+                        onClick = {},
+                        onLongClick = {}
+                    )
+
             }
         }
     }
