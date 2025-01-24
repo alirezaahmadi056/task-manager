@@ -36,4 +36,5 @@
     <string name="title_goals">عنوان هدف</string>
     <string name="description_goals">توضیحات هدف</string>
     <string name="selected_date">تنظیم تاریخ</string>
+    <string name="edit">ویرایش</string>
 </resources>

@@ -90,7 +90,7 @@ fun GoalsFullScreen(
                 GoalsItemCard(
                     item = goals,
                     onClick = {
-                        navHostController.navigate(Screen.AddGoalsScreen(goals.id))
+                        navHostController.navigate(Screen.GoalsDetail(goals.id))
                     },
                     onLongClick = {}
                 )

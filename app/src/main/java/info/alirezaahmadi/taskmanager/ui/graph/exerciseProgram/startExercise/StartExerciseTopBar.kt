@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.ui.component.BaseImageLoader
@@ -121,6 +122,7 @@ fun StartExerciseTopBar(
                     Text(
                         text = stringResource(R.string.exercise_list),
                         style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold,
                         color = Color.White
                     )
                 }
@@ -143,7 +145,7 @@ private fun HeaderIcon(
         modifier = modifier
             .padding(12.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(Color.Transparent.copy(0.7f), RoundedCornerShape(12.dp))
+            .background(Color.White.copy(0.4f), RoundedCornerShape(12.dp))
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
         content = content

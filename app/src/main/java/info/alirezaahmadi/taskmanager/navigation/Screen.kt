@@ -78,4 +78,6 @@ sealed interface Screen {
     data class GoalsFullScreen(val pageIndex: Int)
     @Serializable
     data class AddGoalsScreen(val id:Int=0)
+    @Serializable
+    data class GoalsDetail(val id:Int=0)
 }

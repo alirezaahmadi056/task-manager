@@ -37,7 +37,7 @@ import info.alirezaahmadi.taskmanager.util.openUri
 @Composable
 fun AddImageGoalsSection(
     uri: Uri?,
-    onImageSelected: (Uri?) -> Unit
+    onImageSelected: (String?) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -47,7 +47,7 @@ fun AddImageGoalsSection(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) {
-        onImageSelected(it)
+        onImageSelected(it.toString())
         if (it != null) {
             context.contentResolver.takePersistableUriPermission(
                 it,

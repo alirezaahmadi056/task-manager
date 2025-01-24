@@ -48,7 +48,7 @@ fun AddGoalsScreen(
     id: Int,
     goalsViewModel: GoalsViewModel,
 ) {
-    var selectedImage by remember { mutableStateOf<Uri?>(null) }
+    var selectedImage by remember { mutableStateOf<String?>(null) }
     var timeFrame by remember { mutableStateOf(GoalsTimeFrame.SHORT.name) }
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -57,7 +57,7 @@ fun AddGoalsScreen(
     LaunchedEffect(id) {
         goalsViewModel.getGoalsById(id).collectLatest { goalsItem ->
             goalsItem?.let { goals ->
-                selectedImage = Uri.parse(goalsItem.imageUri)
+                selectedImage = goals.imageUri
                 timeFrame = goalsItem.timeFrame
                 title = goals.title
                 description = goals.description
@@ -135,7 +135,7 @@ fun AddGoalsScreen(
                 onSelectedTimeFrame = { timeFrame = it }
             )
             AddImageGoalsSection(
-                uri = selectedImage,
+                uri =Uri.parse(selectedImage?:"") ,
                 onImageSelected = { selectedImage = it }
             )
             Spacer(Modifier.height(8.dp))

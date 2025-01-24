@@ -7,6 +7,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.graph.goals.addGoals.AddGoalsScreen
+import info.alirezaahmadi.taskmanager.ui.graph.goals.detail.GoalsDetailScreen
 import info.alirezaahmadi.taskmanager.ui.graph.goals.fullScreen.GoalsFullScreen
 import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsScreen
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
@@ -32,6 +33,14 @@ fun NavGraphBuilder.goalsGraph(
             AddGoalsScreen(
                 navHostController = navHostController,
                 id=args.id,
+                goalsViewModel = goalsViewModel
+            )
+        }
+        composable<Screen.GoalsDetail> {
+            val args =it.toRoute<Screen.GoalsDetail>()
+            GoalsDetailScreen(
+                navHostController =navHostController,
+                id = args.id,
                 goalsViewModel = goalsViewModel
             )
         }
