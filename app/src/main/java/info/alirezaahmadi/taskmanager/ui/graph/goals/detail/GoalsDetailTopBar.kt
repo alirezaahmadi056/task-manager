@@ -114,7 +114,7 @@ private fun HeaderIcon(
         modifier = modifier
             .padding(12.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(Color.White.copy(0.4f), RoundedCornerShape(12.dp))
+            .background(Color.Transparent.copy(0.7f), RoundedCornerShape(12.dp))
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
         content = content

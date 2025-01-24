@@ -50,39 +50,40 @@ fun GoalsHeaderPager(
     pagerState: PagerState,
 ) {
     val scope = rememberCoroutineScope()
-        HorizontalPager(
-            state = pagerState,
-        ) { page ->
-            val currentTimeFrame: GoalsTimeFrame = remember(page) {
-                when (page) {
-                    0 -> GoalsTimeFrame.SHORT
-                    1 -> GoalsTimeFrame.MEDIUM
-                    2 -> GoalsTimeFrame.LONG
-                    else -> GoalsTimeFrame.SHORT
+
+    HorizontalPager(
+        state = pagerState,
+    ) { page ->
+        val currentTimeFrame: GoalsTimeFrame = remember(page) {
+            when (page) {
+                0 -> GoalsTimeFrame.SHORT
+                1 -> GoalsTimeFrame.MEDIUM
+                2 -> GoalsTimeFrame.LONG
+                else -> GoalsTimeFrame.SHORT
+            }
+        }
+        val currentGoals = remember(
+            key1 = page,
+            key2 = currentTimeFrame
+        ) { allGoalsList.filter { it.timeFrame == currentTimeFrame.name } }
+        HeadersImage(
+            modifier = Modifier
+                .fillMaxWidth()
+                .applyQuizGraphics(pagerState, page),
+            timeFrame = currentTimeFrame,
+            currentList = currentGoals,
+            currentIndex = page,
+            onClick = { nextPage ->
+                scope.launch {
+                    pagerState.animateScrollToPage(
+                        nextPage,
+                        animationSpec = tween(600)
+                    )
                 }
             }
-            val currentGoals = remember(
-                key1 = page,
-                key2 = currentTimeFrame
-            ) { allGoalsList.filter { it.timeFrame == currentTimeFrame.name } }
-            HeadersImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .applyQuizGraphics(pagerState, page),
-                timeFrame = currentTimeFrame,
-                currentList = currentGoals,
-                currentIndex = page,
-                onClick = { nextPage ->
-                    scope.launch {
-                        pagerState.animateScrollToPage(
-                            nextPage,
-                            animationSpec = tween(600)
-                        )
-                    }
-                }
-            )
-        }
+        )
     }
+}
 
 
 @Composable
@@ -95,15 +96,20 @@ private fun HeadersImage(
 ) {
     val backGroundColor: Pair<Color, Color> =
         remember(key1 = timeFrame.name) { getGoalColor(timeFrame.name) }
+    val completedGoals = currentList.count { it.isCompleted }
+    val totalGoals = currentList.size
+    val pendingGoals = totalGoals - completedGoals
+
     val animatedProgress = animateFloatAsState(
-        targetValue = (if (currentList.isNotEmpty()) {
-            val completedCount = currentList.count { it.isCompleted }
-            (completedCount * 100) / currentList.size
+        targetValue = if (totalGoals > 0) {
+            completedGoals.toFloat() / totalGoals
         } else {
-            0
-        }).toFloat(),
+            0f
+        },
         animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing), label = ""
     )
+
+
 
     Box(
         modifier = modifier,
@@ -137,7 +143,9 @@ private fun HeadersImage(
             )
             Spacer(Modifier.height(35.dp))
             Text(
-                text = "${animatedProgress.value.roundToInt().toString().byLocate()} درصد پیشرفت",
+                text = "${
+                    (animatedProgress.value * 100).roundToInt().toString().byLocate()
+                } درصد پیشرفت",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Normal,
                 modifier = Modifier.padding(bottom = 8.dp),

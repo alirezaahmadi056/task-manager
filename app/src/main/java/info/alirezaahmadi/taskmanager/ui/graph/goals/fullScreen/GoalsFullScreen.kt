@@ -20,6 +20,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +46,6 @@ fun GoalsFullScreen(
     pageIndex: Int,
     goalsViewModel: GoalsViewModel
 ) {
-    val alaGoals = GoalsItem.fakeList
     val pagerState = rememberPagerState(initialPage = pageIndex) { 3 }
     val currentTimeFrame: GoalsTimeFrame = remember(pagerState.currentPage) {
         when (pagerState.currentPage) {
@@ -54,8 +55,14 @@ fun GoalsFullScreen(
             else -> GoalsTimeFrame.SHORT
         }
     }
-    val currentGoals = remember(key1 = alaGoals, key2 = currentTimeFrame) {
-        alaGoals.filter { it.timeFrame == currentTimeFrame.name }
+   val shortTermGoals by goalsViewModel.shortTermGoals.collectAsState()
+   val mediumTermGoals by goalsViewModel.mediumTermGoals.collectAsState()
+   val longTermGoals by goalsViewModel.longTermGoals.collectAsState()
+   val allTermGoals by goalsViewModel.allTermGoals.collectAsState()
+    val goals = when (currentTimeFrame) {
+        GoalsTimeFrame.SHORT -> shortTermGoals
+        GoalsTimeFrame.MEDIUM -> mediumTermGoals
+        GoalsTimeFrame.LONG -> longTermGoals
     }
     val lazyList = rememberLazyListState()
     Scaffold(
@@ -73,7 +80,7 @@ fun GoalsFullScreen(
             item {
                 GoalsHeaderPager(
                     pagerState = pagerState,
-                    allGoalsList = alaGoals,
+                    allGoalsList = allTermGoals,
                 )
             }
             stickyHeader {
@@ -83,10 +90,10 @@ fun GoalsFullScreen(
                     onAddClick = { navHostController.navigate(Screen.AddGoalsScreen()) }
                 )
             }
-            if (currentGoals.isEmpty()) {
+            if (goals.isEmpty()) {
                 item { GoalsEmpty() }
             }
-            items(items = currentGoals, key = { it.id }) { goals ->
+            items(items = goals, key = { it.id }) { goals ->
                 GoalsItemCard(
                     item = goals,
                     onClick = {

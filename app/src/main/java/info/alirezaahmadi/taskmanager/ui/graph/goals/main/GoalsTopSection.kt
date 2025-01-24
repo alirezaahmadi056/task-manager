@@ -17,7 +17,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -42,10 +47,9 @@ fun GoalsTopSection(
     navHostController: NavHostController,
     goalsViewModel: GoalsViewModel
 ) {
-    val shortTermGoals = GoalsItem.fakeList.filter { it.timeFrame == GoalsTimeFrame.SHORT.name }
-    val mediumTermGoals = GoalsItem.fakeList.filter { it.timeFrame == GoalsTimeFrame.MEDIUM.name }
-    val longTermGoals = GoalsItem.fakeList.filter { it.timeFrame == GoalsTimeFrame.LONG.name }
-
+    val shortTermGoals by goalsViewModel.shortTermGoals.collectAsState()
+    val mediumTermGoals by goalsViewModel.mediumTermGoals.collectAsState()
+    val longTermGoals by goalsViewModel.longTermGoals.collectAsState()
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -88,15 +92,18 @@ private fun GoalsSectionItemCard(
 ) {
     val backGroundColor: Pair<Color, Color> =
         remember(key1 = goalsList, key2 = timeFrame) { getGoalColor(timeFrame.name) }
+
+    val completedGoals= goalsList.count { it.isCompleted }
+    val totalGoals= goalsList.size
+    val pendingGoals = totalGoals - completedGoals
+
     val animatedProgress = animateFloatAsState(
-        targetValue = (if (goalsList.isNotEmpty()) {
-            val completedCount = goalsList.count { it.isCompleted }
-            (completedCount * 100) / goalsList.size
-        } else {
-            0
-        }).toFloat(),
+        targetValue = if (totalGoals > 0) {
+            completedGoals.toFloat() / totalGoals
+        } else { 0f },
         animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing), label = ""
     )
+
 
     Column(
         modifier = Modifier
@@ -124,7 +131,7 @@ private fun GoalsSectionItemCard(
         )
         Spacer(Modifier.height(30.dp))
         Text(
-            text = "${animatedProgress.value.roundToInt().toString().byLocate()} درصد پیشرفت",
+            text = "${(animatedProgress.value *100).roundToInt().toString().byLocate()} درصد پیشرفت",
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Normal,
             modifier = Modifier.padding(vertical = 8.dp),
