@@ -1,8 +1,10 @@
 package info.alirezaahmadi.taskmanager.data.db.medicine
 
+import android.annotation.SuppressLint
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import info.alirezaahmadi.taskmanager.R
+import java.time.LocalDateTime
 
 @Entity
 data class MedicineItem(

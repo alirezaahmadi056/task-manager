@@ -39,4 +39,6 @@
     <string name="edit">ویرایش</string>
     <string name="completed_goals">به هدف رسیدم 🥳 </string>
     <string name="my_medicine">داروهای من</string>
+    <string name="add_medicine">افزودن دارو</string>
+    <string name="update_medicine">آپدیت دارو</string>
 </resources>

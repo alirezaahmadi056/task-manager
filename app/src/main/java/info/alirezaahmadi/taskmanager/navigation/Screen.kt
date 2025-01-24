@@ -1,6 +1,7 @@
 package info.alirezaahmadi.taskmanager.navigation
 
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
+import info.alirezaahmadi.taskmanager.data.db.medicine.MedicineTimeFrame
 import kotlinx.serialization.Serializable
 
 sealed interface Screen {
@@ -93,5 +94,5 @@ sealed interface Screen {
     @Serializable
     data object MedicineScreen:Screen
     @Serializable
-    data class AddMedicineScreen(val id:Int=0)
+    data class AddMedicineScreen(val id:Int=0,val timeFrame:String=MedicineTimeFrame.HOURLY.name)
 }
