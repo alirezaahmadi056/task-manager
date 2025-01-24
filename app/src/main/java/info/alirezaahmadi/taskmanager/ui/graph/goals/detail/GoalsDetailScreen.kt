@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
+import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItem
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.util.TaskHelper.byLocate
@@ -93,11 +94,23 @@ fun GoalsDetailScreen(
                         contentColor = Color.White
                     ),
                     onClick = {
+                        goalsViewModel.upsertGoals(
+                            GoalsItem(
+                                imageUri = selectedImage ?: "",
+                                data = selectedDate ?: "",
+                                id = id,
+                                title = title,
+                                timeFrame = timeFrame,
+                                description = description,
+                                isCompleted = true
+                            )
+                        )
+                        navHostController.navigateUp()
                     }
                 ) {
                     Text(
                         modifier = Modifier.padding(2.dp),
-                        text = stringResource(R.string.save),
+                        text = stringResource(R.string.completed_goals),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold
                     )
