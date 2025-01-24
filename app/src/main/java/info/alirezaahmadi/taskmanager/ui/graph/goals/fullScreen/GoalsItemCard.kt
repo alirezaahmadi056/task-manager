@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItem
 import info.alirezaahmadi.taskmanager.ui.component.BaseImageLoader
+import info.alirezaahmadi.taskmanager.ui.component.SwipeToDismissBoxLayout
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -52,53 +53,61 @@ fun GoalsItemCard(
             Color(0xffECECEC),
             Color(0xffECECEC)
         ).toList()
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(85.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(Brush.linearGradient(backgroundColor), RoundedCornerShape(12.dp))
-            .combinedClickable(
-                enabled = !item.isCompleted,
-                onClick = onClick,
-                onLongClick = onLongClick
-            )
-            .padding(horizontal = 8.dp, vertical = 13.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        BaseImageLoader(
-            model = Uri.parse(item.imageUri),
+    SwipeToDismissBoxLayout(
+        enableDismissFromStartToEnd = !item.isCompleted,
+        enableDismissFromEndToStart = true,
+        endToStart = onLongClick,
+        startToEnd = onClick,
+    ){
+        Row(
             modifier = Modifier
-                .weight(0.2f)
+                .fillMaxWidth()
+                .height(85.dp)
                 .clip(RoundedCornerShape(12.dp))
-                .aspectRatio(1f),
-            contentScale = ContentScale.Crop
-        )
-        Spacer(Modifier.weight(0.05f))
-        Column(
-            modifier = Modifier
-                .weight(0.75f)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+                .background(Brush.linearGradient(backgroundColor), RoundedCornerShape(12.dp))
+                .combinedClickable(
+                    enabled = !item.isCompleted,
+                    onClick = onClick,
+                    onLongClick = onLongClick
+                )
+                .padding(horizontal = 8.dp, vertical = 13.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(Modifier.height(2.dp))
-            Text(
-                text = item.title,
-                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp),
-                fontWeight = FontWeight.Bold,
-                color = textColor,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+            BaseImageLoader(
+                model = Uri.parse(item.imageUri),
+                modifier = Modifier
+                    .weight(0.2f)
+                    .clip(RoundedCornerShape(12.dp))
+                    .aspectRatio(1f),
+                contentScale = ContentScale.Crop
             )
-            Text(
-                text = item.description,
-                style = MaterialTheme.typography.titleMedium,
-                color = textColor,
-                modifier = Modifier.fillMaxWidth(0.9f),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Spacer(Modifier.weight(0.05f))
+            Column(
+                modifier = Modifier
+                    .weight(0.75f)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp),
+                    fontWeight = FontWeight.Bold,
+                    color = textColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = item.description,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = textColor,
+                    modifier = Modifier.fillMaxWidth(0.9f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
 
+            }
         }
     }
+
 }

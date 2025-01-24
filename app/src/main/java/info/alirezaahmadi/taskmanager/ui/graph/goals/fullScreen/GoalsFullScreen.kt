@@ -1,6 +1,5 @@
 package info.alirezaahmadi.taskmanager.ui.graph.goals.fullScreen
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -33,8 +32,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,9 +46,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
-import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItem
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
 import info.alirezaahmadi.taskmanager.navigation.Screen
+import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsTopBar
 import info.alirezaahmadi.taskmanager.util.getGoalColor
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
@@ -90,6 +91,17 @@ fun GoalsFullScreen(
     val lazyList = rememberLazyListState()
     val scope = rememberCoroutineScope()
     val showFloatingButton by remember { derivedStateOf { lazyList.firstVisibleItemIndex > 0 } }
+    var singleId by remember { mutableStateOf<Int?>(null) }
+    DialogDeleteItemTask(
+        show = singleId != null,
+        title = "حذف هدف",
+        body = "آیا از حذف کردن هدف راضی هستید؟",
+        onBack = { singleId = null },
+        onDeleteItem = {
+            singleId?.let { goalsViewModel.deletedGoalsById(it) }
+            singleId = null
+        }
+    )
     Scaffold(
         containerColor = Color.White,
         topBar = { GoalsTopBar(stringResource(R.string.my_goals)) { navHostController.navigateUp() } },
@@ -134,7 +146,7 @@ fun GoalsFullScreen(
                 SectionAddGoals(
                     currentTimeFrame = if (showFloatingButton) " ( ${currentTimeFrame.perName} )" else "",
                     color = getGoalColor(currentTimeFrame.name).second,
-                    onAddClick = { navHostController.navigate(Screen.AddGoalsScreen(timeFrame = currentTimeFrame.name)) }
+                    onAddClick = { navHostController.navigate(Screen.AddGoalsScreen(timeFrame = currentTimeFrame.name)) },
                 )
             }
             if (goalsInCompleted.isEmpty() && goalsCompleted.isEmpty()) {
@@ -143,10 +155,8 @@ fun GoalsFullScreen(
             items(items = goalsInCompleted, key = { it.id }) { goals ->
                 GoalsItemCard(
                     item = goals,
-                    onClick = {
-                        navHostController.navigate(Screen.GoalsDetail(goals.id))
-                    },
-                    onLongClick = {},
+                    onClick = { navHostController.navigate(Screen.GoalsDetail(goals.id)) },
+                    onLongClick = { singleId = goals.id },
                     currentColor = currentColor
                 )
             }
@@ -167,7 +177,7 @@ fun GoalsFullScreen(
                     GoalsItemCard(
                         item = goals,
                         onClick = {},
-                        onLongClick = {},
+                        onLongClick = { singleId = goals.id },
                         currentColor = currentColor
                     )
                 }

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -25,6 +23,7 @@ fun BaseProgress(
     progress: Float,
     maxSize: Int,
     progressColor: Color=Color(0xff3B3B3B),
+    enableDot:Boolean=true,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -49,7 +48,7 @@ fun BaseProgress(
                     .background(color =progressColor)
             )
 
-            if (maxSize <= 10) {
+            if (maxSize <= 10&&enableDot) {
                 Canvas(
                     modifier = Modifier.fillMaxSize()
                 ) {

@@ -64,7 +64,8 @@ fun GoalsHeaderPager(
         }
         val currentGoals = remember(
             key1 = page,
-            key2 = currentTimeFrame
+            key2 = currentTimeFrame,
+            key3 = allGoalsList
         ) { allGoalsList.filter { it.timeFrame == currentTimeFrame.name } }
         HeadersImage(
             modifier = Modifier
@@ -152,6 +153,7 @@ private fun HeadersImage(
                 color = Color.White
             )
             BaseProgress(
+                enableDot = false,
                 progress = animatedProgress.value,
                 maxSize = currentList.size,
                 modifier = Modifier
