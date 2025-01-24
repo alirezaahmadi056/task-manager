@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import info.alirezaahmadi.taskmanager.data.db.DataBase
 import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_1_2
 import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_2_3
+import info.alirezaahmadi.taskmanager.data.db.dream.DreamItemDao
 import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramDao
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItemDao
 import info.alirezaahmadi.taskmanager.data.db.medicine.MedicineDao
@@ -62,6 +63,10 @@ object ModuleDataBse {
     @Provides
     @Singleton
     fun provideMedicineDao(dataBase: DataBase): MedicineDao = dataBase.MedicineDao()
+
+   @Provides
+    @Singleton
+    fun provideDreamDao(dataBase: DataBase): DreamItemDao = dataBase.DreamItemDao()
 
 
 }
