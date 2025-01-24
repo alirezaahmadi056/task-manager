@@ -1,6 +1,7 @@
 package info.alirezaahmadi.taskmanager.ui.graph.goals.fullScreen
 
 import android.net.Uri
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -18,9 +19,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -34,16 +37,32 @@ import info.alirezaahmadi.taskmanager.ui.component.BaseImageLoader
 @Composable
 fun GoalsItemCard(
     item: GoalsItem,
+    currentColor: Pair<Color, Color>,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
+    val textColor = if (item.isCompleted)
+        Color.White
+    else Color(0xff5A697D)
+
+    val backgroundColor = if (item.isCompleted) currentColor
+        .toList()
+        .reversed() else
+        Pair(
+            Color(0xffECECEC),
+            Color(0xffECECEC)
+        ).toList()
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(85.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(Color(0xffECECEC), RoundedCornerShape(12.dp))
-            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
+            .background(Brush.linearGradient(backgroundColor), RoundedCornerShape(12.dp))
+            .combinedClickable(
+                enabled = !item.isCompleted,
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
             .padding(horizontal = 8.dp, vertical = 13.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -67,14 +86,14 @@ fun GoalsItemCard(
                 text = item.title,
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp),
                 fontWeight = FontWeight.Bold,
-                color = Color(0xff5A697D),
+                color = textColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
                 text = item.description,
                 style = MaterialTheme.typography.titleMedium,
-                color = Color(0xff5A697D),
+                color = textColor,
                 modifier = Modifier.fillMaxWidth(0.9f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

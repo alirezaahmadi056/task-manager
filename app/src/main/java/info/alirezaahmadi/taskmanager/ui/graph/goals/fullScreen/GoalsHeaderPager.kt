@@ -40,7 +40,6 @@ import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
 import info.alirezaahmadi.taskmanager.ui.component.BaseProgress
 import info.alirezaahmadi.taskmanager.util.TaskHelper.byLocate
 import info.alirezaahmadi.taskmanager.util.applyQuizGraphics
-import info.alirezaahmadi.taskmanager.util.getGoalColor
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -48,6 +47,7 @@ import kotlin.math.roundToInt
 fun GoalsHeaderPager(
     allGoalsList: List<GoalsItem>,
     pagerState: PagerState,
+    color: Pair<Color, Color>,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -73,6 +73,7 @@ fun GoalsHeaderPager(
             timeFrame = currentTimeFrame,
             currentList = currentGoals,
             currentIndex = page,
+            color = color,
             onClick = { nextPage ->
                 scope.launch {
                     pagerState.animateScrollToPage(
@@ -92,10 +93,9 @@ private fun HeadersImage(
     timeFrame: GoalsTimeFrame,
     currentList: List<GoalsItem>,
     currentIndex: Int,
+    color: Pair<Color, Color>,
     onClick: (Int) -> Unit,
 ) {
-    val backGroundColor: Pair<Color, Color> =
-        remember(key1 = timeFrame.name) { getGoalColor(timeFrame.name) }
     val completedGoals = currentList.count { it.isCompleted }
     val totalGoals = currentList.size
     val pendingGoals = totalGoals - completedGoals
@@ -120,7 +120,7 @@ private fun HeadersImage(
                 .padding(horizontal = 10.dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
-                .background(Brush.linearGradient(colors = backGroundColor.toList()))
+                .background(Brush.linearGradient(colors = color.toList()))
                 .padding(bottom = 12.dp, top = 12.dp, start = 30.dp)
         ) {
             Spacer(Modifier.height(12.dp))

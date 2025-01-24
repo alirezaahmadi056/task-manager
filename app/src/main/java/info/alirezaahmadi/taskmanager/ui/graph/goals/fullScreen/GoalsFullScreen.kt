@@ -1,6 +1,9 @@
 package info.alirezaahmadi.taskmanager.ui.graph.goals.fullScreen
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +33,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItem
@@ -55,15 +59,23 @@ fun GoalsFullScreen(
             else -> GoalsTimeFrame.SHORT
         }
     }
-   val shortTermGoals by goalsViewModel.shortTermGoals.collectAsState()
-   val mediumTermGoals by goalsViewModel.mediumTermGoals.collectAsState()
-   val longTermGoals by goalsViewModel.longTermGoals.collectAsState()
-   val allTermGoals by goalsViewModel.allTermGoals.collectAsState()
-    val goals = when (currentTimeFrame) {
-        GoalsTimeFrame.SHORT -> shortTermGoals
-        GoalsTimeFrame.MEDIUM -> mediumTermGoals
-        GoalsTimeFrame.LONG -> longTermGoals
+    val shortTermGoals by goalsViewModel.shortTermGoals.collectAsState()
+    val mediumTermGoals by goalsViewModel.mediumTermGoals.collectAsState()
+    val longTermGoals by goalsViewModel.longTermGoals.collectAsState()
+    val allTermGoals by goalsViewModel.allTermGoals.collectAsState()
+    val (goalsInCompleted, goalsCompleted) = remember(
+        currentTimeFrame,
+        shortTermGoals,
+        mediumTermGoals,
+        longTermGoals
+    ) {
+        when (currentTimeFrame) {
+            GoalsTimeFrame.SHORT -> shortTermGoals.reversed().partition { !it.isCompleted }
+            GoalsTimeFrame.MEDIUM -> mediumTermGoals.reversed().partition { !it.isCompleted }
+            GoalsTimeFrame.LONG -> longTermGoals.reversed().partition { !it.isCompleted }
+        }
     }
+    val currentColor: Pair<Color, Color> = remember(key1 = currentTimeFrame) { getGoalColor(currentTimeFrame.name) }
     val lazyList = rememberLazyListState()
     Scaffold(
         containerColor = Color.White,
@@ -81,27 +93,52 @@ fun GoalsFullScreen(
                 GoalsHeaderPager(
                     pagerState = pagerState,
                     allGoalsList = allTermGoals,
+                    color = currentColor
                 )
             }
             stickyHeader {
                 SectionAddGoals(
-                    currentTimeFrame = if(lazyList.firstVisibleItemIndex>0)" ( ${currentTimeFrame.perName} )" else "",
+                    currentTimeFrame = if (lazyList.firstVisibleItemIndex > 0) " ( ${currentTimeFrame.perName} )" else "",
                     color = getGoalColor(currentTimeFrame.name).second,
                     onAddClick = { navHostController.navigate(Screen.AddGoalsScreen()) }
                 )
             }
-            if (goals.isEmpty()) {
+            if (goalsInCompleted.isEmpty() && goalsCompleted.isEmpty()) {
                 item { GoalsEmpty() }
             }
-            items(items = goals, key = { it.id }) { goals ->
+            items(items = goalsInCompleted, key = { it.id }) { goals ->
                 GoalsItemCard(
                     item = goals,
                     onClick = {
                         navHostController.navigate(Screen.GoalsDetail(goals.id))
                     },
-                    onLongClick = {}
+                    onLongClick = {},
+                    currentColor = currentColor
                 )
             }
+            if (goalsCompleted.isNotEmpty()) {
+                stickyHeader {
+                    Text(
+                        modifier = Modifier
+                            .background(Color.White)
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 12.dp),
+                        text = "اهداف تیک خورده",
+                        style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black
+                    )
+                }
+                items(items = goalsCompleted, key = { "completed${it.id}" }) { goals ->
+                    GoalsItemCard(
+                        item = goals,
+                        onClick = {},
+                        onLongClick = {},
+                        currentColor = currentColor
+                    )
+                }
+            }
+
         }
     }
 
