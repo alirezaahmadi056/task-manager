@@ -80,7 +80,7 @@ fun GoalsFullScreen(
                 SectionAddGoals(
                     currentTimeFrame = if(lazyList.firstVisibleItemIndex>0)" ( ${currentTimeFrame.perName} )" else "",
                     color = getGoalColor(currentTimeFrame.name).second,
-                    onAddClick = {}
+                    onAddClick = { navHostController.navigate(Screen.AddGoalsScreen()) }
                 )
             }
             if (currentGoals.isEmpty()) {

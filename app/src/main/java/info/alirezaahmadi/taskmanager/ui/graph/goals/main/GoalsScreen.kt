@@ -13,7 +13,6 @@ import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GoalsScreen(
     navHostController: NavHostController,
@@ -21,9 +20,7 @@ fun GoalsScreen(
 ) {
     Scaffold(
         containerColor = Color.White,
-        topBar = {
-            GoalsTopBar(text = stringResource(R.string.my_goals)) { navHostController.navigateUp() }
-        }
+        topBar = { GoalsTopBar(text = stringResource(R.string.my_goals)) { navHostController.navigateUp() } }
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
