@@ -29,17 +29,18 @@ fun NavGraphBuilder.goalsGraph(
             )
         }
         composable<Screen.AddGoalsScreen> {
-            val args =it.toRoute<Screen.AddGoalsScreen>()
+            val args = it.toRoute<Screen.AddGoalsScreen>()
             AddGoalsScreen(
                 navHostController = navHostController,
-                id=args.id,
+                id = args.id,
+                time = args.timeFrame,
                 goalsViewModel = goalsViewModel
             )
         }
         composable<Screen.GoalsDetail> {
-            val args =it.toRoute<Screen.GoalsDetail>()
+            val args = it.toRoute<Screen.GoalsDetail>()
             GoalsDetailScreen(
-                navHostController =navHostController,
+                navHostController = navHostController,
                 id = args.id,
                 goalsViewModel = goalsViewModel
             )

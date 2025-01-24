@@ -134,7 +134,7 @@ fun GoalsFullScreen(
                 SectionAddGoals(
                     currentTimeFrame = if (showFloatingButton) " ( ${currentTimeFrame.perName} )" else "",
                     color = getGoalColor(currentTimeFrame.name).second,
-                    onAddClick = { navHostController.navigate(Screen.AddGoalsScreen()) }
+                    onAddClick = { navHostController.navigate(Screen.AddGoalsScreen(timeFrame = currentTimeFrame.name)) }
                 )
             }
             if (goalsInCompleted.isEmpty() && goalsCompleted.isEmpty()) {

@@ -1,5 +1,6 @@
 package info.alirezaahmadi.taskmanager.navigation
 
+import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
 import kotlinx.serialization.Serializable
 
 sealed interface Screen {
@@ -76,8 +77,13 @@ sealed interface Screen {
 
     @Serializable
     data class GoalsFullScreen(val pageIndex: Int)
+
     @Serializable
-    data class AddGoalsScreen(val id:Int=0)
+    data class AddGoalsScreen(
+        val id: Int = 0,
+        val timeFrame: String = GoalsTimeFrame.SHORT.name
+    )
+
     @Serializable
-    data class GoalsDetail(val id:Int=0)
+    data class GoalsDetail(val id: Int = 0)
 }

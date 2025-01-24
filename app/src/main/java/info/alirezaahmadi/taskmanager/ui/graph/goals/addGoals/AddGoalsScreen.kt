@@ -46,10 +46,11 @@ import kotlinx.coroutines.flow.collectLatest
 fun AddGoalsScreen(
     navHostController: NavHostController,
     id: Int,
+    time:String,
     goalsViewModel: GoalsViewModel,
 ) {
     var selectedImage by remember { mutableStateOf<String?>(null) }
-    var timeFrame by remember { mutableStateOf(GoalsTimeFrame.SHORT.name) }
+    var timeFrame by remember { mutableStateOf(time) }
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var checkInput by remember { mutableStateOf(false) }
