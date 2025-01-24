@@ -1,7 +1,10 @@
 package info.alirezaahmadi.taskmanager.ui.graph.goals.fullScreen
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.EmojiPeople
@@ -19,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,11 +60,16 @@ fun GoalsFullScreen(
     val currentGoals = remember(key1 = alaGoals, key2 = currentTimeFrame) {
         alaGoals.filter { it.timeFrame == currentTimeFrame.name }
     }
+    val lazyList = rememberLazyListState()
+    LaunchedEffect(lazyList.firstVisibleItemIndex) {
+        Log.i("1515", lazyList.firstVisibleItemIndex.toString())
+    }
     Scaffold(
         containerColor = Color.White,
-        topBar = { GoalsTopBar(stringResource(R.string.my_goals)){navHostController.navigateUp()} }
+        topBar = { GoalsTopBar(stringResource(R.string.my_goals)) { navHostController.navigateUp() } }
     ) { innerPadding ->
         LazyColumn(
+            state = lazyList,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -72,20 +82,25 @@ fun GoalsFullScreen(
                     allGoalsList = alaGoals,
                 )
             }
-            stickyHeader { SectionAddGoals(
-                color = getGoalColor(currentTimeFrame.name).second,
-                onAddClick = {}
-            ) }
-            if (currentGoals.isEmpty()){
+            stickyHeader {
+                SectionAddGoals(
+                    currentTimeFrame = if(lazyList.firstVisibleItemIndex>0)" ( ${currentTimeFrame.perName} )" else "",
+                    color = getGoalColor(currentTimeFrame.name).second,
+                    onAddClick = {}
+                )
+            }
+            if (currentGoals.isEmpty()) {
                 item { GoalsEmpty() }
             }
-            items(items = currentGoals, key = {it.id}){goals->
-                    GoalsItemCard(
-                        item = goals,
-                        onClick = {},
-                        onLongClick = {}
-                    )
-
+            items(items = currentGoals, key = { it.id }) { goals ->
+                GoalsItemCard(
+                    item = goals,
+                    onClick = {},
+                    onLongClick = {}
+                )
+            }
+            items(50) {
+                Box(Modifier.height(50.dp).background(Color.Blue).padding(5.dp))
             }
         }
     }

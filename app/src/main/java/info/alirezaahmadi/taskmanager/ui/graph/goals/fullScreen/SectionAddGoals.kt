@@ -28,7 +28,8 @@ import info.alirezaahmadi.taskmanager.R
 @Composable
 fun SectionAddGoals(
     color: Color,
-    onAddClick: () -> Unit
+    onAddClick: () -> Unit,
+    currentTimeFrame: String
 ) {
     Row(
         modifier = Modifier
@@ -39,8 +40,8 @@ fun SectionAddGoals(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(R.string.goals_list),
-            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 19.sp),
+            text = stringResource(R.string.goals_list)+currentTimeFrame,
+            style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onBackground
         )

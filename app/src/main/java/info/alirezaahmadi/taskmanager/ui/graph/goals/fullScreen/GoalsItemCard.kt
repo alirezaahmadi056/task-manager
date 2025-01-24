@@ -4,10 +4,12 @@ import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -58,8 +60,9 @@ fun GoalsItemCard(
             modifier = Modifier
                 .weight(0.75f)
                 .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Spacer(Modifier.height(5.dp))
+            Spacer(Modifier.height(2.dp))
             Text(
                 text = item.title,
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp),
@@ -68,7 +71,6 @@ fun GoalsItemCard(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Spacer(Modifier.height(12.dp))
             Text(
                 text = item.description,
                 style = MaterialTheme.typography.titleMedium,
