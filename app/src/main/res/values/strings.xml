@@ -30,5 +30,8 @@
     <string name="introduction_movies_books">معرفی فیلم و کتاب</string>
     <string name="more">بیشتر</string>
     <string name="goals_list">لیست اهداف</string>
-    <string name="add_goals">هدف جدید</string>
+    <string name="new_goals">هدف جدید</string>
+    <string name="add_goals">افزودن هدف</string>
+    <string name="update_goals">ویرایش هدف</string>
+    <string name="title_goals">عنوان هدف</string>
 </resources>

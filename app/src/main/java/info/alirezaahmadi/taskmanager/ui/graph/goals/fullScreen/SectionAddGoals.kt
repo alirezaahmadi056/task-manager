@@ -33,7 +33,7 @@ fun SectionAddGoals(
 ) {
     Row(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.White)
             .fillMaxWidth()
             .padding(horizontal = 5.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -43,7 +43,7 @@ fun SectionAddGoals(
             text = stringResource(R.string.goals_list)+currentTimeFrame,
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onBackground
+            color = Color.Black
         )
         Row(
             modifier = Modifier
@@ -64,7 +64,7 @@ fun SectionAddGoals(
             )
             Spacer(Modifier.width(4.dp))
             Text(
-                text = stringResource(R.string.add_goals),
+                text = stringResource(R.string.new_goals),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White

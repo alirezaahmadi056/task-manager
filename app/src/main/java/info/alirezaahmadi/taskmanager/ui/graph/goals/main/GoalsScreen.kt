@@ -27,6 +27,7 @@ fun GoalsScreen(
     goalsViewModel: GoalsViewModel
 ) {
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             GoalsTopBar(text = stringResource(R.string.my_goals)) { navHostController.navigateUp() }
         }

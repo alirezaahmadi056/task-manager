@@ -36,6 +36,7 @@ import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItem
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
+import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsTopBar
 import info.alirezaahmadi.taskmanager.util.getGoalColor
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
@@ -61,9 +62,6 @@ fun GoalsFullScreen(
         alaGoals.filter { it.timeFrame == currentTimeFrame.name }
     }
     val lazyList = rememberLazyListState()
-    LaunchedEffect(lazyList.firstVisibleItemIndex) {
-        Log.i("1515", lazyList.firstVisibleItemIndex.toString())
-    }
     Scaffold(
         containerColor = Color.White,
         topBar = { GoalsTopBar(stringResource(R.string.my_goals)) { navHostController.navigateUp() } }
@@ -95,12 +93,11 @@ fun GoalsFullScreen(
             items(items = currentGoals, key = { it.id }) { goals ->
                 GoalsItemCard(
                     item = goals,
-                    onClick = {},
+                    onClick = {
+                        navHostController.navigate(Screen.AddGoalsScreen(goals.id))
+                    },
                     onLongClick = {}
                 )
-            }
-            items(50) {
-                Box(Modifier.height(50.dp).background(Color.Blue).padding(5.dp))
             }
         }
     }
