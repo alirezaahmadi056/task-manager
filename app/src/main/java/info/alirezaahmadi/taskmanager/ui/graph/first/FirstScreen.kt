@@ -88,6 +88,10 @@ fun FirstScreen(navHostController: NavHostController) {
                     text = "اهداف",
                 ) { navHostController.navigate(Screen.GoalsGraph) }
 
+                SelectedGraphRoute(
+                    text = "دارو",
+                ) { navHostController.navigate(Screen.MedicineGraph) }
+
             }
         })
 }

@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.LineStyle
 import androidx.compose.material.icons.outlined.NoteAlt
 import androidx.compose.material.icons.outlined.Task
-import androidx.compose.material.icons.rounded.LineStyle
 import androidx.compose.material.icons.rounded.NoteAlt
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Task
@@ -26,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.data.model.NavItem
-import info.alirezaahmadi.taskmanager.navigation.BottomNavigation
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.BaseTopBar
 import info.alirezaahmadi.taskmanager.ui.graph.duties.notes.NotesScreen
@@ -83,7 +80,7 @@ fun DutiesScreen(
             )
         },
         bottomBar = {
-            BottomNavigation(
+            DutiesBottomNavigation(
                 pagerState = pagerState,
                 coroutineScope = scope,
                 navItem = item
