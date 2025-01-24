@@ -9,6 +9,8 @@ import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramDao
 import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramItem
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItem
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItemDao
+import info.alirezaahmadi.taskmanager.data.db.medicine.MedicineDao
+import info.alirezaahmadi.taskmanager.data.db.medicine.MedicineItem
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesDao
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesItem
 import info.alirezaahmadi.taskmanager.data.db.routine.WeeklyRoutineDao
@@ -25,7 +27,8 @@ import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
         RoutineItem::class,
         SkinRoutineItem::class,
         ExerciseProgramItem::class,
-        GoalsItem::class
+        GoalsItem::class,
+        MedicineItem::class
     ],
     version = 1,
     exportSchema = false
@@ -39,6 +42,7 @@ abstract class DataBase : RoomDatabase() {
     abstract fun SkinRoutineDao(): SkinRoutineDao
     abstract fun ExerciseProgramDao(): ExerciseProgramDao
     abstract fun GoalsItemDao(): GoalsItemDao
+    abstract fun MedicineDao(): MedicineDao
 
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {

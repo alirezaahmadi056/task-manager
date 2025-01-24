@@ -9,10 +9,12 @@ import info.alirezaahmadi.taskmanager.ui.graph.duties.dutiesGraph
 import info.alirezaahmadi.taskmanager.ui.graph.exerciseProgram.exerciseProgramGraph
 import info.alirezaahmadi.taskmanager.ui.graph.first.firstGraph
 import info.alirezaahmadi.taskmanager.ui.graph.goals.goalsGraph
+import info.alirezaahmadi.taskmanager.ui.graph.medicine.medicineGraph
 import info.alirezaahmadi.taskmanager.ui.graph.skinRoutine.skinRoutineGraph
 import info.alirezaahmadi.taskmanager.ui.graph.weeklyRoutine.weeklyRoutineGraph
 import info.alirezaahmadi.taskmanager.viewModel.ExerciseProgramViewModel
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
+import info.alirezaahmadi.taskmanager.viewModel.MedicineViewModel
 
 @Composable
 fun NavGraph(
@@ -20,7 +22,8 @@ fun NavGraph(
     navHostController: NavHostController,
     darkThem: (Boolean) -> Unit,
     exerciseProgramViewModel: ExerciseProgramViewModel= hiltViewModel(),
-    goalsViewModel: GoalsViewModel= hiltViewModel()
+    goalsViewModel: GoalsViewModel= hiltViewModel(),
+    medicineViewModel: MedicineViewModel= hiltViewModel()
 ) {
     NavHost(
         modifier = modifier,
@@ -33,6 +36,7 @@ fun NavGraph(
         skinRoutineGraph(navHostController)
         exerciseProgramGraph(navHostController,exerciseProgramViewModel)
         goalsGraph(navHostController,goalsViewModel)
+        medicineGraph(navHostController, medicineViewModel)
     }
 
 }
