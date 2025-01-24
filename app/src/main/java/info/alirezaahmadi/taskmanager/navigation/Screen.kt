@@ -92,4 +92,6 @@ sealed interface Screen {
     data object MedicineGraph:Screen
     @Serializable
     data object MedicineScreen:Screen
+    @Serializable
+    data class AddMedicineScreen(val id:Int=0)
 }
