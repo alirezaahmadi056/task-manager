@@ -12,6 +12,7 @@ import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_1_2
 import info.alirezaahmadi.taskmanager.data.db.DataBase.Companion.MIGRATION_2_3
 import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramDao
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItemDao
+import info.alirezaahmadi.taskmanager.data.db.medicine.MedicineDao
 import info.alirezaahmadi.taskmanager.data.db.notes.NotesDao
 import info.alirezaahmadi.taskmanager.data.db.routine.WeeklyRoutineDao
 import info.alirezaahmadi.taskmanager.data.db.skinRoutine.SkinRoutineDao
@@ -57,5 +58,10 @@ object ModuleDataBse {
     @Provides
     @Singleton
     fun provideGoalsDao(dataBase: DataBase): GoalsItemDao = dataBase.GoalsItemDao()
+
+    @Provides
+    @Singleton
+    fun provideMedicineDao(dataBase: DataBase): MedicineDao = dataBase.MedicineDao()
+
 
 }
