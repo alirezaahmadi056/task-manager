@@ -90,9 +90,22 @@ sealed interface Screen {
 
     //medicine
     @Serializable
-    data object MedicineGraph:Screen
+    data object MedicineGraph : Screen
+
     @Serializable
-    data object MedicineScreen:Screen
+    data object MedicineScreen : Screen
+
     @Serializable
-    data class AddMedicineScreen(val id:Int=0,val timeFrame:String=MedicineTimeFrame.HOURLY.name)
+    data class AddMedicineScreen(
+        val id: Int = 0,
+        val timeFrame: String = MedicineTimeFrame.HOURLY.name
+    )
+
+    //Dream
+    @Serializable
+    data object DreamGraph : Screen
+    @Serializable
+    data object DreamScreen : Screen
+    @Serializable
+    data class AddDreamsScreen(val id: Int = 0) : Screen
 }
