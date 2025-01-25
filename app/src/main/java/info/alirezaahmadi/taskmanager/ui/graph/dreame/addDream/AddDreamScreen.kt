@@ -148,7 +148,7 @@ fun AddDreamScreen(
                 textStyle = MaterialTheme.typography.bodyLarge,
                 shape = RoundedCornerShape(9.dp),
                 value = title, onValueChange = {
-                    if (it.length <= 40) {
+                    if (it.length <= 30) {
                         title = it
                     }
                 },
