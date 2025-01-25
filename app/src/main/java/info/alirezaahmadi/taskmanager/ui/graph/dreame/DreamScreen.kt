@@ -66,7 +66,6 @@ fun DreamScreen(
         onDeleteItem = {
             singleId?.let { dreamViewModel.deleteDreamByID(it) }
             singleId = null
-            navHostController.navigateUp()
         }
     )
     Scaffold(
