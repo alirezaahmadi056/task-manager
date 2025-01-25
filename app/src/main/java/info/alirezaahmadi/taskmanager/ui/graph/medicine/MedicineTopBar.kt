@@ -1,6 +1,7 @@
 package info.alirezaahmadi.taskmanager.ui.graph.medicine
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +46,6 @@ fun MedicineTopBar(
     ) {
         Box(
             modifier = Modifier
-                .statusBarsPadding()
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 16.dp),
             contentAlignment = Alignment.CenterStart

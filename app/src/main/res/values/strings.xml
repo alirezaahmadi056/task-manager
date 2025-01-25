@@ -11,6 +11,7 @@
     <string name="today_exercise_program">برنامه تمرینی امروز</string>
     <string name="add_exercise">افزودن تمرین</string>
     <string name="day_week">روز های هفته</string>
+    <string name="all_day_week">همه روز های هفته</string>
     <string name="name_exercise">نام تمرین</string>
     <string name="description_exercise">توضیحات تمرین</string>
     <string name="set_number">تعداد ست</string>

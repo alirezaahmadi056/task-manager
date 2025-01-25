@@ -86,7 +86,7 @@ fun MedicineScreen(
                         tint = Color.White
                     )
                 },
-                onClick = { navHostController.navigate(Screen.AddSkinRoutineScreen()) }
+                onClick = { navHostController.navigate(Screen.AddMedicineScreen()) }
             )
         },
         floatingActionButtonPosition = FabPosition.Start,
@@ -122,7 +122,6 @@ fun MedicineScreen(
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(innerPadding)
                             .padding(horizontal = 12.dp)
                     ) {
 
@@ -131,7 +130,6 @@ fun MedicineScreen(
                     MedicineEmpty(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(innerPadding)
                     )
                 }
             }
