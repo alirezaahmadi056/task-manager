@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItem
+import info.alirezaahmadi.taskmanager.ui.component.CenterBackTopBar
 import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsTopBar
 import info.alirezaahmadi.taskmanager.viewModel.MedicineViewModel
 
@@ -34,17 +35,16 @@ import info.alirezaahmadi.taskmanager.viewModel.MedicineViewModel
 fun AddMedicineScreen(
     navHostController: NavHostController,
     id: Int,
-    time:String,
     medicineViewModel: MedicineViewModel
 ) {
 
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var currentTimeFrame by remember { mutableStateOf(time) }
+    var currentTimeFrame by remember { mutableStateOf("") }
     Scaffold(
         containerColor = Color.White,
         topBar = {
-            GoalsTopBar(text = stringResource(if (id == 0) R.string.add_goals else R.string.update_goals)) {
+            CenterBackTopBar (text = stringResource(if (id == 0) R.string.add_goals else R.string.update_goals)) {
                 navHostController.navigateUp()
             }
         },
