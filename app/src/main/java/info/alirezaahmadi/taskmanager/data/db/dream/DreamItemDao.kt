@@ -15,5 +15,5 @@ interface DreamItemDao {
     @Query("select * from DreamItem where id=:id")
     fun getDreamById(id:Int):Flow<DreamItem?>
     @Query("delete from DreamItem where id=:id")
-    fun deleteDreamByID(id: Int)
+   suspend fun deleteDreamByID(id: Int)
 }
