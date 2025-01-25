@@ -66,6 +66,7 @@ fun DreamScreen(
         onDeleteItem = {
             singleId?.let { dreamViewModel.deleteDreamByID(it) }
             singleId = null
+            navHostController.navigateUp()
         }
     )
     Scaffold(
@@ -113,7 +114,7 @@ fun DreamScreen(
                             onDeleted = {
                                 singleId =dream.id
                             },
-                            onEdit = {}
+                            onEdit = {navHostController.navigate(Screen.DreamDetailScreen(id = dream.id))}
                         )
                     }
                     stickyHeader {

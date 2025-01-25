@@ -7,6 +7,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.graph.dreame.addDream.AddDreamScreen
+import info.alirezaahmadi.taskmanager.ui.graph.dreame.dreamDetail.DreamDetailScreen
 import info.alirezaahmadi.taskmanager.viewModel.DreamViewModel
 
 fun NavGraphBuilder.dreamGraph(
@@ -24,6 +25,12 @@ fun NavGraphBuilder.dreamGraph(
                 navHostController = navHostController,
                 id = args.id,
                 dreamViewModel = dreamViewModel
+            )
+        }
+        composable<Screen.DreamDetailScreen> {
+            val args =it.toRoute<Screen.DreamDetailScreen>()
+            DreamDetailScreen(
+                navHostController, args.id, dreamViewModel
             )
         }
     }
