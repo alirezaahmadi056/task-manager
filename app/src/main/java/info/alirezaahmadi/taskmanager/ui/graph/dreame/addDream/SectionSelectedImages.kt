@@ -17,6 +17,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,11 +44,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.ui.component.BaseImageLoader
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SectionSelectedImages(
     selectedImages: List<String>,
@@ -62,7 +65,13 @@ fun SectionSelectedImages(
         context = context,
         onDismiss = { showSheetOptionImage = null },
         onDeleted = {
-            onRemoveImage(showSheetOptionImage.toString())
+            if (coveredImage==showSheetOptionImage.toString()){
+                if (selectedImages.isNotEmpty()){
+                    onSelectedCaverImage(selectedImages.random())
+                }else{onSelectedCaverImage("")}
+            }else{
+                onRemoveImage(showSheetOptionImage.toString())
+            }
             showSheetOptionImage = null
         },
         onCovered = {
@@ -71,9 +80,9 @@ fun SectionSelectedImages(
         }
     )
     val imageLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetMultipleContents()
+        contract = ActivityResultContracts.OpenMultipleDocuments()
     ) { uris: List<Uri> ->
-        onAddImage(uris.map { it.toString() })
+        onAddImage(uris.map { it.toString() }.filterNot { it in selectedImages })
         uris.forEach {
             context.contentResolver.takePersistableUriPermission(
                 it,
@@ -81,29 +90,33 @@ fun SectionSelectedImages(
             )
         }
     }
+    val currentList = remember(
+        key1 = selectedImages.toList(),
+        key2 = coveredImage
+    ) {
+        selectedImages.filterNot { it == coveredImage }
+    }
     Text(
-        modifier = Modifier.padding(vertical = 8.dp),
+        modifier = Modifier.padding(vertical = 14.dp),
         text = stringResource(R.string.selected_image),
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.SemiBold,
         color = Color.Black
     )
-    FlowRow(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalArrangement = Arrangement.Start,
-        maxItemsInEachRow = 3
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
     ) {
-        AddImage(onAdd = { imageLauncher.launch("image/*") })
+        item { AddImage(onAdd = { imageLauncher.launch(arrayOf("image/*")) }) }
         if (coveredImage.isNotEmpty()) {
-            SingleImage(
-                image = coveredImage,
-                coveredImage = true,
-                onEdit = { showSheetOptionImage = Uri.parse(coveredImage) }
-            )
+            item {
+                SingleImage(
+                    image = coveredImage,
+                    coveredImage = true,
+                    onEdit = { showSheetOptionImage = Uri.parse(coveredImage) }
+                )
+            }
         }
-
-        selectedImages.forEach {
+        items(currentList) {
             SingleImage(
                 image = it,
                 coveredImage = false,
@@ -117,8 +130,8 @@ fun SectionSelectedImages(
 private fun AddImage(onAdd: () -> Unit) {
     Column(
         modifier = Modifier
-            .padding(3.dp)
-            .size(90.dp)
+            .padding(5.dp)
+            .size(100.dp)
             .clip(RoundedCornerShape(12.dp))
             .drawBehind {
                 val dashWidth = 10.dp.toPx()
@@ -169,8 +182,8 @@ private fun SingleImage(
 ) {
     Box(
         modifier = Modifier
-            .padding(3.dp)
-            .size(90.dp)
+            .padding(5.dp)
+            .size(100.dp)
             .clip(RoundedCornerShape(12.dp))
             .clickable(onClick = onEdit),
         contentAlignment = Alignment.Center
@@ -185,11 +198,13 @@ private fun SingleImage(
         if (coveredImage) {
             Text(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .align(Alignment.BottomCenter)
                     .background(Color.Transparent.copy(0.7f))
                     .padding(vertical = 4.dp)
                     .fillMaxWidth(),
                 text = "عکس اصلی",
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White

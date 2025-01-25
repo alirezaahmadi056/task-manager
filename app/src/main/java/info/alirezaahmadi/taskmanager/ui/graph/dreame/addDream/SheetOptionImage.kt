@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import info.alirezaahmadi.taskmanager.util.openUri
 
@@ -53,7 +54,10 @@ fun SheetOptionImage(
                     tint = Color.Black
                 )
             },
-            onClick = {openUri(context = context, uri = uri) }
+            onClick = {
+                openUri(context = context, uri = uri)
+                onDismiss()
+            }
         )
         SheetItem(
             text = "انتخاب به عنوان عکس اصلی",
@@ -64,7 +68,10 @@ fun SheetOptionImage(
                     tint = Color.Black
                 )
             },
-            onClick = onCovered
+            onClick = {
+                onCovered()
+                onDismiss()
+            }
         )
         SheetItem(
             text = "حذف عکس از لیست",
@@ -75,7 +82,10 @@ fun SheetOptionImage(
                     tint = Color.Black
                 )
             },
-            onClick = onDeleted
+            onClick = {
+                onDeleted()
+                onDismiss()
+            }
         )
 
         Spacer(Modifier.height(8.dp))
@@ -91,17 +101,19 @@ private fun SheetItem(
 ) {
     Row(
         modifier = Modifier
+            .clickable(onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 8.dp)
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 5.dp)
-            .clickable(onClick = onClick),
+            .padding(horizontal = 8.dp, vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         icon.invoke()
         Text(
-            modifier = Modifier.padding(start = 5.dp),
+            modifier = Modifier.padding(start = 8.dp),
             text = text,
             style = MaterialTheme.typography.titleLarge,
             color = Color.Black,
+            textAlign = TextAlign.Center,
             fontWeight = FontWeight.SemiBold
         )
     }

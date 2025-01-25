@@ -14,8 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.navigation.Screen
+import info.alirezaahmadi.taskmanager.ui.component.CenterBackTopBar
 import info.alirezaahmadi.taskmanager.viewModel.DreamViewModel
 
 @Composable
@@ -24,6 +27,11 @@ fun DreamScreen(
     dreamViewModel: DreamViewModel
 ) {
     Scaffold(
+        topBar = {
+            CenterBackTopBar(text = stringResource(R.string.my_dream)) {
+                navHostController.navigateUp()
+            }
+        },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 containerColor = Color.Black,
@@ -49,7 +57,8 @@ fun DreamScreen(
         containerColor = Color.White
     ) { innerPadding ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding)
         ) {
 

@@ -66,7 +66,7 @@ fun FirstScreen(navHostController: NavHostController) {
         content = {
             FlowRow(
                 modifier = Modifier.fillMaxSize(),
-                maxLines = 2,
+                maxLines = 5,
                 horizontalArrangement = Arrangement.Center
             ) {
                 SelectedGraphRoute(

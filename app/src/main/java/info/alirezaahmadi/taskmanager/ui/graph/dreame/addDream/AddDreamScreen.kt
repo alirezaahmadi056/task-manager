@@ -30,12 +30,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
+import info.alirezaahmadi.taskmanager.ui.component.CenterBackTopBar
+import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsTopBar
 import info.alirezaahmadi.taskmanager.viewModel.DreamViewModel
 
 @Composable
 fun AddDreamScreen(
     navHostController: NavHostController,
-    id:Int,
+    id: Int,
     dreamViewModel: DreamViewModel
 ) {
     var title by remember { mutableStateOf("") }
@@ -45,35 +47,17 @@ fun AddDreamScreen(
     var coveredImage by remember { mutableStateOf("") }
     Scaffold(
         containerColor = Color.White,
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                containerColor = Color.Black,
-                expanded = true,
-                text = {
-                    Text(
-                        text = "رویا جدید",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
-                    )
-                },
-                icon = {
-                    Icon(
-                        Icons.Rounded.Add,
-                        contentDescription = "",
-                        tint = Color.White
-                    )
-                },
-                onClick = { }
-            )
-        },
-        floatingActionButtonPosition = FabPosition.Start
+        topBar = {
+            CenterBackTopBar(text = stringResource(if (id == 0) R.string.add_dream else R.string.update_dream)) {
+                navHostController.navigateUp()
+            }
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 12.dp)
-                .verticalScroll(rememberScrollState())
         ) {
             Text(
                 modifier = Modifier.padding(top = 12.dp, bottom = 4.dp, start = 10.dp),
@@ -84,8 +68,8 @@ fun AddDreamScreen(
             )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Gray,
-                    unfocusedIndicatorColor = Color.DarkGray,
+                    focusedIndicatorColor = Color.LightGray,
+                    unfocusedIndicatorColor = Color.White,
                     unfocusedPlaceholderColor = Color.DarkGray,
                     focusedPlaceholderColor = Color.Black,
                     focusedTextColor = Color.Black,
@@ -124,7 +108,7 @@ fun AddDreamScreen(
             )
 
             Text(
-                modifier = Modifier.padding(top = 12.dp, bottom = 4.dp, start = 10.dp),
+                modifier = Modifier.padding(top = 12.dp, bottom = 8.dp, start = 10.dp),
                 text = stringResource(R.string.description_dream),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
@@ -132,8 +116,8 @@ fun AddDreamScreen(
             )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Gray,
-                    unfocusedIndicatorColor = Color.DarkGray,
+                    focusedIndicatorColor = Color.LightGray,
+                    unfocusedIndicatorColor = Color.White,
                     unfocusedPlaceholderColor = Color.DarkGray,
                     focusedPlaceholderColor = Color.Black,
                     focusedTextColor = Color.Black,
@@ -145,8 +129,8 @@ fun AddDreamScreen(
                     errorSupportingTextColor = Color(0xFFE20000),
                 ),
                 modifier = Modifier.fillMaxWidth(),
-                maxLines = 5,
-                minLines = 4,
+                maxLines = 3,
+                minLines = 3,
                 textStyle = MaterialTheme.typography.bodyLarge,
                 shape = RoundedCornerShape(9.dp),
                 value = description, onValueChange = { description = it },
@@ -165,7 +149,6 @@ fun AddDreamScreen(
                 },
                 coveredImage = coveredImage,
                 onSelectedCaverImage = { image ->
-                    imageList.remove(image)
                     coveredImage = image
                 },
                 onRemoveImage = { image ->

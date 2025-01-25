@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
+import info.alirezaahmadi.taskmanager.ui.component.CenterBackTopBar
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
 
 @Composable
@@ -20,7 +21,7 @@ fun GoalsScreen(
 ) {
     Scaffold(
         containerColor = Color.White,
-        topBar = { GoalsTopBar(text = stringResource(R.string.my_goals)) { navHostController.navigateUp() } }
+        topBar = { CenterBackTopBar(text = stringResource(R.string.my_goals)) { navHostController.navigateUp() } }
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier

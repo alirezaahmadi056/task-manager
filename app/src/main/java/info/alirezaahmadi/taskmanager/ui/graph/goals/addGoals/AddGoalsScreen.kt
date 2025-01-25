@@ -38,6 +38,7 @@ import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItem
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
+import info.alirezaahmadi.taskmanager.ui.component.CenterBackTopBar
 import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsTopBar
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -69,7 +70,7 @@ fun AddGoalsScreen(
     Scaffold(
         containerColor = Color.White,
         topBar = {
-            GoalsTopBar(text = stringResource(if (id == 0) R.string.add_goals else R.string.update_goals))
+            CenterBackTopBar (text = stringResource(if (id == 0) R.string.add_goals else R.string.update_goals))
             { navHostController.navigateUp() }
         },
         bottomBar = {
@@ -149,8 +150,8 @@ fun AddGoalsScreen(
             )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Gray,
-                    unfocusedIndicatorColor = Color.DarkGray,
+                    focusedIndicatorColor = Color.LightGray,
+                    unfocusedIndicatorColor = Color.White,
                     unfocusedPlaceholderColor = Color.DarkGray,
                     focusedPlaceholderColor = Color.Black,
                     focusedTextColor = Color.Black,
@@ -215,8 +216,8 @@ fun AddGoalsScreen(
             )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Gray,
-                    unfocusedIndicatorColor = Color.DarkGray,
+                    focusedIndicatorColor = Color.LightGray,
+                    unfocusedIndicatorColor = Color.White,
                     unfocusedPlaceholderColor = Color.DarkGray,
                     focusedPlaceholderColor = Color.Black,
                     focusedTextColor = Color.Black,

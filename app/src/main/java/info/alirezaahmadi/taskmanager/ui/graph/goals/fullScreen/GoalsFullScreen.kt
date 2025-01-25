@@ -48,6 +48,7 @@ import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
 import info.alirezaahmadi.taskmanager.navigation.Screen
+import info.alirezaahmadi.taskmanager.ui.component.CenterBackTopBar
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsTopBar
 import info.alirezaahmadi.taskmanager.util.getGoalColor
@@ -104,7 +105,7 @@ fun GoalsFullScreen(
     )
     Scaffold(
         containerColor = Color.White,
-        topBar = { GoalsTopBar(stringResource(R.string.my_goals)) { navHostController.navigateUp() } },
+        topBar = { CenterBackTopBar(stringResource(R.string.my_goals)) { navHostController.navigateUp() } },
         floatingActionButton = {
             AnimatedVisibility(
                 visible = showFloatingButton,
