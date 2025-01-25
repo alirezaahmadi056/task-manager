@@ -20,6 +20,6 @@ fun BaseImageLoader(
         contentDescription = "",
         contentScale = contentScale
     ){
-        it.placeholder(R.drawable.image_placeholder)
+        it.placeholder(R.drawable.img_place_holder)
     }
 }
