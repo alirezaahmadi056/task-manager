@@ -1,20 +1,26 @@
 package info.alirezaahmadi.taskmanager.ui.graph.dreame.dreamDetail
 
 import android.net.Uri
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
@@ -31,12 +37,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import info.alirezaahmadi.taskmanager.data.db.dream.DreamItem
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.BaseImageLoader
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
@@ -53,6 +61,7 @@ fun DreamDetailScreen(
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    var cover by remember { mutableStateOf("") }
     val imageList = remember { mutableStateListOf<String>() }
     LaunchedEffect(id) {
         dreamViewModel.getDreamById(id).collectLatest { dream ->
@@ -62,6 +71,7 @@ fun DreamDetailScreen(
                 imageList.clear()
                 imageList.add(item.coverUri)
                 imageList.addAll(item.imageUriList)
+                cover =item.coverUri
             }
         }
     }
@@ -79,6 +89,7 @@ fun DreamDetailScreen(
         }
     )
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             DreamDetailTopBar(
                 onBack = { navHostController.navigateUp() },
@@ -99,7 +110,17 @@ fun DreamDetailScreen(
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.textButtonColors(contentColor = Color(0xff535CF0)),
                     onClick = {
-
+                        dreamViewModel.upsertDreamItem(
+                           DreamItem(
+                               id= id,
+                               title =title,
+                               description =description,
+                               coverUri = cover,
+                               imageUriList = imageList,
+                               isCompleted = true
+                           )
+                        )
+                        navHostController.navigateUp()
                     }
                 ) {
                     Text(
@@ -145,24 +166,68 @@ fun DreamDetailScreen(
 
 @Composable
 private fun HeaderPager(
-    imageList:List<String>,
+    imageList: List<String>,
     pagerState: PagerState
 ) {
     val context = LocalContext.current
-    HorizontalPager(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(300.dp),
-        state = pagerState
-    ) {page->
-        val currentImage = remember(key1 = imageList, key2 = page) { Uri.parse(imageList[page]) }
-        BaseImageLoader(
-            model = currentImage,
-            contentScale = ContentScale.FillHeight,
+        contentAlignment = Alignment.Center
+    ) {
+        HorizontalPager(
             modifier = Modifier
-                .applyQuizGraphics(pagerState,page)
-                .fillMaxSize()
-                .clickable { openUri(context,currentImage)  }
+                .fillMaxSize(),
+            state = pagerState
+        ) { page ->
+            val currentImage =
+                remember(key1 = imageList, key2 = page) { Uri.parse(imageList[page]) }
+            BaseImageLoader(
+                model = currentImage,
+                contentScale = ContentScale.FillHeight,
+                modifier = Modifier
+                    .applyQuizGraphics(pagerState, page)
+                    .fillMaxSize()
+                    .clickable { openUri(context, currentImage) }
+            )
+
+
+        }
+        if (imageList.size < 10) {
+            Row(
+                modifier = Modifier
+                    .height(26.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .align(Alignment.BottomCenter)
+                    .background(Color.Transparent.copy(0.7f))
+                    .padding(vertical = 5.dp, horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                PagerIndicator(imageList.size, pagerState.currentPage)
+            }
+        }
+    }
+}
+
+@Composable
+private fun PagerIndicator(
+    listSize: Int,
+    page: Int
+) {
+    repeat(listSize) {
+        val size by animateDpAsState(targetValue = if (page == it) 10.dp else 7.dp, label = "")
+        val color by animateColorAsState(
+            targetValue = if (page == it) Color.White else Color.LightGray,
+            label = ""
+        )
+        Box(
+            modifier = Modifier
+                .padding(2.dp)
+                .clip(CircleShape)
+                .background(color = color, shape = CircleShape)
+                .size(size)
         )
     }
+
 }
