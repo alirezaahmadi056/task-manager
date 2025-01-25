@@ -1,12 +1,22 @@
 package info.alirezaahmadi.taskmanager.ui.graph.dreame.dreamDetail
 
+import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -22,11 +32,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.navigation.Screen
+import info.alirezaahmadi.taskmanager.ui.component.BaseImageLoader
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
+import info.alirezaahmadi.taskmanager.util.applyQuizGraphics
+import info.alirezaahmadi.taskmanager.util.openUri
 import info.alirezaahmadi.taskmanager.viewModel.DreamViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -51,7 +66,7 @@ fun DreamDetailScreen(
         }
     }
     var singleId by remember { mutableStateOf<Int?>(null) }
-
+    val pagerState = rememberPagerState { imageList.size }
     DialogDeleteItemTask(
         title = "حذف رویا",
         body = "از حذف این رویا اطمینان دارید؟",
@@ -66,9 +81,9 @@ fun DreamDetailScreen(
     Scaffold(
         topBar = {
             DreamDetailTopBar(
-                onBack = {navHostController.navigateUp()},
+                onBack = { navHostController.navigateUp() },
                 onEdit = { navHostController.navigate(Screen.AddDreamsScreen(id = id)) },
-                onDeleted = { singleId =id }
+                onDeleted = { singleId = id }
             )
         },
         bottomBar = {
@@ -78,12 +93,11 @@ fun DreamDetailScreen(
                     .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
-                TextButton (
+                TextButton(
                     modifier = Modifier
                         .padding(12.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.
-                    textButtonColors(contentColor = Color(0xff535CF0)),
+                    colors = ButtonDefaults.textButtonColors(contentColor = Color(0xff535CF0)),
                     onClick = {
 
                     }
@@ -98,14 +112,57 @@ fun DreamDetailScreen(
             }
 
         }
-
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
         ) {
-
+            HeaderPager(
+                pagerState = pagerState,
+                imageList = imageList
+            )
+            Spacer(Modifier.height(12.dp))
+            Text(
+                text = title,
+                style = MaterialTheme.typography.labelMedium,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
+            Spacer(Modifier.height(18.dp))
+            Text(
+                text = description,
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.Black,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
         }
+    }
+}
+
+@Composable
+private fun HeaderPager(
+    imageList:List<String>,
+    pagerState: PagerState
+) {
+    val context = LocalContext.current
+    HorizontalPager(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp),
+        state = pagerState
+    ) {page->
+        val currentImage = remember(key1 = imageList, key2 = page) { Uri.parse(imageList[page]) }
+        BaseImageLoader(
+            model = currentImage,
+            contentScale = ContentScale.FillHeight,
+            modifier = Modifier
+                .applyQuizGraphics(pagerState,page)
+                .fillMaxSize()
+                .clickable { openUri(context,currentImage)  }
+        )
     }
 }
