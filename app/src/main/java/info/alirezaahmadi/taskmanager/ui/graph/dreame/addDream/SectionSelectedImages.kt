@@ -65,12 +65,16 @@ fun SectionSelectedImages(
         context = context,
         onDismiss = { showSheetOptionImage = null },
         onDeleted = {
-            if (coveredImage==showSheetOptionImage.toString()){
-                if (selectedImages.isNotEmpty()){
-                    onSelectedCaverImage(selectedImages.random())
-                }else{onSelectedCaverImage("")}
-            }else{
-                onRemoveImage(showSheetOptionImage.toString())
+            val imageToDelete = showSheetOptionImage.toString()
+            if (coveredImage == imageToDelete) {
+                onRemoveImage(imageToDelete)
+                if (selectedImages.isNotEmpty()) {
+                    onSelectedCaverImage(selectedImages.first())
+                } else {
+                    onSelectedCaverImage("")
+                }
+            } else {
+                onRemoveImage(imageToDelete)
             }
             showSheetOptionImage = null
         },
@@ -84,6 +88,9 @@ fun SectionSelectedImages(
     ) { uris: List<Uri> ->
         onAddImage(uris.map { it.toString() }.filterNot { it in selectedImages })
         uris.forEach {
+            if (coveredImage.isEmpty()) {
+                onSelectedCaverImage(it.toString())
+            }
             context.contentResolver.takePersistableUriPermission(
                 it,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION
@@ -106,9 +113,9 @@ fun SectionSelectedImages(
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
     ) {
-        item { AddImage(onAdd = { imageLauncher.launch(arrayOf("image/*")) }) }
+        item(key = "add") { AddImage(onAdd = { imageLauncher.launch(arrayOf("image/*")) }) }
         if (coveredImage.isNotEmpty()) {
-            item {
+            item("key cover") {
                 SingleImage(
                     image = coveredImage,
                     coveredImage = true,
@@ -116,7 +123,7 @@ fun SectionSelectedImages(
                 )
             }
         }
-        items(currentList) {
+        items(currentList, key = { "current:$it" }) {
             SingleImage(
                 image = it,
                 coveredImage = false,
