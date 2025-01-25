@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,6 +49,8 @@ fun CompletedExerciseScreen(
     time: Long,
     exerciseList: List<String>
 ) {
+    val exerciseTime =
+        remember { ((System.currentTimeMillis() - time) / 1000).toDetailedTimeString() }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
@@ -145,7 +148,7 @@ fun CompletedExerciseScreen(
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    text = "زمان تمرین شما: ${((System.currentTimeMillis() - time) / 1000).toDetailedTimeString()}",
+                    text = "زمان تمرین شما: $exerciseTime",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onBackground.copy(0.8f),
