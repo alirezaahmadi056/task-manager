@@ -101,7 +101,7 @@ fun AddMedicineScreen(
     Scaffold(
         containerColor = Color.White,
         topBar = {
-            CenterBackTopBar(text = stringResource(if (id == 0) R.string.add_goals else R.string.update_goals)) {
+            CenterBackTopBar(text = stringResource(if (id == 0) R.string.add_medicine else R.string.update_medicine)) {
                 navHostController.navigateUp()
             }
         },
