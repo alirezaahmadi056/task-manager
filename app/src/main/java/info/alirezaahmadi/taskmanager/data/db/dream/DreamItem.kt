@@ -11,4 +11,5 @@ data class DreamItem(
     val description:String,
     val imageUriList: List<String>,
     val coverUri:String,
+    val isCompleted:Boolean=false,
 )
