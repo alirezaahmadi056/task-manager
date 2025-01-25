@@ -91,6 +91,9 @@ fun FirstScreen(navHostController: NavHostController) {
                 SelectedGraphRoute(
                     text = "دارو",
                 ) { navHostController.navigate(Screen.MedicineGraph) }
+                SelectedGraphRoute(
+                    text = "رویا",
+                ) { navHostController.navigate(Screen.DreamGraph) }
 
             }
         })
