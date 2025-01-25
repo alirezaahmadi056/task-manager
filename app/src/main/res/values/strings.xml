@@ -41,6 +41,7 @@
     <string name="completed_goals">به هدف رسیدم 🥳 </string>
     <string name="my_medicine">داروهای من</string>
     <string name="add_medicine">افزودن دارو</string>
+    <string name="title_medicine">عنوان دارو</string>
     <string name="update_medicine">ویرایش دارو</string>
     <string name="title_dream">عنوان رویا</string>
     <string name="description_dream">توضیحات رویا</string>

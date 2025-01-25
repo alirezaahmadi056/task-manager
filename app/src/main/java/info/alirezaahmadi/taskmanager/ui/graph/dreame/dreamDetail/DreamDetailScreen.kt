@@ -173,7 +173,7 @@ private fun HeaderPager(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp),
+            .height(330.dp),
         contentAlignment = Alignment.Center
     ) {
         HorizontalPager(
@@ -185,7 +185,7 @@ private fun HeaderPager(
                 remember(key1 = imageList, key2 = page) { Uri.parse(imageList[page]) }
             BaseImageLoader(
                 model = currentImage,
-                contentScale = ContentScale.FillHeight,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .applyQuizGraphics(pagerState, page)
                     .fillMaxSize()
@@ -197,7 +197,7 @@ private fun HeaderPager(
         if (imageList.size < 10) {
             Row(
                 modifier = Modifier
-                    .height(26.dp)
+                    .height(25.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .align(Alignment.BottomCenter)
                     .background(Color.Transparent.copy(0.7f))

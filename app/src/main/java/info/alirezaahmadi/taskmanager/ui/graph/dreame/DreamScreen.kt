@@ -116,16 +116,18 @@ fun DreamScreen(
                             onEdit = {navHostController.navigate(Screen.DreamDetailScreen(id = dream.id))}
                         )
                     }
-                    stickyHeader {
-                        Text(
-                            text = "رویاهای محقق شده",
-                            modifier = Modifier
-                                .background(Color.White)
-                                .fillMaxWidth()
-                                .padding(12.dp),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = Color.Black
-                        )
+                    if (dreamCompleted.isNotEmpty()){
+                        stickyHeader {
+                            Text(
+                                text = "رویاهای محقق شده",
+                                modifier = Modifier
+                                    .background(Color.White)
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = Color.Black
+                            )
+                        }
                     }
                     items(dreamCompleted, key = { "completed:${it.id}" }) { dream ->
                         DreamItemCard(
