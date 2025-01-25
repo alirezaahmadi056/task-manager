@@ -234,7 +234,7 @@ fun AddMedicineScreen(
 
             Text(
                 modifier = Modifier.padding(top = 6.dp, bottom = 8.dp, start = 10.dp),
-                text = stringResource(R.string.description_dream),
+                text = stringResource(R.string.description_medicine),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.Black

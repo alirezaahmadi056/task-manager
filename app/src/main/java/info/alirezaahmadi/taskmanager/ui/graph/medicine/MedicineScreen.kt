@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,8 +27,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.navigation.Screen
+import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.util.Constants.persianDayOfWeek
 import info.alirezaahmadi.taskmanager.viewModel.MedicineViewModel
@@ -51,7 +55,34 @@ fun MedicineScreen(
     val dayWeek = remember { Constants.deyWeek }
     val pagerState = rememberPagerState(initialPage = persianDayOfWeek[day] ?: 0) { dayWeek.size }
     val allMedicine by medicineViewModel.allMedicineItems.collectAsState()
+    val medicines = remember(key1 =allMedicine ) {
+        allMedicine.sortedBy {
+            val time = it.time
+            val parts = time.split(":")
+            if (parts.size == 2) {
+                val hours = parts[0].toIntOrNull() ?: 0
+                val minutes = parts[1].toIntOrNull() ?: 0
+                hours * 60 + minutes
+            } else {
+                Int.MAX_VALUE
+            }
+        }
+    }
     val scope = rememberCoroutineScope()
+
+
+    var singleId by remember { mutableStateOf<Int?>(null) }
+
+    DialogDeleteItemTask(
+        title = "حذف دارو",
+        body = "از حذف این دارو اطمینان دارید؟",
+        onBack = { singleId = null },
+        show = singleId != null,
+        onDeleteItem = {
+            singleId?.let { medicineViewModel.deleteMedicineById(it) }
+            singleId = null
+        }
+    )
     Scaffold(
         topBar = {
             MedicineTopBar(
@@ -65,7 +96,7 @@ fun MedicineScreen(
                         )
                     }
                 },
-                onBack = {navHostController.navigateUp()}
+                onBack = { navHostController.navigateUp() }
             )
         },
         floatingActionButton = {
@@ -117,14 +148,21 @@ fun MedicineScreen(
             AnimatedContent(
                 targetState = currentMedicine.isNotEmpty(),
                 label = ""
-            ) {
+            ) { it ->
                 if (it) {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 12.dp)
                     ) {
-
+                        item { Spacer(Modifier.height(12.dp)) }
+                        items(medicines, key = {item-> item.id}) {medicine->
+                            MedicineItemCard(
+                                item = medicine,
+                                onDeleted = {singleId =medicine.id},
+                                onEdited = {navHostController.navigate(Screen.MedicineDetailScreen(medicine.id))}
+                            )
+                        }
                     }
                 } else {
                     MedicineEmpty(

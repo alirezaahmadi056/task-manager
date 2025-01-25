@@ -7,6 +7,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.graph.medicine.addMedicine.AddMedicineScreen
+import info.alirezaahmadi.taskmanager.ui.graph.medicine.medicineDetail.MedicineDetailScreen
 import info.alirezaahmadi.taskmanager.viewModel.MedicineViewModel
 
 fun NavGraphBuilder.medicineGraph(
@@ -23,6 +24,14 @@ fun NavGraphBuilder.medicineGraph(
         composable<Screen.AddMedicineScreen> {
             val args =it.toRoute<Screen.AddMedicineScreen>()
             AddMedicineScreen(
+                navHostController = navHostController,
+                id = args.id,
+                medicineViewModel = medicineViewModel
+            )
+        }
+        composable<Screen.MedicineDetailScreen> {
+            val args =it.toRoute<Screen.MedicineDetailScreen>()
+            MedicineDetailScreen(
                 navHostController = navHostController,
                 id = args.id,
                 medicineViewModel = medicineViewModel

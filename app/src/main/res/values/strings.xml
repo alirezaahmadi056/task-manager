@@ -45,7 +45,9 @@
     <string name="update_medicine">ویرایش دارو</string>
     <string name="title_dream">عنوان رویا</string>
     <string name="description_dream">توضیحات رویا</string>
+    <string name="description_medicine">توضیحات دارو</string>
     <string name="add_dream">افزودن رویا</string>
     <string name="update_dream">ویرایش رویا</string>
     <string name="my_dream">رویاهای من</string>
+    <string name="return_text">برگشت</string>
 </resources>

@@ -108,4 +108,6 @@ sealed interface Screen {
     data class AddDreamsScreen(val id: Int = 0) : Screen
     @Serializable
     data class DreamDetailScreen(val id:Int=0):Screen
+    @Serializable
+    data class MedicineDetailScreen(val id:Int=0):Screen
 }
