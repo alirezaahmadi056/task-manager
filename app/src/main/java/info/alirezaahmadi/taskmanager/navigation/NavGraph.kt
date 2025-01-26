@@ -17,12 +17,13 @@ import info.alirezaahmadi.taskmanager.viewModel.DreamViewModel
 import info.alirezaahmadi.taskmanager.viewModel.ExerciseProgramViewModel
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
 import info.alirezaahmadi.taskmanager.viewModel.MedicineViewModel
+import info.alirezaahmadi.taskmanager.viewModel.ThemViewModel
 
 @Composable
 fun NavGraph(
     modifier: Modifier,
     navHostController: NavHostController,
-    darkThem: (Boolean) -> Unit,
+    themViewModel: ThemViewModel,
     exerciseProgramViewModel: ExerciseProgramViewModel= hiltViewModel(),
     goalsViewModel: GoalsViewModel= hiltViewModel(),
     medicineViewModel: MedicineViewModel= hiltViewModel(),
@@ -33,7 +34,7 @@ fun NavGraph(
         navController = navHostController,
         startDestination = Screen.FirstGraph,
     ) {
-        firstGraph(navHostController)
+        firstGraph(navHostController,themViewModel)
         weeklyRoutineGraph(navHostController)
         dutiesGraph(navHostController)
         skinRoutineGraph(navHostController)

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +29,7 @@ import info.alirezaahmadi.taskmanager.ui.component.AppConfig
 import info.alirezaahmadi.taskmanager.ui.theme.TaskManagerTheme
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.viewModel.SkinRoutineViewModel
+import info.alirezaahmadi.taskmanager.viewModel.ThemViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -47,16 +50,19 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun TskApp(navHostController: NavHostController) {
-        var darkThem by rememberSaveable { mutableStateOf(Constants.isThemDark) }
-        TaskManagerTheme(isSystemInDarkTheme()) {
+    private fun TskApp(
+        navHostController: NavHostController,
+        themViewModel: ThemViewModel = hiltViewModel()
+    ) {
+        val darkThem by themViewModel.darkThem.collectAsState()
+        TaskManagerTheme(darkThem) {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                 NavGraph(
                     modifier = Modifier
                         .fillMaxSize()
                         .safeDrawingPadding(),
                     navHostController = navHostController,
-                    darkThem = { darkThem = it }
+                    themViewModel = themViewModel
                 )
             }
         }
@@ -69,7 +75,7 @@ class MainActivity : ComponentActivity() {
         if (intent.action == Constants.ACTION_TASK_RECEIVER) {
             intent.extras?.let {
                 val id = it.getInt("TASK_ID", 0)
-                navHostController.navigate(Screen.AddTaskScreen(id=id)) {
+                navHostController.navigate(Screen.AddTaskScreen(id = id)) {
                     popUpTo(Screen.DutiesScreen) {
                         inclusive = false
                         saveState = true

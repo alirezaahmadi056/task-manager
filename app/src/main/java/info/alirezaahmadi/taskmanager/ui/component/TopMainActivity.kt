@@ -1,6 +1,5 @@
 package info.alirezaahmadi.taskmanager.ui.component
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -8,11 +7,9 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,36 +25,29 @@ import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.Apps
 import androidx.compose.material.icons.outlined.DarkMode
-import androidx.compose.material.icons.outlined.FilterList
-import androidx.compose.material.icons.outlined.FormatListNumberedRtl
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Stars
-import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -68,156 +58,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.navigation.Screen
-import info.alirezaahmadi.taskmanager.topBarMain.AlertDialogSendMessage
-import info.alirezaahmadi.taskmanager.ui.graph.duties.notes.showDialogSelectedGridList
 import info.alirezaahmadi.taskmanager.util.Constants
 import info.alirezaahmadi.taskmanager.viewModel.DatStoreViewModel
-
-@Composable
-fun BaseTopBar(
-    navHostController: NavHostController,
-    text: String,
-    searchIcon: (@Composable () -> Unit)? = null,
-    isNote: Boolean = false,
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
-            .drawBehind {
-                drawLine(
-                    color = Color.LightGray.copy(alpha = 0.5f),
-                    start = Offset(0f, size.height), // شروع خط در پایین کامپوزبل
-                    end = Offset(size.width, size.height), // پایان خط در پایین کامپوزبل
-                    strokeWidth = 1.5.dp.toPx()
-                )
-            }
-            .padding(vertical = 12.dp),
-    ) {
-        Row(
-            modifier = Modifier.align(Alignment.CenterEnd),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AnimatedVisibility(
-                visible = searchIcon != null,
-            ) {
-                searchIcon?.invoke()
-            }
-
-            var expand by remember {
-                mutableStateOf(false)
-            }
-            Column {
-                IconButton(onClick = {
-                    expand = true
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.menu_dots),
-                        contentDescription = "",
-                        modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.scrim.copy()
-                    )
-                }
-                DropdownMenu(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                    expanded = expand,
-                    onDismissRequest = { expand = false })
-                {
-                    DropdownMenuItem(
-                        modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                        text = {
-                            Text(
-                                text = "ترتیب لیست",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.scrim
-
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Outlined.FormatListNumberedRtl,
-                                contentDescription = "",
-                                tint = MaterialTheme.colorScheme.scrim
-                            )
-                        },
-                        onClick = {
-                            showSelectedSortNotList.value = true
-                            expand = false
-                        })
-
-                    if (isNote) {
-                        HorizontalDivider(
-                            thickness = 0.5.dp,
-                            color = Color.LightGray
-                        )
-                        DropdownMenuItem(
-                            modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                            text = {
-                                Text(
-                                    text = "نوع شاهده لیست",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.scrim
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.FilterList,
-                                    contentDescription = "",
-                                    tint = MaterialTheme.colorScheme.scrim
-                                )
-                            },
-                            onClick = {
-                                showDialogSelectedGridList.value = true
-                                expand = false
-                            })
-                    }
-
-
-                }
-            }
-        }
-
-        Text(
-            modifier = Modifier
-                .align(Alignment.Center),
-            text = text,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.scrim
-        )
-
-        IconButton(
-            modifier = Modifier.align(Alignment.CenterStart),
-            onClick = { navHostController.navigateUp() }
-        ) {
-            Icon(
-                Icons.Rounded.ArrowForward,
-                contentDescription = ""
-            )
-        }
-
-
-    }
-
-
-}
+import info.alirezaahmadi.taskmanager.viewModel.ThemViewModel
 
 
 @Composable
 fun DrawerContent(
     navHostController: NavHostController,
     isOpen: Boolean,
-    changeThem: (Boolean) -> Unit,
     onFinish: () -> Unit,
+    themViewModel: ThemViewModel,
     datStoreViewModel: DatStoreViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current as Activity
+    val context = LocalContext.current
+
+    val darkThem by themViewModel.darkThem.collectAsState()
     val uriHandler = LocalUriHandler.current
-
-    var darkThem by remember {
-        mutableStateOf(Constants.isThemDark)
-    }
-
     var showAlertSendMessage by remember {
         mutableStateOf(false)
     }
@@ -313,18 +170,22 @@ fun DrawerContent(
                     ),
                     checked = darkThem,
                     onCheckedChange = {
-                        darkThem = it
-                        changeThem(it)
+                        themViewModel.changeThem(it)
                         Constants.isThemDark = it
                         datStoreViewModel.saveDarkThem(it)
                     }
                 )
             },
             onClick = {
-                darkThem = !darkThem
-                changeThem(darkThem)
-                Constants.isThemDark = darkThem
-                datStoreViewModel.saveDarkThem(darkThem)
+                if (darkThem) {
+                    themViewModel.changeThem(false)
+                    Constants.isThemDark = false
+                    datStoreViewModel.saveDarkThem(false)
+                } else {
+                    themViewModel.changeThem(true)
+                    Constants.isThemDark = true
+                    datStoreViewModel.saveDarkThem(true)
+                }
             })
 
 
@@ -394,7 +255,7 @@ fun DrawerItem(
 private fun NoInterNet(
     show: Boolean,
     navHostController: NavHostController,
-    context: Activity,
+    context: Context,
     onFinish: () -> Unit
 ) {
     if (show) {

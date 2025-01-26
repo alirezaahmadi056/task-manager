@@ -41,11 +41,15 @@ import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.DrawerContent
 import info.alirezaahmadi.taskmanager.ui.component.MainDrawer
 import info.alirezaahmadi.taskmanager.ui.theme.LightGray
+import info.alirezaahmadi.taskmanager.viewModel.ThemViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun FirstScreen(navHostController: NavHostController) {
+fun FirstScreen(
+    navHostController: NavHostController,
+    themViewModel: ThemViewModel
+) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -55,7 +59,7 @@ fun FirstScreen(navHostController: NavHostController) {
             DrawerContent(
                 navHostController = navHostController,
                 isOpen = drawerState.isOpen,
-                changeThem = { },
+                themViewModel = themViewModel,
                 onFinish = {
                     scope.launch {
                         drawerState.close()
