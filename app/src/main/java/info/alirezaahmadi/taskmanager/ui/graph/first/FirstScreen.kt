@@ -93,7 +93,8 @@ fun FirstScreen(
                         .fillMaxSize()
                         .padding(innerPadding)
                 ) {
-
+                    Spacer(Modifier.height(8.dp))
+                    FirstTopPager(navHostController = navHostController)
                     FlowRow(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -199,11 +200,11 @@ fun SelectedGraphRoute(
     Column(
         modifier = Modifier
             .fillMaxWidth(0.5f)
-            .padding(6.dp)
+            .padding(8.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.onPrimaryContainer)
             .clickable(onClick = onClick)
-            .padding(12.dp),
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
