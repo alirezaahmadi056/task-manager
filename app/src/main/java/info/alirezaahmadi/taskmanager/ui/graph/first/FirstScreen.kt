@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.DrawerValue
@@ -83,6 +85,7 @@ fun FirstScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
+                        .verticalScroll(rememberScrollState())
                 ) {
                     Spacer(Modifier.height(8.dp))
                     FirstTopPager(navHostController = navHostController)
@@ -126,6 +129,9 @@ fun FirstScreen(
                         ) { navHostController.navigate(Screen.DreamGraph) }
 
                     }
+                    IntroductionSection()
+                    Spacer(Modifier.height(12.dp))
+
                 }
 
             }
@@ -195,7 +201,7 @@ fun SelectedGraphRoute(
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.onPrimaryContainer)
             .clickable(onClick = onClick)
-            .padding(8.dp),
+            .padding(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -213,7 +219,7 @@ fun SelectedGraphRoute(
             color = MaterialTheme.colorScheme.scrim,
             textAlign = TextAlign.Center
         )
-        Spacer(Modifier.height(6.dp))
+        Spacer(Modifier.height(14.dp))
     }
 
 }
