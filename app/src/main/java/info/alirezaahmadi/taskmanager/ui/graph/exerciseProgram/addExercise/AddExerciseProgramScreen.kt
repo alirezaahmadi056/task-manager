@@ -79,7 +79,7 @@ fun AddExerciseProgramScreen(
     }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
         topBar = { AddExerciseTopBar { navHostController.navigateUp() } },
         bottomBar = {
             Box(
