@@ -4,7 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
-   id("org.jetbrains.kotlin.plugin.serialization")
+    id("org.jetbrains.kotlin.plugin.serialization")
 
 }
 
@@ -28,7 +28,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
-            isShrinkResources =true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -115,4 +115,8 @@ dependencies {
 
     //Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
+
+
 }
