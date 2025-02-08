@@ -87,6 +87,8 @@ sealed interface Screen {
     @Serializable
     data class GoalsDetail(val id: Int = 0)
 
+    @Serializable
+    data class MovieBookDetailScreen(val id:Int,val type:String)
     //medicine
     @Serializable
     data object MedicineGraph : Screen
