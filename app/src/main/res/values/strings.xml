@@ -28,7 +28,8 @@
     <string name="return_to_homePage">برگشت به صفحه اصلی</string>
     <string name="goals">هدف</string>
     <string name="my_goals">اهداف من</string>
-    <string name="introduction_movies_books">معرفی فیلم و کتاب</string>
+    <string name="introduction_movies">معرفی فیلم</string>
+    <string name="introduction_books">معرفی کتاب</string>
     <string name="more">بیشتر</string>
     <string name="goals_list">لیست اهداف</string>
     <string name="new_goals">هدف جدید</string>
