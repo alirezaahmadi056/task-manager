@@ -1,7 +1,6 @@
 package info.alirezaahmadi.taskmanager.ui.graph.goals.main
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -66,9 +64,9 @@ fun GoalsScreen(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp, start = 23.dp, end = 8.dp),
+                        .padding(top = 12.dp, start = 23.dp, end = 8.dp),
                     text = stringResource(R.string.introduction_books),
-                    style = MaterialTheme.typography.labelLarge.copy(fontSize = 18.sp),
+                    style = MaterialTheme.typography.labelLarge.copy(fontSize = 20.sp),
                     fontWeight = FontWeight.Bold,
                 )
             }
@@ -98,9 +96,9 @@ fun GoalsScreen(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp, start = 23.dp, end = 8.dp),
+                        .padding(top = 12.dp, start = 23.dp, end = 8.dp),
                     text = stringResource(R.string.introduction_movies),
-                    style = MaterialTheme.typography.labelLarge.copy(fontSize = 18.sp),
+                    style = MaterialTheme.typography.labelLarge.copy(fontSize = 20.sp),
                     fontWeight = FontWeight.Bold,
                 )
             }
