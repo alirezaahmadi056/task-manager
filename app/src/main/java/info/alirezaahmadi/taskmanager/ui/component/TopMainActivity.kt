@@ -50,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
@@ -105,9 +106,10 @@ fun DrawerContent(
         Image(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(230.dp),
-            painter = painterResource(id = R.drawable.taskhed),
+                .height(300.dp),
+            painter = painterResource(id = R.drawable.drawer_image),
             contentDescription = "",
+            contentScale = ContentScale.Fit
         )
         DrawerItem(text = "درباره من", icon = Icons.Outlined.Person,
             onClick = {
@@ -166,7 +168,10 @@ fun DrawerContent(
                     },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.White,
-                        uncheckedBorderColor = Color.Transparent
+                        uncheckedBorderColor = Color.Transparent,
+                        uncheckedIconColor = Color.White,
+                        uncheckedThumbColor = Color.White,
+                        uncheckedTrackColor = Color(0xffD3D3D3)
                     ),
                     checked = darkThem,
                     onCheckedChange = {
