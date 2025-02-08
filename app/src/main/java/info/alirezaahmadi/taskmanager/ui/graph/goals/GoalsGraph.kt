@@ -10,6 +10,7 @@ import info.alirezaahmadi.taskmanager.ui.graph.goals.addGoals.AddGoalsScreen
 import info.alirezaahmadi.taskmanager.ui.graph.goals.detail.GoalsDetailScreen
 import info.alirezaahmadi.taskmanager.ui.graph.goals.fullScreen.GoalsFullScreen
 import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsScreen
+import info.alirezaahmadi.taskmanager.ui.graph.goals.main.MovieBookDetailScreen
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
 
 fun NavGraphBuilder.goalsGraph(
@@ -45,5 +46,14 @@ fun NavGraphBuilder.goalsGraph(
                 goalsViewModel = goalsViewModel
             )
         }
+        composable<Screen.MovieBookDetailScreen> {
+            val args = it.toRoute<Screen.MovieBookDetailScreen>()
+            MovieBookDetailScreen(
+                navHostController = navHostController,
+                id = args.id,
+                type = args.type
+            )
+        }
+
     }
 }
