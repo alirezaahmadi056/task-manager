@@ -57,7 +57,7 @@ fun IntroductionSection() {
             contentAlignment = Alignment.Center
         ){
             Text(
-                text = "@Lrn.ir",
+                text = "Lrn.ir@",
                 style = MaterialTheme.typography.titleLarge,
                 color = Color.Black,
                 fontWeight = FontWeight.SemiBold,
