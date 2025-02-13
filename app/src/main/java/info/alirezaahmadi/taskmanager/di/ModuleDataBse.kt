@@ -64,9 +64,12 @@ object ModuleDataBse {
     @Singleton
     fun provideMedicineDao(dataBase: DataBase): MedicineDao = dataBase.MedicineDao()
 
-   @Provides
+    @Provides
     @Singleton
     fun provideDreamDao(dataBase: DataBase): DreamItemDao = dataBase.DreamItemDao()
 
+    @Provides
+    @Singleton
+    fun provideCurriculumDao(dataBase: DataBase) = dataBase.CurriculumDao()
 
 }
