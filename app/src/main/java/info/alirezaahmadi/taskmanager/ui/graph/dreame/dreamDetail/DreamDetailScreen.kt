@@ -69,7 +69,6 @@ fun DreamDetailScreen(
                 title = item.title
                 description = item.description
                 imageList.clear()
-                imageList.add(item.coverUri)
                 imageList.addAll(item.imageUriList)
                 cover =item.coverUri
             }
