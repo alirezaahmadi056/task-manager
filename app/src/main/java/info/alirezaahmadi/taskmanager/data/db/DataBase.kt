@@ -5,6 +5,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import info.alirezaahmadi.taskmanager.data.db.curriculum.CurriculumDao
+import info.alirezaahmadi.taskmanager.data.db.curriculum.CurriculumItem
 import info.alirezaahmadi.taskmanager.data.db.dream.DreamItem
 import info.alirezaahmadi.taskmanager.data.db.dream.DreamItemDao
 import info.alirezaahmadi.taskmanager.data.db.exerciseProgram.ExerciseProgramDao
@@ -31,7 +33,8 @@ import info.alirezaahmadi.taskmanager.data.db.task.TaskItem
         ExerciseProgramItem::class,
         GoalsItem::class,
         MedicineItem::class,
-        DreamItem::class
+        DreamItem::class,
+        CurriculumItem::class
     ],
     version = 1,
     exportSchema = false
@@ -46,8 +49,8 @@ abstract class DataBase : RoomDatabase() {
     abstract fun ExerciseProgramDao(): ExerciseProgramDao
     abstract fun GoalsItemDao(): GoalsItemDao
     abstract fun MedicineDao(): MedicineDao
-    abstract fun DreamItemDao():DreamItemDao
-
+    abstract fun DreamItemDao(): DreamItemDao
+    abstract fun CurriculumDao(): CurriculumDao
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
