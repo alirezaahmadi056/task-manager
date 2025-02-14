@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,8 +38,8 @@ fun SkinRoutineItemCard(
     onDeleted: () -> Unit = {},
 ) {
 
-    val backgroundColor = Constants.skinColors[item.color]
-    val image = Constants.SkinsImage[item.image]
+    val backgroundColor = remember(item.color) { Constants.skinColors[item.color] }
+    val image = remember(item.image) { Constants.SkinsImage[item.image]  }
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(12.dp))
@@ -53,7 +54,8 @@ fun SkinRoutineItemCard(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.weight(0.2f),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp)
+                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
+                color = Color.Black
             )
             Row(
                 modifier = Modifier
@@ -87,66 +89,3 @@ fun SkinRoutineItemCard(
 
     }
 
-/*
-Row(
-modifier = Modifier.fillMaxWidth(),
-verticalAlignment = Alignment.CenterVertically,
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .weight(0.2f)
-        ,
-        contentAlignment = Alignment.Center
-    ){
-        Text(
-            text = item.time,
-            fontWeight = FontWeight.SemiBold,
-        )
-    }
-    Card(
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.scrim.copy(0.2f)),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
-        modifier = Modifier
-            .weight(0.8f)
-            .padding(horizontal = 5.dp, vertical = 4.dp)
-            .fillMaxWidth()
-            .combinedClickable(
-                onClick = onEdited,
-                onLongClick = onDeleted
-            ),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            Text(
-                modifier = Modifier
-                    .padding(top = 5.dp),
-                text = item.title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.scrim,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp),
-                text = item.description,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    lineHeight = 19.sp
-                ),
-                color = MaterialTheme.colorScheme.scrim.copy(0.8f),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
-
-        }
-    }
-}*/

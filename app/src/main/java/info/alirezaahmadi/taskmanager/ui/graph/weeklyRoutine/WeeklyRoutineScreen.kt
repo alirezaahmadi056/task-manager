@@ -214,8 +214,8 @@ private fun Routine(
 ) {
     AnimatedContent(
         targetState = routines.isNotEmpty(), label = ""
-    ) {
-        if (it) {
+    ) {notEmpty->
+        if (notEmpty) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
