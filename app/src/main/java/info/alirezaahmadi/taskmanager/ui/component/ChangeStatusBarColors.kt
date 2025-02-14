@@ -38,6 +38,7 @@ fun ChangeStatusBarColors(
             }
 
             Screen.WeeklyRoutineGraph::class.simpleName,
+            Screen.CurriculumGraph::class.simpleName,
             Screen.ExerciseProgramGraph::class.simpleName -> {
                 systemUiController.setStatusBarColor(
                     if (darkThem) Color(0xff3B3B3B) else Color(0xffECECEC)
