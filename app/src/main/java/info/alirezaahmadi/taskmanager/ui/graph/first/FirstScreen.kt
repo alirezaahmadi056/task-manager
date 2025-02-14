@@ -127,6 +127,10 @@ fun FirstScreen(
                             text = "رویاهای من",
                             image = R.drawable.dream_image
                         ) { navHostController.navigate(Screen.DreamGraph) }
+                        SelectedGraphRoute(
+                            text = "برنامه ریزی درسی",
+                            image = R.drawable.lesson_image
+                        ) { navHostController.navigate(Screen.CurriculumGraph) }
 
                     }
                     IntroductionSection()
