@@ -117,8 +117,8 @@ fun AddCurriculumScreen(
                     ),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black,
-                        contentColor = Color.White
+                        containerColor = MaterialTheme.colorScheme.onBackground,
+                        contentColor = MaterialTheme.colorScheme.background
                     ),
                     onClick = {
                         if (currentDayStatus.isNotEmpty() && title.isNotEmpty()) {
