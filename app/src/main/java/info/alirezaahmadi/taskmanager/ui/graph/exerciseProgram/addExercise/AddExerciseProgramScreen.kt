@@ -62,25 +62,26 @@ fun AddExerciseProgramScreen(
     var repetitionSetNumber by remember { mutableIntStateOf(0) }
     var timeNumber by remember { mutableIntStateOf(0) }
     LaunchedEffect(id) {
-        exerciseProgramViewModel.getExerciseProgram(id ?: 0).collectLatest { exercise ->
-            exercise?.let {
-                currentDayStatus.addAll(it.dayWeek)
-                selectedImage = Uri.parse(it.imageUri)
-                selectedVideo = Uri.parse(it.videoUri)
-                title = it.name
-                description = it.description
-                enableDropDown = it.dropdown
-                setNumber =it.setNumber
-                repetitionSetNumber =it.repetitionSetNumber
-                timeNumber =it.time
+        if (id!=null){
+            exerciseProgramViewModel.getExerciseProgram(id).collectLatest { exercise ->
+                exercise?.let {
+                    currentDayStatus.addAll(it.dayWeek)
+                    selectedImage = Uri.parse(it.imageUri)
+                    selectedVideo = Uri.parse(it.videoUri)
+                    title = it.name
+                    description = it.description
+                    enableDropDown = it.dropdown
+                    setNumber =it.setNumber
+                    repetitionSetNumber =it.repetitionSetNumber
+                    timeNumber =it.time
+                }
             }
         }
-
     }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        topBar = { AddExerciseTopBar { navHostController.navigateUp() } },
+        topBar = { AddExerciseTopBar(id) { navHostController.navigateUp() } },
         bottomBar = {
             Box(
                 modifier = Modifier

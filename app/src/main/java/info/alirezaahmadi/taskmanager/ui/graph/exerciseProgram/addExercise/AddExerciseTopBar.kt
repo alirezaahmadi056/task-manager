@@ -22,6 +22,7 @@ import info.alirezaahmadi.taskmanager.R
 
 @Composable
 fun AddExerciseTopBar(
+    id:Int?,
     onBack: () -> Unit,
 ) {
     Box(
@@ -32,7 +33,7 @@ fun AddExerciseTopBar(
         contentAlignment = Alignment.CenterStart
     ) {
         Text(
-            text = stringResource(R.string.add_exercise),
+            text = stringResource( if(id==null)R.string.add_exercise else R.string.update_exercise),
             style = MaterialTheme.typography.bodyLarge.copy(fontSize = 20.sp),
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.align(Alignment.Center),
