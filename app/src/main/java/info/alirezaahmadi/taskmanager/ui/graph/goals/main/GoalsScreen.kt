@@ -1,6 +1,8 @@
 package info.alirezaahmadi.taskmanager.ui.graph.goals.main
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -16,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,9 +42,10 @@ import info.alirezaahmadi.taskmanager.data.model.Movie
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.BaseImageLoader
 import info.alirezaahmadi.taskmanager.ui.component.CenterBackTopBar
+import info.alirezaahmadi.taskmanager.ui.theme.LightGray
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun GoalsScreen(
     navHostController: NavHostController,
@@ -60,14 +64,15 @@ fun GoalsScreen(
                 .padding(innerPadding)
         ) {
             item { GoalsTopSection(navHostController, goalsViewModel) }
-            item {
+            stickyHeader {
                 Text(
                     modifier = Modifier
+                        .background(Color.White)
                         .fillMaxWidth()
-                        .padding(top = 12.dp, start = 23.dp, end = 8.dp),
+                        .padding(top = 12.dp, start = 23.dp, end = 8.dp, bottom = 12.dp),
                     text = stringResource(R.string.introduction_books),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 20.sp),
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Black,
                 )
             }
             item {
@@ -93,13 +98,21 @@ fun GoalsScreen(
                 }
             }
             item {
+                HorizontalDivider(
+                    thickness = 35.dp,
+                    color = Color.LightGray.copy(0.2f),
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+            }
+            stickyHeader {
                 Text(
                     modifier = Modifier
+                        .background(Color.White)
                         .fillMaxWidth()
-                        .padding(top = 12.dp, start = 23.dp, end = 8.dp),
+                        .padding(top = 12.dp, start = 23.dp, end = 8.dp, bottom = 12.dp),
                     text = stringResource(R.string.introduction_movies),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 20.sp),
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Black,
                 )
             }
             item {
