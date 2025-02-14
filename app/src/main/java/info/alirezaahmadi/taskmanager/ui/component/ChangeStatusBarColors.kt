@@ -27,31 +27,31 @@ fun ChangeStatusBarColors(
 
     LaunchedEffect(currentGraph, darkThem) {
         when (currentGraph?.substringAfterLast(".")) {
-            Screen.DreamGraph::class.simpleName,
-            Screen.GoalsGraph::class.simpleName -> {
+            Screen.DreamGraph.toString(),
+            Screen.GoalsGraph.toString() -> {
                 systemUiController.setSystemBarsColor(Color.White)
             }
 
-            Screen.FirstGraph::class.simpleName,
-            Screen.DutiesGraph::class.simpleName -> {
+            Screen.FirstGraph.toString(),
+            Screen.DutiesGraph.toString() -> {
                 systemUiController.setSystemBarsColor(defaultStatusBarColor)
             }
 
-            Screen.WeeklyRoutineGraph::class.simpleName,
-            Screen.CurriculumGraph::class.simpleName,
-            Screen.ExerciseProgramGraph::class.simpleName -> {
+            Screen.WeeklyRoutineGraph.toString(),
+            Screen.CurriculumGraph.toString(),
+            Screen.ExerciseProgramGraph.toString() -> {
                 systemUiController.setStatusBarColor(
                     if (darkThem) Color(0xff3B3B3B) else Color(0xffECECEC)
                 )
                 systemUiController.setNavigationBarColor(defaultNavBarColor)
             }
 
-            Screen.SkinRoutineGraph::class.simpleName -> {
+            Screen.SkinRoutineGraph.toString() -> {
                 systemUiController.setStatusBarColor(Color(0xffFFEDD8))
                 systemUiController.setNavigationBarColor(Color.White)
             }
 
-            Screen.MedicineGraph::class.simpleName -> {
+            Screen.MedicineGraph.toString() -> {
                 systemUiController.setStatusBarColor(Color(0xffC3D8C7))
                 systemUiController.setNavigationBarColor(Color.White)
             }
