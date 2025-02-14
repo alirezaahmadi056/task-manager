@@ -51,7 +51,7 @@ fun RoutineItemCard(
 
     Card(
         elevation = CardDefaults.cardElevation(1.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimaryContainer),
         border = BorderStroke(1.dp, Color.LightGray.copy(0.6f)),
         modifier = Modifier
             .padding(horizontal = 6.dp, vertical = 4.dp)
