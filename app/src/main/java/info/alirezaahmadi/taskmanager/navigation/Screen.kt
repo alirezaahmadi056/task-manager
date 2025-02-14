@@ -112,4 +112,12 @@ sealed interface Screen {
     data class DreamDetailScreen(val id:Int=0):Screen
     @Serializable
     data class MedicineDetailScreen(val id:Int=0):Screen
+
+    //Curriculum
+    @Serializable
+    data object CurriculumGraph : Screen
+    @Serializable
+    data object CurriculumScreen : Screen
+    @Serializable
+    data class AddCurriculumScreen(val id: Int? = null) : Screen
 }
