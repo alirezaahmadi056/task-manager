@@ -10,6 +10,7 @@
     <string name="my_exercise_program">برنامه ورزشی من</string>
     <string name="today_exercise_program">برنامه تمرینی امروز</string>
     <string name="add_exercise">افزودن تمرین</string>
+    <string name="update_exercise">ویرایش تمرین</string>
     <string name="day_week">روز های هفته</string>
     <string name="all_day_week">همه روز های هفته</string>
     <string name="name_exercise">نام تمرین</string>
@@ -51,4 +52,10 @@
     <string name="update_dream">ویرایش رویا</string>
     <string name="my_dream">رویاهای من</string>
     <string name="return_text">برگشت</string>
+    <string name="add_lesson">افزودن درس</string>
+    <string name="update_lesson">ویرایش درس</string>
+    <string name="name_lesson">نام درس</string>
+    <string name="description_lesson">توضیحات درس</string>
+    <string name="start_time">ساعت شروع</string>
+    <string name="end_time">ساعت پایان</string>
 </resources>
