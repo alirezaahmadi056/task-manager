@@ -49,7 +49,6 @@ fun CurriculumScreen(
     val pagerState = rememberPagerState(initialPage = persianDayOfWeek[day] ?: 0) { dayWeek.size }
 
     val allCurriculumItems by curriculumViewModel.getAllCurriculum().collectAsState(emptyList())
-
     Scaffold(
         containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
         topBar = {
@@ -95,7 +94,15 @@ fun CurriculumScreen(
             val currentCurriculum = remember(
                 page,
                 allCurriculumItems
-            ) { allCurriculumItems.filter { it.dayWeek.contains(dayWeek[page]) } }
+            ) { allCurriculumItems.filter { it.dayWeek.contains(dayWeek[page]) }.sortedBy {
+                val time = it.startTime
+                val parts = time.split(":")
+                if (parts.size == 2) {
+                    val hours = parts[0].toIntOrNull() ?: 0
+                    val minutes = parts[1].toIntOrNull() ?: 0
+                    hours * 60 + minutes
+                } else { Int.MAX_VALUE }
+            } }
             Curriculum(
                 items = currentCurriculum,
                 currentDay = dayWeek[page],
