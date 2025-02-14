@@ -11,4 +11,5 @@ data class CurriculumItem(
     val description:String,
     val startTime:String,
     val endTime:String,
+    val dayWeek:List<String>
 )
