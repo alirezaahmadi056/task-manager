@@ -28,7 +28,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,7 +60,8 @@ fun FirstScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
+    var showSheet by remember { mutableStateOf(false) }
+    SheetVideo(showSheet) {showSheet=false }
     MainDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -77,7 +82,9 @@ fun FirstScreen(
                 topBar = {
                     FistTopBar(
                         openMenu = { scope.launch { drawerState.open() } },
-                        openHelp = {}
+                        openHelp = {
+                            showSheet = true
+                        }
                     )
                 }
             ) { innerPadding ->
