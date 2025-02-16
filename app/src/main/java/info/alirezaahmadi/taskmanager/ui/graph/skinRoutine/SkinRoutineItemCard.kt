@@ -44,7 +44,7 @@ fun SkinRoutineItemCard(
             modifier = Modifier
                 .clip(RoundedCornerShape(12.dp))
                 .combinedClickable (onClick = onEdited, onLongClick = onDeleted)
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 12.dp, vertical = 6.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -55,7 +55,7 @@ fun SkinRoutineItemCard(
                 modifier = Modifier.weight(0.2f),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
             Row(
                 modifier = Modifier

@@ -122,23 +122,25 @@ fun SkinRoutineScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                containerColor = Color.Black,
+                containerColor = MaterialTheme.colorScheme.onBackground,
+                contentColor = MaterialTheme.colorScheme.background,
                 expanded = true,
                 text = {
                     Text(
                         text = "روتین جدید",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
                     )
                 },
                 icon = {
                     Icon(
                         Icons.Rounded.Add,
                         contentDescription = "",
-                        tint = Color.White
                     )
                 },
-                onClick = { navHostController.navigate(Screen.AddSkinRoutineScreen()) }
+                onClick = { navHostController.navigate(Screen.AddSkinRoutineScreen(
+                    day = dayWeek[pagerState.currentPage],
+                    time = filterStatus
+                )) }
             )
         },
         floatingActionButtonPosition = FabPosition.Start,
@@ -156,7 +158,7 @@ fun SkinRoutineScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
         ) { page ->
             val currentRoutine = remember(key1 = page, key2 = routines) {
                 filterRoutinesByDay(day = dayWeek[page], routines = routines)
@@ -228,14 +230,15 @@ private fun SkinEmpty() {
         Icon(
             imageVector = Icons.Rounded.EmojiPeople,
             contentDescription = "",
-            modifier = Modifier.size(100.dp)
+            modifier = Modifier.size(100.dp),
+            tint = MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = "روتینی برای این بازه تنظیم نشده است!",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }

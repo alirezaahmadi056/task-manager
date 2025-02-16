@@ -57,7 +57,7 @@ fun SkinBottomNavigation(
                     strokeWidth = 1.5f
                 )
             }
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .navigationBarsPadding()
             .fillMaxWidth()
             .padding(8.dp),
@@ -99,8 +99,8 @@ private fun SkinNavItem(
                         Badge(
                             modifier = Modifier
                                 .padding(horizontal = 8.dp),
-                            contentColor = Color.White,
-                            containerColor = Color.Black,
+                            contentColor = MaterialTheme.colorScheme.background,
+                            containerColor = MaterialTheme.colorScheme.onBackground,
                         ) {
                             Text(
                                 badgeCount.toString().byLocate(),
@@ -130,11 +130,11 @@ private fun SkinNavItem(
             )
         },
         colors = NavigationRailItemDefaults.colors(
-            selectedTextColor = Color.Black,
-            selectedIconColor = Color.White,
-            unselectedTextColor = Color.DarkGray,
-            unselectedIconColor = Color.DarkGray,
-            indicatorColor = Color.Black
+            selectedTextColor = MaterialTheme.colorScheme.onBackground,
+            selectedIconColor =MaterialTheme.colorScheme.background,
+            unselectedTextColor =MaterialTheme.colorScheme.onBackground.copy(0.8f),
+            unselectedIconColor = MaterialTheme.colorScheme.onBackground.copy(0.8f),
+            indicatorColor = MaterialTheme.colorScheme.onBackground
         )
     )
 }

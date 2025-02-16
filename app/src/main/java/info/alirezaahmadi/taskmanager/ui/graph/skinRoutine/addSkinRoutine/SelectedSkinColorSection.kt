@@ -42,7 +42,7 @@ fun SelectedSkinColorSection(
     Text(
         text = stringResource(R.string.selected_color),
         style = MaterialTheme.typography.titleLarge,
-        color = Color.Black,
+        color = MaterialTheme.colorScheme.onBackground,
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier.padding(start = 4.dp)
     )

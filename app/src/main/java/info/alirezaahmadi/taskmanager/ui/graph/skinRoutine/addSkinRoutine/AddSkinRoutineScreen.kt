@@ -61,6 +61,8 @@ import java.util.Locale
 fun AddSkinRoutineScreen(
     navHostController: NavHostController,
     id: Int,
+    day: String?,
+    time: String?,
     skinRoutineViewModel: SkinRoutineViewModel = hiltViewModel()
 ) {
 
@@ -82,15 +84,17 @@ fun AddSkinRoutineScreen(
     var currentColor by remember { mutableIntStateOf(0) }
     var checkInput by remember { mutableStateOf(false) }
 
-    LaunchedEffect(id) {
+    LaunchedEffect(Unit) {
+        time?.let { currentTimeStatus = it }
+        day?.let { currentDayStatus.add(it) }
         skinRoutineViewModel.getSkinRoutine(id).collectLatest { routine ->
             routine?.let { skin ->
-                currentTimeStatus =skin.status
+                currentTimeStatus = skin.status
                 title = skin.title
-                body =skin.description
-                selectedTime =skin.time
-                currentImage =skin.image
-                currentColor =skin.color
+                body = skin.description
+                selectedTime = skin.time
+                currentImage = skin.image
+                currentColor = skin.color
                 currentDayStatus.addAll(skin.dayWeek)
             }
         }
@@ -114,7 +118,7 @@ fun AddSkinRoutineScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 Button(
@@ -167,7 +171,7 @@ fun AddSkinRoutineScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 12.dp)
                 .verticalScroll(rememberScrollState())
         ) {
@@ -199,16 +203,18 @@ fun AddSkinRoutineScreen(
             Spacer(modifier = Modifier.height(15.dp))
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = Color.DarkGray,
                     focusedIndicatorColor = Color.Gray,
                     unfocusedIndicatorColor = Color.DarkGray,
-                    focusedTextColor = Color.Black,
+                    unfocusedPlaceholderColor = Color.DarkGray,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
                     unfocusedTextColor = Color.DarkGray,
-                    focusedLabelColor = Color.Black,
-                    unfocusedLabelColor = Color.DarkGray,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White.copy(0.8f),
-                    errorContainerColor = Color.White,
-                    errorSupportingTextColor = Color(0xFFE20000)
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = Color(0xffECECEC),
+                    errorContainerColor = Color(0xFFE20000).copy(0.4f),
+                    errorSupportingTextColor = Color(0xFFE20000),
                 ),
                 modifier = Modifier.fillMaxWidth(),
                 maxLines = 1,
@@ -252,21 +258,21 @@ fun AddSkinRoutineScreen(
                         modifier = Modifier
                             .padding(end = 12.dp)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(Color(0xffFFE3D5))
+                            .background(MaterialTheme.colorScheme.onBackground)
                             .border(1.dp, Color(0xff9D6B53), RoundedCornerShape(8.dp))
                             .clickable { showDialogSelectedTime = true }
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Edit,
                             contentDescription = "",
-                            tint = Color(0xff5B3A2B),
+                            tint = MaterialTheme.colorScheme.background,
                             modifier = Modifier.padding(4.dp)
                         )
                     }
                     Text(
                         text = stringResource(R.string.selected_hour),
                         style = MaterialTheme.typography.titleLarge,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.SemiBold
                     )
 
@@ -274,20 +280,24 @@ fun AddSkinRoutineScreen(
                 Text(
                     text = selectedTime.byLocate(),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black,
+                    color =MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.clickable { showDialogSelectedTime = true }
                 )
             }
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = Color.DarkGray,
                     focusedIndicatorColor = Color.Gray,
                     unfocusedIndicatorColor = Color.DarkGray,
-                    focusedTextColor = Color.Black,
+                    unfocusedPlaceholderColor = Color.DarkGray,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
                     unfocusedTextColor = Color.DarkGray,
-                    focusedLabelColor = Color.Black,
-                    unfocusedLabelColor = Color.DarkGray,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White.copy(0.8f),
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = Color(0xffECECEC),
+                    errorContainerColor = Color(0xFFE20000).copy(0.4f),
+                    errorSupportingTextColor = Color(0xFFE20000),
                 ),
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 3,

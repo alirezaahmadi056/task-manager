@@ -46,7 +46,11 @@ sealed interface Screen {
     data object SkinRoutineScreen : Screen
 
     @Serializable
-    data class AddSkinRoutineScreen(val id: Int = 0) : Screen
+    data class AddSkinRoutineScreen(
+        val id: Int = 0,
+        val time:String?=null,
+        val day:String?=null
+    ) : Screen
 
     //exercise program
     @Serializable
@@ -88,7 +92,8 @@ sealed interface Screen {
     data class GoalsDetail(val id: Int = 0)
 
     @Serializable
-    data class MovieBookDetailScreen(val id:Int,val type:String)
+    data class MovieBookDetailScreen(val id: Int, val type: String)
+
     //medicine
     @Serializable
     data object MedicineGraph : Screen
@@ -104,20 +109,26 @@ sealed interface Screen {
     //Dream
     @Serializable
     data object DreamGraph : Screen
+
     @Serializable
     data object DreamScreen : Screen
+
     @Serializable
     data class AddDreamsScreen(val id: Int = 0) : Screen
+
     @Serializable
-    data class DreamDetailScreen(val id:Int=0):Screen
+    data class DreamDetailScreen(val id: Int = 0) : Screen
+
     @Serializable
-    data class MedicineDetailScreen(val id:Int=0):Screen
+    data class MedicineDetailScreen(val id: Int = 0) : Screen
 
     //Curriculum
     @Serializable
     data object CurriculumGraph : Screen
+
     @Serializable
     data object CurriculumScreen : Screen
+
     @Serializable
     data class AddCurriculumScreen(val id: Int? = null) : Screen
 }

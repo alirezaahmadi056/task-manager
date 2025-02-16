@@ -40,7 +40,7 @@ fun SelectedSinImageSection(
     Text(
         text = stringResource(R.string.selected_image),
         style = MaterialTheme.typography.titleLarge,
-        color = Color.Black,
+        color = MaterialTheme.colorScheme.onBackground,
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier.padding(start = 4.dp)
     )
@@ -69,7 +69,8 @@ private fun SingleImage(
     onClick:()->Unit,
 ) {
     val boarderColor by animateColorAsState(
-        targetValue = if (isSelected) Color.DarkGray else Color.White,
+        targetValue = if (isSelected) MaterialTheme.colorScheme.onBackground else
+            MaterialTheme.colorScheme.background,
         label = ""
     )
     Box(
