@@ -41,7 +41,7 @@ fun SheetOptionImage(
     if (uri == null) return
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(12.dp)
     ) {
         Spacer(Modifier.height(8.dp))
@@ -51,7 +51,7 @@ fun SheetOptionImage(
                 Icon(
                     imageVector = Icons.Rounded.ImageSearch,
                     contentDescription = "",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             },
             onClick = {
@@ -65,7 +65,7 @@ fun SheetOptionImage(
                 Icon(
                     imageVector = Icons.Rounded.Image,
                     contentDescription = "",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             },
             onClick = {
@@ -79,7 +79,7 @@ fun SheetOptionImage(
                 Icon(
                     imageVector = Icons.Rounded.Delete,
                     contentDescription = "",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             },
             onClick = {
@@ -112,7 +112,7 @@ private fun SheetItem(
             modifier = Modifier.padding(start = 8.dp),
             text = text,
             style = MaterialTheme.typography.titleLarge,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.SemiBold
         )

@@ -76,27 +76,26 @@ fun DreamScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                containerColor = Color.Black,
+                containerColor =  MaterialTheme.colorScheme.onBackground,
+                contentColor =  MaterialTheme.colorScheme.background,
                 expanded = true,
                 text = {
                     Text(
                         text = "رویای جدید",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
                     )
                 },
                 icon = {
                     Icon(
                         Icons.Rounded.Add,
                         contentDescription = "",
-                        tint = Color.White
                     )
                 },
                 onClick = { navHostController.navigate(Screen.AddDreamsScreen()) }
             )
         },
         floatingActionButtonPosition = FabPosition.Start,
-        containerColor = Color.White
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         AnimatedContent(
             targetState = allDream.isNotEmpty(), label = ""
@@ -121,11 +120,11 @@ fun DreamScreen(
                             Text(
                                 text = "رویاهای محقق شده",
                                 modifier = Modifier
-                                    .background(Color.White)
+                                    .background( MaterialTheme.colorScheme.background)
                                     .fillMaxWidth()
                                     .padding(12.dp),
                                 style = MaterialTheme.typography.labelLarge,
-                                color = Color.Black
+                                color =  MaterialTheme.colorScheme.onBackground
                             )
                         }
                     }
@@ -162,14 +161,15 @@ private fun DreamEmpty(modifier: Modifier) {
         Icon(
             imageVector = Icons.Rounded.EmojiPeople,
             contentDescription = "",
-            modifier = Modifier.size(100.dp)
+            modifier = Modifier.size(100.dp),
+            tint =  MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = "هیج رویایی ثبت نشده است!",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black
+            color =  MaterialTheme.colorScheme.onBackground
         )
     }
 }

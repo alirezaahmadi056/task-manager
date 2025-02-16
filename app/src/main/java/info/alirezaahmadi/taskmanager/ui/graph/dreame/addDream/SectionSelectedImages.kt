@@ -9,8 +9,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -108,7 +106,7 @@ fun SectionSelectedImages(
         text = stringResource(R.string.selected_image),
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.SemiBold,
-        color = Color.Black
+        color =  MaterialTheme.colorScheme.onBackground
     )
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
@@ -169,14 +167,14 @@ private fun AddImage(onAdd: () -> Unit) {
         Icon(
             painter = painterResource(R.drawable.album_image),
             contentDescription = "",
-            tint = Color.Black
+            tint = MaterialTheme.colorScheme.onBackground
         )
         Text(
             modifier = Modifier.padding(vertical = 5.dp),
             text = "افزودن",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black
+            color =  MaterialTheme.colorScheme.onBackground
         )
     }
 }

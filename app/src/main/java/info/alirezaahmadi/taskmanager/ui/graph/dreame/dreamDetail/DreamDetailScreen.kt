@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.data.db.dream.DreamItem
@@ -70,7 +71,7 @@ fun DreamDetailScreen(
                 description = item.description
                 imageList.clear()
                 imageList.addAll(item.imageUriList)
-                cover =item.coverUri
+                cover = item.coverUri
             }
         }
     }
@@ -88,7 +89,7 @@ fun DreamDetailScreen(
         }
     )
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             DreamDetailTopBar(
                 onBack = { navHostController.navigateUp() },
@@ -100,7 +101,7 @@ fun DreamDetailScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 TextButton(
@@ -110,14 +111,14 @@ fun DreamDetailScreen(
                     colors = ButtonDefaults.textButtonColors(contentColor = Color(0xff535CF0)),
                     onClick = {
                         dreamViewModel.upsertDreamItem(
-                           DreamItem(
-                               id= id,
-                               title =title,
-                               description =description,
-                               coverUri = cover,
-                               imageUriList = imageList,
-                               isCompleted = true
-                           )
+                            DreamItem(
+                                id = id,
+                                title = title,
+                                description = description,
+                                coverUri = cover,
+                                imageUriList = imageList,
+                                isCompleted = true
+                            )
                         )
                         navHostController.navigateUp()
                     }
@@ -143,19 +144,20 @@ fun DreamDetailScreen(
                 pagerState = pagerState,
                 imageList = imageList
             )
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(18.dp))
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelMedium,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 12.dp)
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
             )
             Spacer(Modifier.height(18.dp))
             Text(
-                text = description,
+                text = "توضیحات رویا: $description",
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
@@ -193,7 +195,7 @@ private fun HeaderPager(
 
 
         }
-        if (imageList.size < 10) {
+        if (imageList.size in 2..9) {
             Row(
                 modifier = Modifier
                     .height(25.dp)
@@ -215,7 +217,7 @@ private fun PagerIndicator(
     page: Int
 ) {
     repeat(listSize) {
-        val size by animateDpAsState(targetValue = if (page == it) 10.dp else 7.dp, label = "")
+        val size by animateDpAsState(targetValue = if (page == it) 8.dp else 5.dp, label = "")
         val color by animateColorAsState(
             targetValue = if (page == it) Color.White else Color.LightGray,
             label = ""

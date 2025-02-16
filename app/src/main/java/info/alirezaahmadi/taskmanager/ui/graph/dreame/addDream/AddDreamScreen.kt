@@ -60,7 +60,7 @@ fun AddDreamScreen(
         }
     }
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             CenterBackTopBar(text = stringResource(if (id == 0) R.string.add_dream else R.string.update_dream)) {
                 navHostController.navigateUp()
@@ -70,7 +70,7 @@ fun AddDreamScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White),
+                    .background( MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 Button(
@@ -126,18 +126,19 @@ fun AddDreamScreen(
                 text = stringResource(R.string.title_dream),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.LightGray,
-                    unfocusedIndicatorColor = Color.White,
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = Color.DarkGray,
+                    focusedIndicatorColor = Color.Gray,
+                    unfocusedIndicatorColor = Color.DarkGray,
                     unfocusedPlaceholderColor = Color.DarkGray,
-                    focusedPlaceholderColor = Color.Black,
-                    focusedTextColor = Color.Black,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
                     unfocusedTextColor = Color.DarkGray,
-                    focusedContainerColor = Color.White,
-                    errorPlaceholderColor = Color.White,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
                     unfocusedContainerColor = Color(0xffECECEC),
                     errorContainerColor = Color(0xFFE20000).copy(0.4f),
                     errorSupportingTextColor = Color(0xFFE20000),
@@ -174,18 +175,19 @@ fun AddDreamScreen(
                 text = stringResource(R.string.description_dream),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                color =  MaterialTheme.colorScheme.onBackground
             )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.LightGray,
-                    unfocusedIndicatorColor = Color.White,
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = Color.DarkGray,
+                    focusedIndicatorColor = Color.Gray,
+                    unfocusedIndicatorColor = Color.DarkGray,
                     unfocusedPlaceholderColor = Color.DarkGray,
-                    focusedPlaceholderColor = Color.Black,
-                    focusedTextColor = Color.Black,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
                     unfocusedTextColor = Color.DarkGray,
-                    focusedContainerColor = Color.White,
-                    errorPlaceholderColor = Color.White,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
                     unfocusedContainerColor = Color(0xffECECEC),
                     errorContainerColor = Color(0xFFE20000).copy(0.4f),
                     errorSupportingTextColor = Color(0xFFE20000),

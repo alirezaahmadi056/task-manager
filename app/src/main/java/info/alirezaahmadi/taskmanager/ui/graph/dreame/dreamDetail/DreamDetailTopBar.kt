@@ -11,6 +11,7 @@ import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +39,7 @@ fun DreamDetailTopBar(
             Icon(
                 imageVector = Icons.Rounded.ArrowForward,
                 contentDescription = "",
-                tint = Color.Black
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
         Spacer(Modifier.width(4.dp))
@@ -48,7 +49,7 @@ fun DreamDetailTopBar(
             Icon(
                 painter = painterResource(R.drawable.ic_edit),
                 contentDescription = "",
-                tint = Color.Black
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
         Spacer(Modifier.width(4.dp))

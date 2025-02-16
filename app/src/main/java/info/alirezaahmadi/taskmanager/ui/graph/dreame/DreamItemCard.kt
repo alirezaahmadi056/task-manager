@@ -46,7 +46,7 @@ fun DreamItemCard(
     ) {
         Row(
             modifier = Modifier
-                .background(Color.White)
+                .background(color = MaterialTheme.colorScheme.background)
                 .clip(RoundedCornerShape(12.dp))
                 .combinedClickable(
                     enabled = !item.isCompleted,
@@ -59,7 +59,7 @@ fun DreamItemCard(
         ) {
             BaseImageLoader(
                 model = Uri.parse(item.coverUri),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .weight(0.28f)
                     .aspectRatio(1f)
@@ -74,7 +74,7 @@ fun DreamItemCard(
                     text = item.title,
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black,
+                    color =  MaterialTheme.colorScheme.onBackground,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -86,7 +86,7 @@ fun DreamItemCard(
                     maxLines = 2,
                     modifier = Modifier.padding(start = 9.dp),
                     overflow = TextOverflow.Ellipsis,
-                    color = Color(0xff5A697D)
+                    color =  MaterialTheme.colorScheme.onBackground.copy(0.7f)
                 )
             }
             Icon(
@@ -94,7 +94,8 @@ fun DreamItemCard(
                     .align(Alignment.CenterVertically)
                     .weight(0.1f),
                 imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                contentDescription = ""
+                contentDescription = "",
+                tint =  MaterialTheme.colorScheme.onBackground
             )
         }
 
