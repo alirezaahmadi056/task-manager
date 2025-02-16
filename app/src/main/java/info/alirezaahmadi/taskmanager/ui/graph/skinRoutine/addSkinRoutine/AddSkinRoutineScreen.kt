@@ -201,10 +201,17 @@ fun AddSkinRoutineScreen(
                 )
             }
             Spacer(modifier = Modifier.height(15.dp))
+            Text(
+                modifier = Modifier.padding(top = 5.dp, bottom = 4.dp, start = 10.dp),
+                text = "عنوان روتین",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
                     focusedLabelColor = MaterialTheme.colorScheme.onBackground,
-                    unfocusedLabelColor = Color.DarkGray,
+                    unfocusedLabelColor = Color.LightGray,
                     focusedIndicatorColor = Color.Gray,
                     unfocusedIndicatorColor = Color.DarkGray,
                     unfocusedPlaceholderColor = Color.DarkGray,
@@ -222,12 +229,6 @@ fun AddSkinRoutineScreen(
                 textStyle = MaterialTheme.typography.bodyLarge,
                 shape = RoundedCornerShape(9.dp),
                 value = title, onValueChange = { title = it },
-                label = {
-                    Text(
-                        text = "عنوان روتین",
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                },
                 placeholder = {
                     Text(
                         text = "عنوان روتین را وارد کنید",
@@ -284,10 +285,17 @@ fun AddSkinRoutineScreen(
                     modifier = Modifier.clickable { showDialogSelectedTime = true }
                 )
             }
+            Text(
+                modifier = Modifier.padding(top = 5.dp, bottom = 4.dp, start = 10.dp),
+                text = "توضیحات روتین",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
                     focusedLabelColor = MaterialTheme.colorScheme.onBackground,
-                    unfocusedLabelColor = Color.DarkGray,
+                    unfocusedLabelColor = Color.LightGray,
                     focusedIndicatorColor = Color.Gray,
                     unfocusedIndicatorColor = Color.DarkGray,
                     unfocusedPlaceholderColor = Color.DarkGray,
@@ -305,12 +313,6 @@ fun AddSkinRoutineScreen(
                 textStyle = MaterialTheme.typography.bodyLarge,
                 shape = RoundedCornerShape(9.dp),
                 value = body, onValueChange = { body = it },
-                label = {
-                    Text(
-                        text = "توضیحات روتین",
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                },
                 placeholder = {
                     Text(
                         text = "توضیحات روتین را وارد کنید",
