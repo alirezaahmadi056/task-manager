@@ -96,6 +96,7 @@ fun FirstScreen(
                 ) {
                     Spacer(Modifier.height(8.dp))
                     FirstTopPager(navHostController = navHostController)
+                    Spacer(Modifier.height(8.dp))
                     FlowRow(
                         modifier = Modifier
                             .fillMaxWidth(),
