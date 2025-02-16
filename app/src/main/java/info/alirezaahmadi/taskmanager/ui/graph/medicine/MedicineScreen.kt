@@ -117,7 +117,7 @@ fun MedicineScreen(
                         tint = Color.White
                     )
                 },
-                onClick = { navHostController.navigate(Screen.AddMedicineScreen()) }
+                onClick = { navHostController.navigate(Screen.AddMedicineScreen(day = dayWeek[pagerState.currentPage])) }
             )
         },
         floatingActionButtonPosition = FabPosition.Start,

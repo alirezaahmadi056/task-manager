@@ -59,6 +59,7 @@ import java.util.Locale
 fun AddMedicineScreen(
     navHostController: NavHostController,
     id: Int,
+    day: String? = null,
     medicineViewModel: MedicineViewModel
 ) {
     val currentDayStatus = remember { mutableStateListOf<String>() }
@@ -77,6 +78,7 @@ fun AddMedicineScreen(
         }
     }
     LaunchedEffect(id) {
+        day?.let { currentDayStatus.add(it) }
         medicineViewModel.getMedicineById(id).collectLatest { medicines ->
             medicines?.let { medicine ->
                 title = medicine.title
@@ -242,7 +244,7 @@ fun AddMedicineScreen(
                 text = stringResource(R.string.description_medicine),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
-                color =MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onBackground
             )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(

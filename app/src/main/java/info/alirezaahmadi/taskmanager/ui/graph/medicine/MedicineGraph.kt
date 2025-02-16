@@ -26,6 +26,7 @@ fun NavGraphBuilder.medicineGraph(
             AddMedicineScreen(
                 navHostController = navHostController,
                 id = args.id,
+                day = args.day,
                 medicineViewModel = medicineViewModel
             )
         }

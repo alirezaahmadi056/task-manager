@@ -103,7 +103,7 @@ sealed interface Screen {
 
     @Serializable
     data class AddMedicineScreen(
-        val id: Int = 0,
+        val id: Int = 0,val day:String?=null
     )
 
     //Dream
