@@ -55,7 +55,7 @@ fun GoalsScreen(
     val movies = remember { Movie.movies }
 
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = { CenterBackTopBar(text = stringResource(R.string.my_goals)) { navHostController.navigateUp() } }
     ) { innerPadding ->
         LazyColumn(
@@ -67,7 +67,7 @@ fun GoalsScreen(
             stickyHeader {
                 Text(
                     modifier = Modifier
-                        .background(Color.White)
+                        .background(MaterialTheme.colorScheme.background)
                         .fillMaxWidth()
                         .padding(top = 12.dp, start = 23.dp, end = 8.dp, bottom = 12.dp),
                     text = stringResource(R.string.introduction_books),
@@ -107,7 +107,7 @@ fun GoalsScreen(
             stickyHeader {
                 Text(
                     modifier = Modifier
-                        .background(Color.White)
+                        .background(MaterialTheme.colorScheme.background)
                         .fillMaxWidth()
                         .padding(top = 12.dp, start = 23.dp, end = 8.dp, bottom = 12.dp),
                     text = stringResource(R.string.introduction_movies),
@@ -154,8 +154,8 @@ private fun BooksItemCar(
     ) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = Color.White,
-                contentColor = Color.Black
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.onBackground
             ),
             elevation = CardDefaults.cardElevation(2.dp),
             border = BorderStroke(1.dp, Color.LightGray.copy(0.4f)),

@@ -65,7 +65,7 @@ fun GoalsDetailScreen(
         }
     }
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             GoalsDetailTopBar(
                 image = selectedImage ?: "",
@@ -77,7 +77,7 @@ fun GoalsDetailScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 Button(
@@ -131,12 +131,12 @@ fun GoalsDetailScreen(
                 style = MaterialTheme.typography.labelLarge.copy(fontSize = 24.sp),
                 fontWeight = FontWeight.Black,
                 modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
             Text(
                 text = GoalsTimeFrame.entries.find { it.name == timeFrame }?.perName.toString(),
                 style = MaterialTheme.typography.titleLarge,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(bottom = 12.dp, top = 8.dp),
             )
 
@@ -149,13 +149,13 @@ fun GoalsDetailScreen(
                 Icon(
                     imageVector = Icons.Rounded.DateRange,
                     contentDescription = "",
-                    tint = Color(0xff5A697D)
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
                     text = "فرصت انجام تا تاریخ : ${selectedDate.toString().byLocate()} ",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color(0xff5A697D)
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
             Text(
@@ -163,7 +163,7 @@ fun GoalsDetailScreen(
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Black,
                 modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             Text(
@@ -171,7 +171,7 @@ fun GoalsDetailScreen(
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Black,
                 modifier = Modifier.padding(vertical = 12.dp),
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
     }

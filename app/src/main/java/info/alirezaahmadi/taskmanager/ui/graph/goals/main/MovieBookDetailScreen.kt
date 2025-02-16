@@ -3,7 +3,6 @@ package info.alirezaahmadi.taskmanager.ui.graph.goals.main
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -56,7 +55,7 @@ private fun MovieScreen(navHostController: NavHostController, id: Int) {
     val currentMovie = remember(id) { Movie.movies.find { it.id == id } }
 
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = { CenterBackTopBar("معرفی فیلم") { navHostController.navigateUp() } }
     ) { innerPadding ->
         Column(
@@ -81,7 +80,7 @@ private fun MovieScreen(navHostController: NavHostController, id: Int) {
             Text(
                 text = currentMovie?.title ?: "",
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 22.sp),
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -90,7 +89,7 @@ private fun MovieScreen(navHostController: NavHostController, id: Int) {
             Text(
                 text = currentMovie?.director ?: "",
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.DarkGray,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
             )
@@ -98,28 +97,28 @@ private fun MovieScreen(navHostController: NavHostController, id: Int) {
             Text(
                 text = "بازیگران",
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold
             )
             currentMovie?.actors?.let { actors ->
                 Text(
                     text = actors.joinToString(", "),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.DarkGray,
+                    color = MaterialTheme.colorScheme.onBackground.copy(0.8f),
                 )
             }
             Spacer(Modifier.height(8.dp))
             Text(
                 text = "خلاصه",
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 6.dp)
             )
             Text(
                 text = currentMovie?.summary ?: "",
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.SemiBold,
             )
             Spacer(Modifier.height(15.dp))
@@ -132,7 +131,7 @@ private fun BookScreen(navHostController: NavHostController, id: Int) {
     val currentBook = remember(id) { Book.books.find { it.id == id } }
 
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = { CenterBackTopBar("معرفی کتاب") { navHostController.navigateUp() } }
     ) { innerPadding ->
         Column(
@@ -157,7 +156,7 @@ private fun BookScreen(navHostController: NavHostController, id: Int) {
             Text(
                 text = currentBook?.title ?: "",
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 22.sp),
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -166,7 +165,7 @@ private fun BookScreen(navHostController: NavHostController, id: Int) {
             Text(
                 text = currentBook?.author ?: "",
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.DarkGray,
+                color = MaterialTheme.colorScheme.onBackground.copy(.8f),
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
             )
@@ -174,14 +173,14 @@ private fun BookScreen(navHostController: NavHostController, id: Int) {
             Text(
                 text = "خلاصه",
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 19.sp),
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 6.dp)
             )
             Text(
                 text = currentBook?.summary ?: "",
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.SemiBold,
             )
             Spacer(Modifier.height(15.dp))

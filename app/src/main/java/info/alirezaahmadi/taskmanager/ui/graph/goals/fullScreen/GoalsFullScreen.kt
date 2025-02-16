@@ -50,7 +50,6 @@ import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
 import info.alirezaahmadi.taskmanager.navigation.Screen
 import info.alirezaahmadi.taskmanager.ui.component.CenterBackTopBar
 import info.alirezaahmadi.taskmanager.ui.component.DialogDeleteItemTask
-import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsTopBar
 import info.alirezaahmadi.taskmanager.util.getGoalColor
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
 import kotlinx.coroutines.launch
@@ -104,7 +103,7 @@ fun GoalsFullScreen(
         }
     )
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = { CenterBackTopBar(stringResource(R.string.my_goals)) { navHostController.navigateUp() } },
         floatingActionButton = {
             AnimatedVisibility(
@@ -165,13 +164,13 @@ fun GoalsFullScreen(
                 stickyHeader {
                     Text(
                         modifier = Modifier
-                            .background(Color.White)
+                            .background(MaterialTheme.colorScheme.background)
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp, vertical = 12.dp),
                         text = "اهداف تیک خورده",
                         style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
                 items(items = goalsCompleted, key = { "completed${it.id}" }) { goals ->
@@ -204,14 +203,14 @@ private fun GoalsEmpty() {
             imageVector = Icons.Rounded.EmojiPeople,
             contentDescription = "",
             modifier = Modifier.size(100.dp),
-            tint = Color.Black
+            tint = MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = "هدفی برای این بازه ثبت نشده است!",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onBackground
 
         )
     }

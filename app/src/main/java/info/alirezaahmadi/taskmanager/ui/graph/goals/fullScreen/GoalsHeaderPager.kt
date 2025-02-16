@@ -198,13 +198,13 @@ private fun NextClick(
         Box(
             modifier = modifier
                 .clip(CircleShape)
-                .background(Color.White, CircleShape),
+                .background(MaterialTheme.colorScheme.background, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = "",
-                tint = Color.Black,
+                tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(7.dp)
             )
         }

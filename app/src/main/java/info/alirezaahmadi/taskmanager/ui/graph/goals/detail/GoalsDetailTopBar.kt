@@ -58,7 +58,7 @@ fun GoalsDetailTopBar(
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable(enabled = image.isNotEmpty()) { openUri(context, Uri.parse(image)) },
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 model = Uri.parse(image)
             )
             HeaderIcon(
