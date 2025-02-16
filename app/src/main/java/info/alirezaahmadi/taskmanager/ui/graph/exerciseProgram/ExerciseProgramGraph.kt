@@ -19,18 +19,27 @@ fun NavGraphBuilder.exerciseProgramGraph(
         startDestination = Screen.ExerciseProgramScreen
     ) {
         composable<Screen.ExerciseProgramScreen> {
-            ExerciseProgramScreen(navHostController = navHostController,exerciseProgramViewModel)
+            ExerciseProgramScreen(navHostController = navHostController, exerciseProgramViewModel)
         }
         composable<Screen.AddExerciseProgramScreen> {
             val args = it.toRoute<Screen.AddExerciseProgramScreen>()
-            AddExerciseProgramScreen(navHostController = navHostController, id = args.id,exerciseProgramViewModel)
+            AddExerciseProgramScreen(
+                navHostController = navHostController,
+                id = args.id,
+                day = args.day,
+                exerciseProgramViewModel = exerciseProgramViewModel
+            )
         }
         composable<Screen.StartExerciseProgramScreen> {
             val args = it.toRoute<Screen.StartExerciseProgramScreen>()
-            StartExerciseProgramScreen(navHostController = navHostController, day = args.day,exerciseProgramViewModel)
+            StartExerciseProgramScreen(
+                navHostController = navHostController,
+                day = args.day,
+                exerciseProgramViewModel
+            )
         }
         composable<Screen.CompletedExerciseScreen> {
-            val args =it.toRoute<Screen.CompletedExerciseScreen>()
+            val args = it.toRoute<Screen.CompletedExerciseScreen>()
             CompletedExerciseScreen(
                 navHostController = navHostController,
                 dayName = args.dayName,

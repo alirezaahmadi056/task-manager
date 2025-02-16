@@ -49,6 +49,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun AddExerciseProgramScreen(
     navHostController: NavHostController,
     id: Int?,
+    day:String?=null,
     exerciseProgramViewModel: ExerciseProgramViewModel = hiltViewModel()
 ) {
     val currentDayStatus = remember { mutableStateListOf<String>() }
@@ -62,6 +63,7 @@ fun AddExerciseProgramScreen(
     var repetitionSetNumber by remember { mutableIntStateOf(0) }
     var timeNumber by remember { mutableIntStateOf(0) }
     LaunchedEffect(id) {
+        day?.let { currentDayStatus.add(day) }
         if (id!=null){
             exerciseProgramViewModel.getExerciseProgram(id).collectLatest { exercise ->
                 exercise?.let {

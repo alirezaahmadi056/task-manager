@@ -161,7 +161,7 @@ fun ExerciseProgramScreen(
                 stickyHeader {
                     SectionAddExercise(
                         day = dayWeek[page],
-                        onAddClick = { navHostController.navigate(Screen.AddExerciseProgramScreen()) }
+                        onAddClick = { navHostController.navigate(Screen.AddExerciseProgramScreen(day = dayWeek[page])) }
                     )
                 }
                 if (currentExerciseProgramItems.isEmpty()) {
