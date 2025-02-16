@@ -56,6 +56,7 @@ import java.util.Locale
 fun AddCurriculumScreen(
     navHostController: NavHostController,
     id: Int?,
+    day:String?=null,
     curriculumViewModel: CurriculumViewModel
 ) {
 
@@ -69,6 +70,7 @@ fun AddCurriculumScreen(
         mutableStateOf(Pair(false, ""))
     }
     LaunchedEffect(id) {
+        day?.let {currentDayStatus.add(it)  }
         if (id != null){
             curriculumViewModel.getCurriculum(id).collectLatest {curriculum->
                 curriculum?.let {

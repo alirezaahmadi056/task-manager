@@ -17,11 +17,16 @@ fun NavGraphBuilder.curriculumGraph(
 
     navigation<Screen.CurriculumGraph>(startDestination = Screen.CurriculumScreen) {
         composable<Screen.CurriculumScreen> {
-            CurriculumScreen(navHostController,curriculumViewModel)
+            CurriculumScreen(navHostController, curriculumViewModel)
         }
         composable<Screen.AddCurriculumScreen> {
-            val args =it.toRoute<Screen.AddCurriculumScreen>()
-            AddCurriculumScreen(navHostController, args.id, curriculumViewModel)
+            val args = it.toRoute<Screen.AddCurriculumScreen>()
+            AddCurriculumScreen(
+                navHostController = navHostController,
+                id = args.id,
+                day = args.day,
+                curriculumViewModel = curriculumViewModel
+            )
         }
     }
 }

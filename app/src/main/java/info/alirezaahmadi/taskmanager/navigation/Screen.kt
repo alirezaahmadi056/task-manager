@@ -130,5 +130,5 @@ sealed interface Screen {
     data object CurriculumScreen : Screen
 
     @Serializable
-    data class AddCurriculumScreen(val id: Int? = null) : Screen
+    data class AddCurriculumScreen(val id: Int? = null,val day:String?=null) : Screen
 }

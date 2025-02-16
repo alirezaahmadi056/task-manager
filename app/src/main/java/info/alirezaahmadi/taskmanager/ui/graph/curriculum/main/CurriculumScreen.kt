@@ -76,7 +76,7 @@ fun CurriculumScreen(
                         tint = MaterialTheme.colorScheme.onBackground
                     )
                 },
-                onClick = { navHostController.navigate(Screen.AddCurriculumScreen()) }
+                onClick = { navHostController.navigate(Screen.AddCurriculumScreen(day = dayWeek[pagerState.currentPage])) }
             )
         },
         floatingActionButtonPosition = FabPosition.Start,
