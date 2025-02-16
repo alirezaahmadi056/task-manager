@@ -104,7 +104,7 @@ fun FirstScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         SelectedGraphRoute(
-                            text = "مدیریت وظایف ",
+                            text = "وظایف و یادداشت ها",
                             image = R.drawable.duties_image
                         ) { navHostController.navigate(Screen.DutiesGraph) }
 
