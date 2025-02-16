@@ -24,11 +24,13 @@ import info.alirezaahmadi.taskmanager.R
 @Composable
 fun CenterBackTopBar(
     text :String,
+    backColor :Color=MaterialTheme.colorScheme.background,
+    textColor: Color=MaterialTheme.colorScheme.onBackground,
     onBack: () -> Unit
 ) {
     Box(
         modifier = Modifier
-            .background(Color.White)
+            .background(backColor)
             .statusBarsPadding()
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 16.dp),
@@ -37,7 +39,7 @@ fun CenterBackTopBar(
         Text(
             text = text,
             style = MaterialTheme.typography.bodyLarge.copy(fontSize = 19.sp),
-            color = Color.Black,
+            color = textColor,
             modifier = Modifier.align(Alignment.Center),
             fontWeight = FontWeight.Black
         )
@@ -45,7 +47,7 @@ fun CenterBackTopBar(
             Icon(
                 imageVector = Icons.Rounded.ArrowForward,
                 contentDescription = "",
-                tint = Color.Black
+                tint =textColor
             )
         }
     }

@@ -99,9 +99,13 @@ fun AddMedicineScreen(
     )
 
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            CenterBackTopBar(text = stringResource(if (id == 0) R.string.add_medicine else R.string.update_medicine)) {
+            CenterBackTopBar(
+                text = stringResource(if (id == 0) R.string.add_medicine else R.string.update_medicine),
+                backColor = Color(0xffC3D8C7),
+                textColor = Color.Black
+            ) {
                 navHostController.navigateUp()
             }
         },
@@ -109,7 +113,7 @@ fun AddMedicineScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 Button(
@@ -189,18 +193,19 @@ fun AddMedicineScreen(
                 text = stringResource(R.string.title_medicine),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.LightGray,
-                    unfocusedIndicatorColor = Color.White,
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = Color.DarkGray,
+                    focusedIndicatorColor = Color.Gray,
+                    unfocusedIndicatorColor = Color.DarkGray,
                     unfocusedPlaceholderColor = Color.DarkGray,
-                    focusedPlaceholderColor = Color.Black,
-                    focusedTextColor = Color.Black,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
                     unfocusedTextColor = Color.DarkGray,
-                    focusedContainerColor = Color.White,
-                    errorPlaceholderColor = Color.White,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
                     unfocusedContainerColor = Color(0xffECECEC),
                     errorContainerColor = Color(0xFFE20000).copy(0.4f),
                     errorSupportingTextColor = Color(0xFFE20000),
@@ -237,18 +242,19 @@ fun AddMedicineScreen(
                 text = stringResource(R.string.description_medicine),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                color =MaterialTheme.colorScheme.onBackground
             )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.LightGray,
-                    unfocusedIndicatorColor = Color.White,
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = Color.DarkGray,
+                    focusedIndicatorColor = Color.Gray,
+                    unfocusedIndicatorColor = Color.DarkGray,
                     unfocusedPlaceholderColor = Color.DarkGray,
-                    focusedPlaceholderColor = Color.Black,
-                    focusedTextColor = Color.Black,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
                     unfocusedTextColor = Color.DarkGray,
-                    focusedContainerColor = Color.White,
-                    errorPlaceholderColor = Color.White,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
                     unfocusedContainerColor = Color(0xffECECEC),
                     errorContainerColor = Color(0xFFE20000).copy(0.4f),
                     errorSupportingTextColor = Color(0xFFE20000),
@@ -294,7 +300,7 @@ fun AddMedicineScreen(
                     Text(
                         text = stringResource(R.string.selected_hour),
                         style = MaterialTheme.typography.titleLarge,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.SemiBold
                     )
 
@@ -302,7 +308,7 @@ fun AddMedicineScreen(
                 Text(
                     text = selectedTime.byLocate(),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.clickable { showDialogSelectedTime = true }
                 )
             }

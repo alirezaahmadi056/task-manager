@@ -55,7 +55,7 @@ fun MedicineScreen(
     val dayWeek = remember { Constants.deyWeek }
     val pagerState = rememberPagerState(initialPage = persianDayOfWeek[day] ?: 0) { dayWeek.size }
     val allMedicine by medicineViewModel.allMedicineItems.collectAsState()
-    val medicines = remember(key1 =allMedicine ) {
+    val medicines = remember(key1 = allMedicine) {
         allMedicine.sortedBy {
             val time = it.time
             val parts = time.split(":")
@@ -128,7 +128,7 @@ fun MedicineScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
-                .background(Color.White),
+                .background(MaterialTheme.colorScheme.background),
             state = pagerState
         ) { page ->
             val currentMedicine = remember(key1 = page, key2 = allMedicine) {
@@ -148,19 +148,25 @@ fun MedicineScreen(
             AnimatedContent(
                 targetState = currentMedicine.isNotEmpty(),
                 label = ""
-            ) { it ->
-                if (it) {
+            ) { notEmpty ->
+                if (notEmpty) {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 12.dp)
                     ) {
                         item { Spacer(Modifier.height(12.dp)) }
-                        items(medicines, key = {item-> item.id}) {medicine->
+                        items(medicines, key = { item -> item.id }) { medicine ->
                             MedicineItemCard(
                                 item = medicine,
-                                onDeleted = {singleId =medicine.id},
-                                onEdited = {navHostController.navigate(Screen.MedicineDetailScreen(medicine.id))}
+                                onDeleted = { singleId = medicine.id },
+                                onEdited = {
+                                    navHostController.navigate(
+                                        Screen.MedicineDetailScreen(
+                                            medicine.id
+                                        )
+                                    )
+                                }
                             )
                         }
                     }
@@ -187,14 +193,16 @@ private fun MedicineEmpty(modifier: Modifier) {
         Icon(
             imageVector = Icons.Rounded.EmojiPeople,
             contentDescription = "",
-            modifier = Modifier.size(100.dp)
+            modifier = Modifier.size(100.dp),
+            tint = MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = "دارویی برای این بازه ثبت نشده است!",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onBackground
+
         )
     }
 }

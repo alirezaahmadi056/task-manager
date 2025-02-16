@@ -35,8 +35,8 @@ import info.alirezaahmadi.taskmanager.util.TaskHelper.byLocate
 @Composable
 fun MedicineItemCard(
     item: MedicineItem,
-    onEdited:()->Unit,
-    onDeleted:()->Unit,
+    onEdited: () -> Unit,
+    onDeleted: () -> Unit,
 ) {
     SwipeToDismissBoxLayout(
         enableDismissFromEndToStart = true,
@@ -47,8 +47,8 @@ fun MedicineItemCard(
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(12.dp))
-                .combinedClickable (onClick = onEdited, onLongClick = onDeleted)
-                .background(Color.White)
+                .combinedClickable(onClick = onEdited, onLongClick = onDeleted)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 12.dp, vertical = 6.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -58,13 +58,14 @@ fun MedicineItemCard(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.weight(0.2f),
                 textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp)
             )
             Row(
                 modifier = Modifier
                     .weight(0.8f)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xffECECEC))
+                    .background(MaterialTheme.colorScheme.onPrimaryContainer)
                     .padding(vertical = 8.dp, horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -73,7 +74,7 @@ fun MedicineItemCard(
                     painter = painterResource(R.drawable.medicine_item_image),
                     contentDescription = "",
                     modifier = Modifier
-                        .background(Color(0xffC3D8C7),RoundedCornerShape(12.dp))
+                        .background(Color(0xffC3D8C7), RoundedCornerShape(12.dp))
                         .padding(4.dp)
                         .size(55.dp),
                     contentScale = ContentScale.Fit
@@ -85,7 +86,7 @@ fun MedicineItemCard(
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }

@@ -93,11 +93,11 @@ private fun SingeTopDay(
     onClick: () -> Unit
 ) {
     val textColor by animateColorAsState(
-        targetValue = if (!isSelected) Color.DarkGray
+        targetValue = if (!isSelected) MaterialTheme.colorScheme.onBackground
         else Color.White, label = ""
     )
     val backColor by animateColorAsState(
-        targetValue = if (!isSelected) Color.White else
+        targetValue = if (!isSelected) MaterialTheme.colorScheme.background else
           Color(0xff43A154 ), label = ""
     )
 

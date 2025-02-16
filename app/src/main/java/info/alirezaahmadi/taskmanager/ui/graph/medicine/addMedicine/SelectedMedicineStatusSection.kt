@@ -39,7 +39,7 @@ fun SelectedMedicineStatusSection(
         text = stringResource(R.string.day_week),
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.SemiBold,
-        color = Color.Black,
+        color = MaterialTheme.colorScheme.onBackground,
         modifier = Modifier.padding(
             bottom = 12.dp,
             start = 10.dp
