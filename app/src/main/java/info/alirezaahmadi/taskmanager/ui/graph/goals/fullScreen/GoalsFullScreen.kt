@@ -1,13 +1,18 @@
 package info.alirezaahmadi.taskmanager.ui.graph.goals.fullScreen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +24,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.EmojiPeople
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.FabPosition
@@ -38,6 +44,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -102,6 +109,8 @@ fun GoalsFullScreen(
             singleId = null
         }
     )
+    var isExpanded by remember { mutableStateOf(true) }
+    val rotationAngle by animateFloatAsState(targetValue = if (isExpanded) 180f else 0f, label = "")
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = { CenterBackTopBar(stringResource(R.string.my_goals)) { navHostController.navigateUp() } },
@@ -162,24 +171,45 @@ fun GoalsFullScreen(
             }
             if (goalsCompleted.isNotEmpty()) {
                 stickyHeader {
-                    Text(
+                    Row(
                         modifier = Modifier
-                            .background(MaterialTheme.colorScheme.background)
                             .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.background)
+                            .clickable { isExpanded = !isExpanded }
                             .padding(horizontal = 8.dp, vertical = 12.dp),
-                        text = "اهداف تیک خورده",
-                        style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "اهداف تیک خورده",
+                            style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = "Toggle List",
+                            modifier = Modifier
+                                .size(24.dp)
+                                .rotate(rotationAngle),
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+
                 }
                 items(items = goalsCompleted, key = { "completed${it.id}" }) { goals ->
-                    GoalsItemCard(
-                        item = goals,
-                        onClick = {},
-                        onLongClick = { singleId = goals.id },
-                        currentColor = currentColor
-                    )
+                    AnimatedVisibility(
+                        visible = isExpanded,
+                        enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
+                        exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
+                    ) {
+                        GoalsItemCard(
+                            item = goals,
+                            onClick = {},
+                            onLongClick = { singleId = goals.id },
+                            currentColor = currentColor
+                        )
+                    }
                 }
             }
 

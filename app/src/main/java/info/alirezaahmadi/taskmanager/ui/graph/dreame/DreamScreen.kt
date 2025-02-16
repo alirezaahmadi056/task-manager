@@ -134,7 +134,8 @@ fun DreamScreen(
                                     .background(MaterialTheme.colorScheme.background)
                                     .clickable { isExpanded = !isExpanded }
                                     .padding(12.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(
                                     text = "رویاهای محقق شده",
