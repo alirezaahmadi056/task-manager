@@ -1,8 +1,16 @@
 package info.alirezaahmadi.taskmanager.ui.graph.dreame
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.EmojiPeople
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -31,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,7 +67,8 @@ fun DreamScreen(
     }
 
     var singleId by remember { mutableStateOf<Int?>(null) }
-
+    var isExpanded by remember { mutableStateOf(true) }
+    val rotationAngle by animateFloatAsState(targetValue = if (isExpanded) 180f else 0f, label = "")
     DialogDeleteItemTask(
         title = "حذف رویا",
         body = "از حذف این رویا اطمینان دارید؟",
@@ -76,8 +87,8 @@ fun DreamScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                containerColor =  MaterialTheme.colorScheme.onBackground,
-                contentColor =  MaterialTheme.colorScheme.background,
+                containerColor = MaterialTheme.colorScheme.onBackground,
+                contentColor = MaterialTheme.colorScheme.background,
                 expanded = true,
                 text = {
                     Text(
@@ -99,7 +110,7 @@ fun DreamScreen(
     ) { innerPadding ->
         AnimatedContent(
             targetState = allDream.isNotEmpty(), label = ""
-        ) {dreams->
+        ) { dreams ->
             if (dreams) {
                 LazyColumn(
                     modifier = Modifier
@@ -110,43 +121,63 @@ fun DreamScreen(
                         DreamItemCard(
                             item = dream,
                             onDeleted = {
-                                singleId =dream.id
+                                singleId = dream.id
                             },
-                            onEdit = {navHostController.navigate(Screen.DreamDetailScreen(id = dream.id))}
+                            onEdit = { navHostController.navigate(Screen.DreamDetailScreen(id = dream.id)) }
                         )
                     }
-                    if (dreamCompleted.isNotEmpty()){
+                    if (dreamCompleted.isNotEmpty()) {
                         stickyHeader {
-                            Text(
-                                text = "رویاهای محقق شده",
+                            Row(
                                 modifier = Modifier
-                                    .background( MaterialTheme.colorScheme.background)
                                     .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.background)
+                                    .clickable { isExpanded = !isExpanded }
                                     .padding(12.dp),
-                                style = MaterialTheme.typography.labelLarge,
-                                color =  MaterialTheme.colorScheme.onBackground
-                            )
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "رویاهای محقق شده",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowDown,
+                                    contentDescription = "Toggle List",
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .rotate(rotationAngle),
+                                    tint = MaterialTheme.colorScheme.onBackground
+                                )
+                            }
                         }
                     }
                     items(dreamCompleted, key = { "completed:${it.id}" }) { dream ->
-                        DreamItemCard(
-                            item = dream,
-                            onDeleted = {
-                                singleId =dream.id
-                            },
-                            onEdit = {}
-                        )
-                    }
-                }
-            } else {
-                DreamEmpty(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding))
-            }
-        }
+                        AnimatedVisibility(
+                            visible = isExpanded,
+                            enter = fadeIn() + expandVertically(animationSpec = tween(1000)),
+                            exit = fadeOut() + shrinkVertically(animationSpec = tween(1000))
+                        ) {
+                            DreamItemCard(
+                                item = dream,
+                                onDeleted = { singleId = dream.id },
+                                onEdit = {}
+                            )
+                        }
 
+                    }
+            }
+        } else {
+        DreamEmpty(
+            Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        )
     }
+    }
+
+}
 
 }
 
@@ -162,14 +193,14 @@ private fun DreamEmpty(modifier: Modifier) {
             imageVector = Icons.Rounded.EmojiPeople,
             contentDescription = "",
             modifier = Modifier.size(100.dp),
-            tint =  MaterialTheme.colorScheme.onBackground
+            tint = MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = "هیج رویایی ثبت نشده است!",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold,
-            color =  MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }
