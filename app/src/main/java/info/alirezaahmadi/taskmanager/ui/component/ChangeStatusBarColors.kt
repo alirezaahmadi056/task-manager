@@ -29,11 +29,11 @@ fun ChangeStatusBarColors(
         when (currentGraph?.substringAfterLast(".")) {
             Screen.DreamGraph.toString(),
             Screen.GoalsGraph.toString() -> {
-                systemUiController.setSystemBarsColor(Color.White)
+                systemUiController.setSystemBarsColor(defaultStatusBarColor)
             }
 
             Screen.FirstGraph.toString(),
-            Screen.DutiesGraph.toString() -> {
+            Screen.DutiesGraph.toString()-> {
                 systemUiController.setSystemBarsColor(defaultStatusBarColor)
             }
 
@@ -48,12 +48,12 @@ fun ChangeStatusBarColors(
 
             Screen.SkinRoutineGraph.toString() -> {
                 systemUiController.setStatusBarColor(Color(0xffFFEDD8))
-                systemUiController.setNavigationBarColor(Color.White)
+                systemUiController.setNavigationBarColor(defaultNavBarColor)
             }
 
             Screen.MedicineGraph.toString() -> {
                 systemUiController.setStatusBarColor(Color(0xffC3D8C7))
-                systemUiController.setNavigationBarColor(Color.White)
+                systemUiController.setNavigationBarColor(defaultNavBarColor)
             }
 
             else -> {
