@@ -83,14 +83,14 @@ fun SectionSelectedGoalsDate(
                 Icon(
                     imageVector = Icons.Rounded.Edit,
                     contentDescription = "",
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(4.dp)
                 )
             }
             Text(
                 text = stringResource(R.string.selected_date),
                 style = MaterialTheme.typography.titleLarge,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.SemiBold
             )
 
@@ -98,7 +98,7 @@ fun SectionSelectedGoalsDate(
         Text(
             text = currentDate?.byLocate()?:"انتخاب نشده",
             style = MaterialTheme.typography.bodyLarge,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.clickable { showDialog.value = true }
         )
     }

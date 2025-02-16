@@ -37,9 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import info.alirezaahmadi.taskmanager.R
 import info.alirezaahmadi.taskmanager.data.db.goals.GoalsItem
-import info.alirezaahmadi.taskmanager.data.db.goals.GoalsTimeFrame
 import info.alirezaahmadi.taskmanager.ui.component.CenterBackTopBar
-import info.alirezaahmadi.taskmanager.ui.graph.goals.main.GoalsTopBar
 import info.alirezaahmadi.taskmanager.viewModel.GoalsViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -68,7 +66,7 @@ fun AddGoalsScreen(
         }
     }
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             CenterBackTopBar (text = stringResource(if (id == 0) R.string.add_goals else R.string.update_goals))
             { navHostController.navigateUp() }
@@ -77,7 +75,7 @@ fun AddGoalsScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 Button(
@@ -146,7 +144,7 @@ fun AddGoalsScreen(
                 text = stringResource(R.string.title_goals),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
@@ -212,7 +210,7 @@ fun AddGoalsScreen(
                 text = stringResource(R.string.description_goals),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
