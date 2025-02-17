@@ -18,5 +18,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Task Manager"
+rootProject.name = "Kara"
 include(":app")
