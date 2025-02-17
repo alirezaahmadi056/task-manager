@@ -27,5 +27,5 @@ fun SheetVideo(
         sheetState = sheetState,
         shape = RoundedCornerShape(12.dp),
         containerColor = Color.Black
-    ) { PlayerSection("") }
+    ) { PlayerSection("https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/video.mp4") }
 }
