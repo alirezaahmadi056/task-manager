@@ -83,7 +83,7 @@ fun SectionSelectedGoalsDate(
                 Icon(
                     imageVector = Icons.Rounded.Edit,
                     contentDescription = "",
-                    tint = MaterialTheme.colorScheme.onBackground,
+                    tint = Color.White,
                     modifier = Modifier.padding(4.dp)
                 )
             }

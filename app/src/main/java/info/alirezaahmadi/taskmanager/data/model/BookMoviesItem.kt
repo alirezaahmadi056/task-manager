@@ -4,7 +4,7 @@ import info.alirezaahmadi.taskmanager.R
 
 data class Book(
     val id: Int,
-    val image: Int,
+    val image: String,
     val title: String,
     val author: String,
     val summary: String
@@ -13,70 +13,70 @@ data class Book(
         val books = listOf(
             Book(
                 1,
-                R.drawable.b1,
+                "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/b1.png",
                 "قدرت عادت",
                 "چارلز دوهیگ",
                 "این کتاب بررسی می‌کند که چگونه عادت‌ها شکل می‌گیرند، چگونه بر زندگی ما تأثیر می‌گذارند و چگونه می‌توانیم عادت‌های بد را با عادت‌های مفید جایگزین کنیم."
             ),
             Book(
                 2,
-                R.drawable.b2,
+               "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/b2.png",
                 "اثر مرکب",
                 "دارن هاردی",
                 "کتاب توضیح می‌دهد که موفقیت نتیجه‌ی اقدامات کوچک و مداوم در طول زمان است."
             ),
             Book(
                 3,
-                R.drawable.b3,
+               "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/b3.png",
                 "بیدار کردن غول درون",
                 "آنتونی رابینز",
                 "این کتاب به شما می‌آموزد که چگونه کنترل زندگی خود را به دست بگیرید و به موفقیت و رضایت شخصی برسید."
             ),
             Book(
                 4,
-                R.drawable.b4,
+                "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/b4.png",
                 "از خوب به عالی",
                 "جیم کالینز",
                 "این کتاب نشان می‌دهد که چگونه شرکت‌های معمولی به شرکت‌های خارق‌العاده تبدیل شده‌اند."
             ),
             Book(
                 5,
-                R.drawable.b5,
+               "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/b5.png",
                 "قوانین موفقیت",
                 "ناپلئون هیل",
                 "این کتاب اصول بنیادین موفقیت را بر اساس مصاحبه با صدها فرد موفق ارائه می‌دهد."
             ),
             Book(
                 6,
-                R.drawable.b6,
+            "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/b6.png",
                 "تخت‌خوابت را مرتب کن",
                 "ویلیام مک‌ریون",
                 "این کتاب شامل درس‌هایی ساده اما عمیق درباره‌ی نظم، پشتکار و قدرت تغییرات کوچک است."
             ),
             Book(
                 7,
-                R.drawable.b7,
+               "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/b7.png",
                 "راز",
                 "روندا برن",
                 "این کتاب توضیح می‌دهد که چگونه افکار و احساسات ما می‌توانند واقعیت زندگی‌مان را شکل دهند."
             ),
             Book(
                 8,
-                R.drawable.b8,
+              "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/b8.png",
                 "معجزه سپاسگزاری",
                 "راندا برن",
                 "این کتاب بر اهمیت شکرگزاری در تغییر زندگی تأکید دارد."
             ),
             Book(
                 9,
-                R.drawable.b9,
+               "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/b9.png",
                 "عادت‌های اتمی",
                 "جیمز کلیر",
                 "این کتاب نشان می‌دهد که چگونه تغییرات کوچک در عادت‌های روزانه می‌توانند تأثیرات بزرگی بر زندگی‌تان داشته باشند."
             ),
             Book(
                 10,
-                R.drawable.b10,
+               "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/b10.png",
                 "باشگاه ۵ صبحی‌ها",
                 "رابین شارما",
                 "این کتاب اهمیت بیدار شدن زودهنگام و ایجاد یک روتین صبحگاهی سازنده را بررسی می‌کند."
@@ -87,7 +87,7 @@ data class Book(
 
 data class Movie(
     val id: Int,
-    val image:Int,
+    val image:String,
     val title: String,
     val director: String,
     val actors: List<String>,
@@ -97,7 +97,7 @@ data class Movie(
         val movies = listOf(
             Movie(
                 1,
-                R.drawable.m1,
+               "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/m1.png",
                 "The Pursuit of Happyness",
                 "گابریله موچینو",
                 listOf("ویل اسمیت", "جیدن اسمیت"),
@@ -105,7 +105,7 @@ data class Movie(
             ),
             Movie(
                 2,
-                R.drawable.m2,
+                "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/m2.png",
                 "Rocky",
                 "جان جی. آویلدسن",
                 listOf("سیلوستر استالونه", "تالیا شایر"),
@@ -113,7 +113,7 @@ data class Movie(
             ),
             Movie(
                 3,
-                R.drawable.m3,
+               "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/m3.png",
                 "The Social Network",
                 "دیوید فینچر",
                 listOf("جسی آیزنبرگ", "اندرو گارفیلد", "جاستین تیمبرلیک"),
@@ -121,7 +121,7 @@ data class Movie(
             ),
             Movie(
                 4,
-                R.drawable.m4,
+               "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/m4.png",
                 "Forrest Gump",
                 "رابرت زمه‌کیس",
                 listOf("تام هنکس", "رابین رایت"),
@@ -129,7 +129,7 @@ data class Movie(
             ),
             Movie(
                 5,
-                R.drawable.m5,
+               "https://dl.daneshjooyar.com/mvie/Ahmadi-Alireza/Files/kara/m5.png",
                 "Whiplash",
                 "دیمین شزل",
                 listOf("مایلز تلر", "جی. کی. سیمونز"),

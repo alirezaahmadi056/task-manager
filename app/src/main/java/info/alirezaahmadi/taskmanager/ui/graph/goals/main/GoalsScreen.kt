@@ -145,7 +145,7 @@ fun GoalsScreen(
 private fun BooksItemCar(
     title: String,
     description: String,
-    image: Int,
+    image: String,
     onClick: () -> Unit
 ) {
     Box(
