@@ -9,15 +9,15 @@ plugins {
 }
 
 android {
-    namespace = "info.alirezaahmadi.taskmanager"
+    namespace = "ir.lrn.kara"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "info.alirezaahmadi.taskmanager"
+        applicationId = "ir.lrn.kara"
         minSdk = 23
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.3"
+        versionCode = 1
+        versionName = "1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Task Manager</string>
+    <string name="app_name">کارا</string>
     <string name="add_skin_routine">افزودن روتین پوستی</string>
     <string name="selected_hour">انتخاب ساعت</string>
     <string name="selected_image">انتخاب عکس</string>
