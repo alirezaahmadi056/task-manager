@@ -181,7 +181,7 @@ private fun FistTopBar(
         }
         Image(
             painter = painterResource(R.drawable.first_top_logo),
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Fit,
             contentDescription = "",
             modifier = Modifier
                 .size(40.dp)
