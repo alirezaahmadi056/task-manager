@@ -131,19 +131,8 @@ fun MedicineScreen(
                 .background(MaterialTheme.colorScheme.background),
             state = pagerState
         ) { page ->
-            val currentMedicine = remember(key1 = page, key2 = allMedicine) {
-                allMedicine.filter { it.dayWeek.contains(dayWeek[page]) }
-                    .sortedBy {
-                        val time = it.time
-                        val parts = time.split(":")
-                        if (parts.size == 2) {
-                            val hours = parts[0].toIntOrNull() ?: 0
-                            val minutes = parts[1].toIntOrNull() ?: 0
-                            hours * 60 + minutes
-                        } else {
-                            Int.MAX_VALUE
-                        }
-                    }
+            val currentMedicine = remember(key1 = page, key2 = medicines) {
+                medicines.filter { it.dayWeek.contains(dayWeek[page]) }
             }
             AnimatedContent(
                 targetState = currentMedicine.isNotEmpty(),
@@ -156,7 +145,7 @@ fun MedicineScreen(
                             .padding(horizontal = 12.dp)
                     ) {
                         item { Spacer(Modifier.height(12.dp)) }
-                        items(medicines, key = { item -> item.id }) { medicine ->
+                        items(currentMedicine, key = { item -> item.id }) { medicine ->
                             MedicineItemCard(
                                 item = medicine,
                                 onDeleted = { singleId = medicine.id },
