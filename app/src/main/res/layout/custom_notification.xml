@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="8dp">
+
+
+    <!-- عنوان اول -->
+    <TextView
+        android:id="@+id/notification_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:fontFamily="@font/iranyekanbold"
+        android:text="عنوان نوتیفیکیشن"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- پیام دوم -->
+    <TextView
+        android:id="@+id/notification_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/notification_title"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/iranyekanmedium"
+        android:text="پیام نوتیفیکیشن شما"
+        android:textColor="@color/black"
+        android:textSize="19sp" />
+
+
+</RelativeLayout>
