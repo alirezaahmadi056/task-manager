@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.lrn.kara.data.dataStore.DataStoreRepositoryImpl
+import ir.lrn.kara.data.model.FirstRouteData
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -19,8 +20,20 @@ class DatStoreViewModel @Inject constructor(
         const val NOTE_SORT = "NOTE_SORT"
         const val TASK_SORT = "TASK_SORT"
         const val ROUTINE_SORT = "ROUTINE_SORT"
+        const val ENABLED_ROUTE_IDS = "ENABLED_ROUTE_IDS"
     }
 
+    fun saveEnabledRoutes(ids: Set<Int>) {
+        viewModelScope.launch {
+            val stringIds = ids.map { it.toString() }.toSet()
+            repository.putStringSet(ENABLED_ROUTE_IDS, stringIds)
+        }
+    }
+    fun getEnabledRoutes(): Set<Int> = runBlocking {
+        val defaultIds = FirstRouteData.fullFirstData.map { it.id }.toSet()
+        val stringSet = repository.getStringSet(ENABLED_ROUTE_IDS)
+        stringSet?.map { it.toInt() }?.toSet() ?: defaultIds
+    }
 
     fun saveGridList(value: Boolean) {
         viewModelScope.launch {
