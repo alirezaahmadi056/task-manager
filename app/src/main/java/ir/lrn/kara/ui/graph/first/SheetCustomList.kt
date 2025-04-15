@@ -89,14 +89,6 @@ fun SheetCustomList(
                 modifier = Modifier.fillMaxWidth()
             ){
                 allList.fastMapIndexed { index, firstRouteData ->
-                    AnimatedVisibility(
-                        visible = true,
-                        enter = fadeIn(tween(800)) + slideInVertically(
-                            animationSpec = tween(800),
-                            initialOffsetY = { -40 }
-                        ),
-                        exit = fadeOut()
-                    ){
                         RouteItem(
                             routeData = firstRouteData,
                             selected = firstRouteData.id in selectedIds,
@@ -108,7 +100,6 @@ fun SheetCustomList(
                         )
                     }
 
-                }
             }
 
 

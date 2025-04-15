@@ -28,6 +28,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
@@ -175,6 +176,34 @@ fun FirstScreen(
                         }
 
                     }
+                    if (activeUserList.isEmpty()) {
+                        TextButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            onClick = { showSheetCustomList =true }
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Info,
+                                    contentDescription = "No Items",
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "هیچ آیتم فعالی وجود ندارد! برای ویرایش کلیک کنید.",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onBackground
+                                )
+                            }
+                        }
+
+                    }
+
                     Spacer(Modifier.height(12.dp))
                 }
             }
