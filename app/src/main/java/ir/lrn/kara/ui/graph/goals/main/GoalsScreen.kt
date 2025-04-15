@@ -16,9 +16,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.NoteAdd
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,6 +47,7 @@ import ir.lrn.kara.data.model.Movie
 import ir.lrn.kara.navigation.Screen
 import ir.lrn.kara.ui.component.BaseImageLoader
 import ir.lrn.kara.ui.component.CenterBackTopBar
+import ir.lrn.kara.ui.graph.duties.task.getNextTaskId
 import ir.lrn.kara.viewModel.GoalsViewModel
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
@@ -55,7 +61,28 @@ fun GoalsScreen(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = { CenterBackTopBar(text = stringResource(R.string.my_goals)) { navHostController.navigateUp() } }
+        topBar = { CenterBackTopBar(text = stringResource(R.string.my_goals)) { navHostController.navigateUp() } },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.onBackground,
+                contentColor = MaterialTheme.colorScheme.background,
+                expanded = true,
+                text = {
+                    Text(
+                        text = "هدف",
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                },
+                icon = {
+                    Icon(
+                        Icons.AutoMirrored.Rounded.NoteAdd,
+                        contentDescription = "",
+                    )
+                },
+                onClick = { navHostController.navigate(Screen.GoalsFullScreen(0)) }
+            )
+        },
+        floatingActionButtonPosition = FabPosition.Start,
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
@@ -136,6 +163,7 @@ fun GoalsScreen(
                     }
                 }
             }
+            item { Spacer(Modifier.height(50.dp)) }
         }
     }
 }
