@@ -2,6 +2,7 @@ package ir.lrn.kara.util
 
 import androidx.compose.ui.graphics.Color
 import ir.lrn.kara.R
+import ir.lrn.kara.data.model.FirstRouteData.Companion.fullFirstData
 import java.util.Calendar
 
 object Constants {
@@ -63,4 +64,6 @@ object Constants {
         Color(0xffF9DBBD),
         Color(0xffC0FFB2),
     )
+    var firstDataSet : Set<Int> = fullFirstData.map { it.id }.toSet()
+
 }
