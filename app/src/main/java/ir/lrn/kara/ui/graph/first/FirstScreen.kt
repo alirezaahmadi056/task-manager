@@ -15,12 +15,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -94,7 +96,6 @@ fun FirstScreen(
     SheetCustomList(
         isShow = showSheetCustomList,
         allList = defaultList,
-        activeList = activeUserList,
         activeId = defaultList.filter { it.id in selectedUserIdList },
         updateId = { newIds ->
             selectedUserIdList.clear()
@@ -124,11 +125,11 @@ fun FirstScreen(
                 topBar = {
                     FistTopBar(
                         openMenu = { scope.launch { drawerState.open() } },
-                        openHelp = {
-                            showSheetVideo = true
-                        }
+                        openHelp = { showSheetVideo = true },
+                        openSheetEdit = { showSheetCustomList = true }
                     )
-                }
+                },
+                bottomBar = { IntroductionSection() }
             ) { innerPadding ->
                 Column(
                     modifier = Modifier
@@ -158,8 +159,8 @@ fun FirstScreen(
                         activeUserList.forEach { graph ->
                             AnimatedVisibility(
                                 visibleState = visibilityState,
-                                enter = fadeIn(tween(700)) + slideInVertically(
-                                    animationSpec = tween(700),
+                                enter = fadeIn(tween(800)) + slideInVertically(
+                                    animationSpec = tween(800),
                                     initialOffsetY = { -40 }
                                 ),
                                 exit = fadeOut()
@@ -174,17 +175,6 @@ fun FirstScreen(
                         }
 
                     }
-                    TextButton(
-                        onClick = { showSheetCustomList = true },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text(
-                            text = "کاستومایز لیست",
-                            color = MaterialTheme.colorScheme.onBackground,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                    IntroductionSection()
                     Spacer(Modifier.height(12.dp))
                 }
             }
@@ -196,7 +186,8 @@ fun FirstScreen(
 @Composable
 private fun FistTopBar(
     openMenu: () -> Unit,
-    openHelp: () -> Unit
+    openHelp: () -> Unit,
+    openSheetEdit: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -211,16 +202,18 @@ private fun FistTopBar(
             }
             .padding(9.dp)
     ) {
-        IconButton(
-            modifier = Modifier.align(Alignment.CenterStart),
-            onClick = openMenu
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Menu,
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-        }
+            IconButton(
+                modifier = Modifier.align(Alignment.CenterStart),
+                onClick = openMenu
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Menu,
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
+
+
         Image(
             painter = painterResource(R.drawable.first_top_logo),
             contentScale = ContentScale.Fit,
@@ -229,16 +222,32 @@ private fun FistTopBar(
                 .size(40.dp)
                 .align(Alignment.Center),
         )
-        IconButton(
+        Row(
             modifier = Modifier.align(Alignment.CenterEnd),
-            onClick = openHelp
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(R.drawable.message_question),
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.onBackground
-            )
+            IconButton(
+                onClick = openSheetEdit
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.layout_edit),
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            Spacer(Modifier.width(2.dp))
+            IconButton(
+                onClick = openHelp
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.message_question),
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
+
         }
+
     }
 }
 
@@ -276,11 +285,4 @@ fun SelectedGraphRoute(
         Spacer(Modifier.height(14.dp))
     }
 
-}
-
-fun getUserSelectedRoutes(
-    enabledIds: Set<Int>,
-    defaultsList: List<FirstRouteData>
-): List<FirstRouteData> {
-    return defaultsList.filter { it.id in enabledIds }
 }
