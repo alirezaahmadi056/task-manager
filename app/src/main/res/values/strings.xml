@@ -58,4 +58,11 @@
     <string name="description_lesson">توضیحات درس</string>
     <string name="start_time">ساعت شروع</string>
     <string name="end_time">ساعت پایان</string>
+    <string name="duties_and_notes">وظایف و یادداشت ها</string>
+    <string name="weekly_routine">روتین هفتگی</string>
+    <string name="skin_routine">روتین پوستی</string>
+    <string name="exercise_program">برنامه باشگاه</string>
+    <string name="medicine_program">برنامه دارویی</string>
+    <string name="my_dreams">رویاهای من</string>
+    <string name="curriculum_planning">برنامه ریزی درسی</string>
 </resources>
