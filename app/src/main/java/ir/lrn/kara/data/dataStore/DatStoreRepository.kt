@@ -9,4 +9,6 @@ interface DatStoreRepository {
     suspend fun getString(key: String): String?
     suspend fun getInt(key: String): Int?
     suspend fun getBoolean(key: String):Boolean?
+    suspend fun putStringSet(key: String, value: Set<String>)
+    suspend fun getStringSet(key: String): Set<String>?
 }
