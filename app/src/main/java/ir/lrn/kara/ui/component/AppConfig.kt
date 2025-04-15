@@ -11,6 +11,7 @@ fun AppConfig(datStoreViewModel: DatStoreViewModel = hiltViewModel()) {
 }
 
 fun getDataStore(datStoreViewModel: DatStoreViewModel) {
+    Constants.firstDataSet = datStoreViewModel.getEnabledRoutes()
     Constants.GRIDLIST = datStoreViewModel.getGridList()
     Constants.SORT_TASK = datStoreViewModel.getTaskSort()
     Constants.SORT_NOTE = datStoreViewModel.getNoteSort()
