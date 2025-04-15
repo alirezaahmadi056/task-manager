@@ -1,6 +1,5 @@
 package ir.lrn.kara.ui.graph.first
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
@@ -23,9 +22,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -37,10 +33,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -63,14 +59,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ir.lrn.kara.R
 import ir.lrn.kara.data.model.FirstRouteData
-import ir.lrn.kara.data.model.FirstRouteData.Companion.fullFirstData
-import ir.lrn.kara.navigation.Screen
 import ir.lrn.kara.ui.component.DrawerContent
 import ir.lrn.kara.ui.component.MainDrawer
 import ir.lrn.kara.util.Constants
 import ir.lrn.kara.viewModel.DatStoreViewModel
 import ir.lrn.kara.viewModel.ThemViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -82,8 +75,9 @@ fun FirstScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var showSheet by remember { mutableStateOf(false) }
-    SheetVideo(showSheet) { showSheet = false }
+    var showSheetVideo by remember { mutableStateOf(false) }
+    var showSheetCustomList by remember { mutableStateOf(false) }
+    SheetVideo(showSheetVideo) { showSheetVideo = false }
 
     val defaultList = remember { FirstRouteData.fullFirstData }
 
@@ -97,7 +91,19 @@ fun FirstScreen(
         selectedUserIdList.addAll(Constants.firstDataSet)
     }
     val visibilityState = remember { MutableTransitionState(false).apply { targetState = true } }
-
+    SheetCustomList(
+        isShow = showSheetCustomList,
+        allList = defaultList,
+        activeList = activeUserList,
+        activeId = defaultList.filter { it.id in selectedUserIdList },
+        updateId = { newIds ->
+            selectedUserIdList.clear()
+            selectedUserIdList.addAll(newIds)
+            datStoreViewModel.saveEnabledRoutes(newIds)
+            Constants.firstDataSet = newIds
+        },
+        onDismiss = { showSheetCustomList = false }
+    )
     MainDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -119,7 +125,7 @@ fun FirstScreen(
                     FistTopBar(
                         openMenu = { scope.launch { drawerState.open() } },
                         openHelp = {
-                            showSheet = true
+                            showSheetVideo = true
                         }
                     )
                 }
@@ -166,14 +172,25 @@ fun FirstScreen(
                                 }
                             }
                         }
-                        IntroductionSection()
-                        Spacer(Modifier.height(12.dp))
-                    }
 
+                    }
+                    TextButton(
+                        onClick = { showSheetCustomList = true },
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text(
+                            text = "کاستومایز لیست",
+                            color = MaterialTheme.colorScheme.onBackground,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                    IntroductionSection()
+                    Spacer(Modifier.height(12.dp))
                 }
             }
 
-        })
+        }
+    )
 }
 
 @Composable
