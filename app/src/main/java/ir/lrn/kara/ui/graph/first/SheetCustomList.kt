@@ -1,5 +1,12 @@
 package ir.lrn.kara.ui.graph.first
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -9,13 +16,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -26,9 +36,15 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastMapIndexed
 import ir.lrn.kara.data.model.FirstRouteData
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -36,7 +52,6 @@ import ir.lrn.kara.data.model.FirstRouteData
 fun SheetCustomList(
     isShow: Boolean,
     allList: List<FirstRouteData>,
-    activeList: List<FirstRouteData>,
     activeId: List<FirstRouteData>,
     updateId: (Set<Int>) -> Unit,
     onDismiss: () -> Unit
@@ -61,45 +76,41 @@ fun SheetCustomList(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = "فعال‌ها",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(vertical = 8.dp)
+                text = "مدیریت آیتم‌های فعال",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 12.dp, horizontal = 5.dp),
+                fontWeight = FontWeight.Bold,
             )
-            FlowRow {
-                activeList.forEach { item ->
-                    RouteItem(
-                        name = stringResource(id = item.nameRes),
-                        selected = item.id in selectedIds,
-                        onSelected = { isChecked ->
-                            if (isChecked) selectedIds.add(item.id)
-                            else selectedIds.remove(item.id)
-                        }
-                    )
+            FlowRow(
+                modifier = Modifier.fillMaxWidth()
+            ){
+                allList.fastMapIndexed { index, firstRouteData ->
+                    AnimatedVisibility(
+                        visible = true,
+                        enter = fadeIn(tween(800)) + slideInVertically(
+                            animationSpec = tween(800),
+                            initialOffsetY = { -40 }
+                        ),
+                        exit = fadeOut()
+                    ){
+                        RouteItem(
+                            routeData = firstRouteData,
+                            selected = firstRouteData.id in selectedIds,
+                            onSelected = { isChecked ->
+                                if (isChecked) selectedIds.add(firstRouteData.id)
+                                else selectedIds.remove(firstRouteData.id)
+                            },
+                            lastItem =allList.lastIndex ==index
+                        )
+                    }
+
                 }
             }
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-            Text(
-                text = "غیرفعال‌ها",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-            FlowRow {
-                val inactiveList = allList.filter { it.id !in activeList.map { a -> a.id } }
-                inactiveList.forEach { item ->
-                    RouteItem(
-                        name = stringResource(id = item.nameRes),
-                        selected = item.id in selectedIds,
-                        onSelected = { isChecked ->
-                            if (isChecked) selectedIds.add(item.id)
-                            else selectedIds.remove(item.id)
-                        }
-                    )
-                }
-            }
 
             Spacer(modifier = Modifier.height(16.dp))
             Button(
@@ -107,15 +118,20 @@ fun SheetCustomList(
                     updateId(selectedIds.toSet())
                     onDismiss()
                 },
+                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+                    .padding(8.dp)
+                    .fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    contentColor = MaterialTheme.colorScheme.background,
-                    containerColor = MaterialTheme.colorScheme.onBackground
-                )
+                    contentColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
             ) {
-                Text("ویرایش", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = "ذخیره تغییرات",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
         }
     }
@@ -124,28 +140,53 @@ fun SheetCustomList(
 
 @Composable
 private fun RouteItem(
-    name: String,
+    routeData: FirstRouteData,
     selected: Boolean,
-    onSelected: (Boolean) -> Unit
+    onSelected: (Boolean) -> Unit,
+    lastItem: Boolean
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(0.5f)
-            .padding(5.dp),
+            .clickable { onSelected(!selected) }
+            .fillMaxWidth()
+            .padding(8.dp)
+            .drawBehind {
+                if(!lastItem){
+                    drawLine(
+                        color = Color.LightGray.copy(alpha = 0.4f),
+                        start = Offset(0f, size.height), // شروع خط در پایین کامپوزبل
+                        end = Offset(size.width, size.height), // پایان خط در پایین کامپوزبل
+                        strokeWidth = 1.5.dp.toPx()
+                    )
+                }
+
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = name,
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(routeData.image),
+                contentDescription = "",
+                modifier = Modifier.size(35.dp),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(Modifier.width(5.dp))
+            Text(
+                text = stringResource(routeData.nameRes) ,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+
         Checkbox(
             checked = selected,
             onCheckedChange = onSelected,
             colors = CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colorScheme.onBackground,
-                checkmarkColor = MaterialTheme.colorScheme.background
+                checkedColor = MaterialTheme.colorScheme.primary,
+                checkmarkColor = Color.White
             )
         )
     }
