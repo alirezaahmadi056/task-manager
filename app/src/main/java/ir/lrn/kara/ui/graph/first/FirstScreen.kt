@@ -1,6 +1,13 @@
 package ir.lrn.kara.ui.graph.first
 
+import android.util.Log
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +22,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -28,7 +39,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -41,27 +55,49 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ir.lrn.kara.R
+import ir.lrn.kara.data.model.FirstRouteData
+import ir.lrn.kara.data.model.FirstRouteData.Companion.fullFirstData
 import ir.lrn.kara.navigation.Screen
 import ir.lrn.kara.ui.component.DrawerContent
 import ir.lrn.kara.ui.component.MainDrawer
+import ir.lrn.kara.util.Constants
+import ir.lrn.kara.viewModel.DatStoreViewModel
 import ir.lrn.kara.viewModel.ThemViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FirstScreen(
     navHostController: NavHostController,
-    themViewModel: ThemViewModel
+    themViewModel: ThemViewModel,
+    datStoreViewModel: DatStoreViewModel = hiltViewModel()
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showSheet by remember { mutableStateOf(false) }
-    SheetVideo(showSheet) {showSheet=false }
+    SheetVideo(showSheet) { showSheet = false }
+
+    val defaultList = remember { FirstRouteData.fullFirstData }
+
+    val selectedUserIdList = remember { mutableStateListOf<Int>() }
+
+    val activeUserList = remember(key1 = defaultList, key2 = selectedUserIdList.toList()) {
+        defaultList.filter { it.id in selectedUserIdList }
+    }
+    LaunchedEffect(Unit) {
+        selectedUserIdList.clear()
+        selectedUserIdList.addAll(Constants.firstDataSet)
+    }
+    val visibilityState = remember { MutableTransitionState(false).apply { targetState = true } }
+
     MainDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -95,57 +131,46 @@ fun FirstScreen(
                         .verticalScroll(rememberScrollState())
                 ) {
                     Spacer(Modifier.height(8.dp))
-                    FirstTopPager(navHostController = navHostController)
+                    AnimatedVisibility(
+                        visibleState = visibilityState,
+                        enter = fadeIn(tween(500)) + slideInVertically(
+                            animationSpec = tween(500),
+                            initialOffsetY = { -40 }
+                        ),
+                        exit = fadeOut()
+                    ) {
+                        FirstTopPager(navHostController = navHostController)
+                    }
                     Spacer(Modifier.height(8.dp))
                     FlowRow(
-                        modifier = Modifier
-                            .fillMaxWidth(),
                         maxItemsInEachRow = 2,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        SelectedGraphRoute(
-                            text = "وظایف و یادداشت ها",
-                            image = R.drawable.duties_image
-                        ) { navHostController.navigate(Screen.DutiesGraph) }
-
-                        SelectedGraphRoute(
-                            text = "روتین هفتگی",
-                            image = R.drawable.weekly_routine_image
-                        ) { navHostController.navigate(Screen.WeeklyRoutineGraph) }
-                        SelectedGraphRoute(
-                            text = "روتین پوستی",
-                            image = R.drawable.skin_routine_image
-                        ) { navHostController.navigate(Screen.SkinRoutineGraph) }
-
-                        SelectedGraphRoute(
-                            text = "برنامه باشگاه",
-                            image = R.drawable.ecericies_image
-                        ) { navHostController.navigate(Screen.ExerciseProgramGraph) }
-
-                        SelectedGraphRoute(
-                            text = "اهداف من",
-                            image = R.drawable.goals_image
-                        ) { navHostController.navigate(Screen.GoalsGraph) }
-
-                        SelectedGraphRoute(
-                            text = "برنامه دارویی",
-                            image = R.drawable.medicine_image
-                        ) { navHostController.navigate(Screen.MedicineGraph) }
-                        SelectedGraphRoute(
-                            text = "رویاهای من",
-                            image = R.drawable.dream_image
-                        ) { navHostController.navigate(Screen.DreamGraph) }
-                        SelectedGraphRoute(
-                            text = "برنامه ریزی درسی",
-                            image = R.drawable.lesson_image
-                        ) { navHostController.navigate(Screen.CurriculumGraph) }
-
+                        activeUserList.forEach { graph ->
+                            AnimatedVisibility(
+                                visibleState = visibilityState,
+                                enter = fadeIn(tween(700)) + slideInVertically(
+                                    animationSpec = tween(700),
+                                    initialOffsetY = { -40 }
+                                ),
+                                exit = fadeOut()
+                            ) {
+                                SelectedGraphRoute(
+                                    text = stringResource(graph.nameRes),
+                                    image = graph.image
+                                ) {
+                                    navHostController.navigate(graph.route)
+                                }
+                            }
+                        }
+                        IntroductionSection()
+                        Spacer(Modifier.height(12.dp))
                     }
-                    IntroductionSection()
-                    Spacer(Modifier.height(12.dp))
 
                 }
-
             }
 
         })
@@ -234,4 +259,11 @@ fun SelectedGraphRoute(
         Spacer(Modifier.height(14.dp))
     }
 
+}
+
+fun getUserSelectedRoutes(
+    enabledIds: Set<Int>,
+    defaultsList: List<FirstRouteData>
+): List<FirstRouteData> {
+    return defaultsList.filter { it.id in enabledIds }
 }
