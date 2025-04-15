@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import ir.lrn.kara.util.Constants
 import kotlinx.coroutines.flow.first
@@ -70,6 +71,16 @@ class DataStoreRepositoryImpl @Inject constructor(
             e.printStackTrace()
             null
         }
+    }
+    override suspend fun putStringSet(key: String, value: Set<String>) {
+        context.dataStore.edit { preferences ->
+            preferences[stringSetPreferencesKey(key)] = value
+        }
+    }
+
+    override suspend fun getStringSet(key: String): Set<String>? {
+        val preferences = context.dataStore.data.first()
+        return preferences[stringSetPreferencesKey(key)]
     }
 
 
