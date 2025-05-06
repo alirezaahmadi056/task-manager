@@ -66,4 +66,5 @@ object Constants {
     )
     var firstDataSet : Set<Int> = fullFirstData.map { it.id }.toSet()
 
+    var showPager =true
 }

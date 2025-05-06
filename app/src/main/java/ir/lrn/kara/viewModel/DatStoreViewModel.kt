@@ -21,6 +21,15 @@ class DatStoreViewModel @Inject constructor(
         const val TASK_SORT = "TASK_SORT"
         const val ROUTINE_SORT = "ROUTINE_SORT"
         const val ENABLED_ROUTE_IDS = "ENABLED_ROUTE_IDS"
+        const val SHOW_PAGER ="SHOW_PAGER"
+    }
+    fun saveShowPager(value: Boolean) {
+        viewModelScope.launch {
+            repository.putBoolean(SHOW_PAGER, value)
+        }
+    }
+    fun getShowPager(): Boolean = runBlocking {
+        repository.getBoolean(SHOW_PAGER) == true
     }
 
     fun saveEnabledRoutes(ids: Set<Int>) {

@@ -134,4 +134,8 @@ sealed interface Screen {
 
     @Serializable
     data class AddCurriculumScreen(val id: Int? = null, val day: String? = null) : Screen
+
+    //firstPager
+    @Serializable
+    data object FirstPagerScreen: Screen
 }

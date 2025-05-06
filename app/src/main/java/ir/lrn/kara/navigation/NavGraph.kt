@@ -5,6 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import ir.lrn.kara.ui.FirstPagerScreen
 import ir.lrn.kara.ui.graph.curriculum.curriculumGraph
 import ir.lrn.kara.ui.graph.dreame.dreamGraph
 import ir.lrn.kara.ui.graph.duties.dutiesGraph
@@ -14,7 +16,9 @@ import ir.lrn.kara.ui.graph.goals.goalsGraph
 import ir.lrn.kara.ui.graph.medicine.medicineGraph
 import ir.lrn.kara.ui.graph.skinRoutine.skinRoutineGraph
 import ir.lrn.kara.ui.graph.weeklyRoutine.weeklyRoutineGraph
+import ir.lrn.kara.util.Constants
 import ir.lrn.kara.viewModel.CurriculumViewModel
+import ir.lrn.kara.viewModel.DatStoreViewModel
 import ir.lrn.kara.viewModel.DreamViewModel
 import ir.lrn.kara.viewModel.ExerciseProgramViewModel
 import ir.lrn.kara.viewModel.GoalsViewModel
@@ -30,13 +34,18 @@ fun NavGraph(
     goalsViewModel: GoalsViewModel= hiltViewModel(),
     medicineViewModel: MedicineViewModel= hiltViewModel(),
     dreamViewModel: DreamViewModel= hiltViewModel(),
-    curriculumViewModel: CurriculumViewModel= hiltViewModel()
+    curriculumViewModel: CurriculumViewModel= hiltViewModel(),
+    datStoreViewModel: DatStoreViewModel=hiltViewModel()
 ) {
+    val startDestination = if (Constants.showPager) Screen.FirstPagerScreen else Screen.FirstGraph
     NavHost(
         modifier = modifier,
         navController = navHostController,
-        startDestination = Screen.FirstGraph,
+        startDestination =Screen.FirstPagerScreen ,
     ) {
+        composable<Screen.FirstPagerScreen> {
+            FirstPagerScreen(navHostController,datStoreViewModel)
+        }
         firstGraph(navHostController,themViewModel)
         weeklyRoutineGraph(navHostController)
         dutiesGraph(navHostController)

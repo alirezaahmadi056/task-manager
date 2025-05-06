@@ -17,4 +17,5 @@ fun getDataStore(datStoreViewModel: DatStoreViewModel) {
     Constants.SORT_NOTE = datStoreViewModel.getNoteSort()
     Constants.isThemDark = datStoreViewModel.getDarkThem()
     Constants.ROUTINE_SORT = datStoreViewModel.getRoutineSort()
+    Constants.showPager =datStoreViewModel.getShowPager()
 }
